@@ -1,7 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { AuthStackParamList, RegisterFormType } from '../lib/type';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
@@ -9,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();

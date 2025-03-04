@@ -1,7 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
 import { AuthStackParamList, LoginFormType } from '../lib/type';
 import { useState } from 'react';
@@ -9,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
+import InputWithLabel from '../components/atoms/InputWithLabel';
 
 export default function LoginScreen() {
   const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
