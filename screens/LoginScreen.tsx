@@ -1,19 +1,20 @@
-import { Alert, Pressable, Text, TextInput, View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
 import { AuthStackParamList, LoginFormType } from '../lib/type';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Error from '../components/atoms/Error';
+import ScreenContainer from '../components/templates/ScreenContainer';
 
 export default function LoginScreen() {
   const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
   const [loading, setLoading] = useState(false);
   async function signInWithEmail({ email, password }: LoginFormType) {
-    console.log(email, password)
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -28,11 +29,50 @@ export default function LoginScreen() {
     signInWithEmail({ email: data.email, password: data.password });
   }
   return (
-    <View>
-      <InputWithLabel control={control} name='email' placeHolder="Email@example.com" label='이메일' invisible={false} />
-      <InputWithLabel control={control} name='password' placeHolder='비밀번호' label='비밀번호' invisible={true} />
-      <Pressable onPress={() => { navigation.navigate("Register") }}><Text>Register</Text></Pressable>
-      <Button onPress={handleSubmit(onSubmit)}>Login</Button>
-    </View>
+    <ScreenContainer>
+      <InputWithLabel
+        control={control}
+        name='email'
+        label='이메일'
+        placeHolder="Email@example.com"
+        invisible={false}
+        rules={{
+          required: "이메일을 입력해주세요",
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "유효한 이메일 형식이 아닙니다"
+          }
+        }}
+      />
+      <Error message={errors.email?.message} />
+      <InputWithLabel
+        control={control}
+        name='password'
+        label='비밀번호'
+        placeHolder='Password'
+        invisible={true}
+        rules={{
+          required: "비밀번호를 입력해주세요",
+          minLength: {
+            value: 6,
+            message: "최소 6자 이상의 비밀번호가 필요합니다"
+          },
+          maxLength: {
+            value: 14,
+            message: "비밀번호는 최대 14자까지만 가능합니다"
+          }
+        }}
+      />
+      <Error message={errors.password?.message} />
+      <Pressable onPress={() => { navigation.navigate("Register") }}><Text style={sytles.toggleButton}>회원가입</Text></Pressable>
+      <Button onPress={handleSubmit(onSubmit)}>로그인</Button>
+    </ScreenContainer>
   );
 };
+
+const sytles = StyleSheet.create({
+  toggleButton: {
+    marginVertical: 20,
+    color: "#7f8c8d",
+  }
+});

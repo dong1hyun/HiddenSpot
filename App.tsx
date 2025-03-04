@@ -23,19 +23,20 @@ export default function App() {
 
 
   return (
-    <NavigationContainer>
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
         {session?.user?.id ?
           <AppNavigator /> :
           <AuthNavigator />
         }
-      </SafeAreaView>
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  }  
+    // padding: 20,
+  }
 });

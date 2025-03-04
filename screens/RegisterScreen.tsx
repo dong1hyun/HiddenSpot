@@ -1,5 +1,4 @@
-import { Alert, Pressable, Text, View } from 'react-native'
-import AuthForm from '../components/molecules/AuthForm'
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { AuthStackParamList, RegisterFormType } from '../lib/type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -8,6 +7,8 @@ import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Error from '../components/atoms/Error';
+import ScreenContainer from '../components/templates/ScreenContainer';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
@@ -40,9 +41,8 @@ export default function RegisterScreen() {
             nickName: data.nickName
         });
     }
-    console.log(errors);
     return (
-        <View>
+        <ScreenContainer>
             <InputWithLabel
                 control={control}
                 name='email'
@@ -50,13 +50,14 @@ export default function RegisterScreen() {
                 placeHolder="Email@example.com"
                 invisible={false}
                 rules={{
-                    required: "Please enter your email.",
+                    required: "이메일을 입력해주세요",
                     pattern: {
                         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Please enter a valid email format."
+                        message: "유효한 이메일 형식이 아닙니다"
                     }
                 }}
             />
+            <Error message={errors.email?.message} />
             <InputWithLabel
                 control={control}
                 name='password'
@@ -64,17 +65,18 @@ export default function RegisterScreen() {
                 placeHolder='Password'
                 invisible={true}
                 rules={{
-                    required: "Please enter your password.",
+                    required: "비밀번호를 입력해주세요",
                     minLength: {
                         value: 6,
-                        message: "Please enter at least 6 characters."
+                        message: "최소 6자 이상의 비밀번호가 필요합니다"
                     },
                     maxLength: {
                         value: 14,
-                        message: "You can enter up to 14 characters only."
+                        message: "비밀번호는 최대 14자까지만 가능합니다"
                     }
                 }}
             />
+            <Error message={errors.password?.message} />
             <InputWithLabel
                 control={control}
                 name='confirm_password'
@@ -82,18 +84,41 @@ export default function RegisterScreen() {
                 placeHolder='Confirm Password'
                 invisible={true}
                 rules={{
-                    validate: (value) => value === watch("password") || "Passwords do not match"
+                    validate: (value) => value === watch("password") || "비밀번호와 일치하지 않습니다"
                 }}
             />
+            <Error message={errors.confirm_password?.message} />
             <InputWithLabel
                 control={control}
                 name='nickName'
                 label='닉네임'
-                placeHolder='닉네임'
+                placeHolder='NickName'
                 invisible={false}
+                rules={{
+                    required: "닉네임을 입력해주세요",
+                    minLength: {
+                        value: 2,
+                        message: "최소 2자 이상의 닉네임이이 필요합니다"
+                    },
+                    maxLength: {
+                        value: 14,
+                        message: "닉네임은 최대 10자까지만 가능합니다"
+                    }
+                }}
             />
-            <Pressable onPress={() => { navigation.navigate("Login") }}><Text>Login</Text></Pressable>
-            <Button onPress={handleSubmit(onSubmit)}>Register</Button>
-        </View>
-    )
-}
+            <Error message={errors.nickName?.message} />
+            <Pressable style={sytles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text>로그인</Text></Pressable>
+            <Button onPress={handleSubmit(onSubmit)}>계정생성</Button>
+        </ScreenContainer>
+    );
+};
+
+const sytles = StyleSheet.create({
+    container: {
+
+    },
+    toggleButton: {
+        marginVertical: 20,
+        color: "#7f8c8d",
+    }
+});
