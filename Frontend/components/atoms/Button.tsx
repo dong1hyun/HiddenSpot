@@ -2,13 +2,15 @@ import { ReactNode } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
 
 interface Props {
-    children: ReactNode,
+    children: ReactNode;
+    isLoading?: boolean
     onPress:  () => void;
 }
 
-export default function Button({ children, onPress }: Props) {
+export default function Button({ children, onPress, isLoading }: Props) {
     return (
         <Pressable 
+        disabled={isLoading}
         style={styles.button}
         onPress={onPress} 
         >

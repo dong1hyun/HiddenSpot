@@ -9,12 +9,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import LoadingOverlay from '../components/atoms/Loading';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
     const { control, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormType>();
     const [loading, setLoading] = useState(false);
-    async function signUpWithEmail({ email, password, confirm_password, nickName }: RegisterFormType) {
+    async function signUpWithEmail({ email, password, nickName }: RegisterFormType) {
         setLoading(true);
         const {
             data: { session },
@@ -109,6 +110,7 @@ export default function RegisterScreen() {
             <Error message={errors.nickName?.message} />
             <Pressable style={sytles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text>로그인</Text></Pressable>
             <Button onPress={handleSubmit(onSubmit)}>계정생성</Button>
+            {loading && <LoadingOverlay />}
         </ScreenContainer>
     );
 };
