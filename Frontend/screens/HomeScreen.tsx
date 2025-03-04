@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 
 const data = [
@@ -24,17 +26,30 @@ const data = [
 ]
 
 export default function HomeScreen() {
-    
+    const fetchData = async () => {
+        const response = await fetch('http://10.0.2.2:5000'); // Android 에뮬레이터용
+        if (!response.ok) throw new Error('데이터 가져오기 실패');
+        return response.text(); // JSON이면 `response.json();`
+      };
+
+    // const {data, error, isLoading} = useQuery({
+    //     queryKey: ['places'],
+    //     queryFn: fetchData
+    // })
+
+    useEffect(() => {
+        fetchData();
+    }, [])
     return (
         <View>
-            <FlatList 
+            <FlatList
                 data={data}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                     <View>
                         <Text>
                             {item.title}
                         </Text>
-                        <Image style={styles.image} source={{uri: item.image}} />
+                        <Image style={styles.image} source={{ uri: item.image }} />
                     </View>
                 )}
             />

@@ -6,6 +6,7 @@ import AuthNavigator from './navigations/AuthNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from "./navigations/AppNavigator";
 import { SafeAreaView, StyleSheet } from "react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -21,15 +22,18 @@ export default function App() {
     })
   }, []);
 
+  const queryClient = new QueryClient();
 
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        {session?.user?.id ?
-          <AppNavigator /> :
-          <AuthNavigator />
-        }
-      </NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          {session?.user?.id ?
+            <AppNavigator /> :
+            <AuthNavigator />
+          }
+        </NavigationContainer>
+      </QueryClientProvider>
     </SafeAreaView>
   )
 }
