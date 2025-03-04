@@ -6,12 +6,12 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 
 interface Props {
-    onSubmit: ({email, password, setLoading}: AuthType) => void
+    onSubmit: ({ email, password, setLoading }: AuthType) => void
     title: "Register" | "Login",
     isLogin: boolean
 }
 
-export default function AuthForm({onSubmit, title, isLogin}: Props) {
+export default function AuthForm({ onSubmit, title, isLogin }: Props) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false);
@@ -43,9 +43,22 @@ export default function AuthForm({onSubmit, title, isLogin}: Props) {
                     autoCapitalize={'none'}
                 />
             </View>
+            {!isLogin &&
+                <View style={styles.verticallySpaced}>
+                    <Input
+                        label="Nickname"
+                        leftIcon={{ type: 'font-awesome-5', name: 'smile' }}
+                        // onChangeText={(text) => setPassword(text)}
+                        value={password}
+                        secureTextEntry={true}
+                        placeholder="Nickname"
+                        autoCapitalize={'none'}
+                    />
+                </View>
+            }
             <Pressable onPress={toggleAuth}><Text>{to}</Text></Pressable>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button title={title} disabled={loading} onPress={() => onSubmit({email, password, setLoading})} />
+                <Button title={title} disabled={loading} onPress={() => onSubmit({ email, password, setLoading })} />
             </View>
         </View>
     )

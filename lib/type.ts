@@ -1,12 +1,18 @@
 import { Dispatch, SetStateAction } from "react"
 
-export interface AuthType {
-    email: string
-    password: string
-    setLoading: Dispatch<SetStateAction<boolean>>
-}
-
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
 };
+
+export interface LoginFormType {
+    email: string;
+    password: string;
+}
+
+export interface RegisterFormType {
+    email: string;
+    password: string;
+    confirm_password:string;
+    nickName: string
+}
