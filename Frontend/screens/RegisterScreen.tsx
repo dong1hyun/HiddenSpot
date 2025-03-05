@@ -1,6 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { AuthStackParamList, RegisterFormType } from '../lib/type';
+import { AuthStackParamList, RegisterFormType, UserType } from '../lib/type';
 import { useState } from 'react';
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
@@ -10,15 +10,28 @@ import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import LoadingOverlay from '../components/atoms/Loading';
+import { useMutation } from '@tanstack/react-query';
+import { postData } from '../util/fetch';
 
+const user = {"app_metadata": {"provider": "email", "providers": ["email"]}, "aud": "authenticated", "created_at": "2025-03-04T12:21:45.822379Z", "email": "limd1238@gmail.com", "email_confirmed_at": "2025-03-04T12:21:45.832493296Z", "id": "7bf35d44-6e2d-4d6c-bcd8-60d1637b817d", "identities": [{"created_at": "2025-03-04T12:21:45.828315Z", "email": "limd1238@gmail.com", "id": "7bf35d44-6e2d-4d6c-bcd8-60d1637b817d", "identity_data": [Object], "identity_id": "79419f95-23a7-4a2a-8a54-2cf0ff162a3e", "last_sign_in_at": "2025-03-04T12:21:45.828260594Z", "provider": "email", "updated_at": "2025-03-04T12:21:45.828315Z", "user_id": "7bf35d44-6e2d-4d6c-bcd8-60d1637b817d"}], "is_anonymous": false, "last_sign_in_at": "2025-03-04T12:21:45.836110984Z", "phone": "", "role": "authenticated", "updated_at": "2025-03-04T12:21:45.838129Z", "user_metadata": {"email": "limd1238@gmail.com", "email_verified": true, "nickName": "dsfa", "phone_verified": false, "sub": "7bf35d44-6e2d-4d6c-bcd8-60d1637b817d"}}
+user.user_metadata.nickName
+user.email
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
     const { control, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormType>();
     const [loading, setLoading] = useState(false);
-    async function signUpWithEmail({ email, password, nickName }: RegisterFormType) {
+    const {mutate} = useMutation({
+        mutationFn: ({email, nickName}: UserType) => postData("http://10.0.2.2:5000/place", {email, nickName}), 
+        onError: (error) => {
+            console.error(error);
+        },
+        onSettled() {
+            setLoading(false);
+        },
+    });
+    async function signUpAndCreateUser({ email, password, nickName }: RegisterFormType) {
         setLoading(true);
         const {
-            data: { session },
             error,
         } = await supabase.auth.signUp({
             email: email,
@@ -29,13 +42,11 @@ export default function RegisterScreen() {
                 }
             }
         });
-
-        if (error) Alert.alert(error.message)
-        // else if (!session) Alert.alert('Please check your inbox for email verification!')
-        setLoading(false);
+        if (error) Alert.alert(error.message);
+        mutate({email, nickName});
     }
     const onSubmit: SubmitHandler<RegisterFormType> = (data) => {
-        signUpWithEmail({
+        signUpAndCreateUser({
             email: data.email,
             password: data.password,
             confirm_password: data.confirm_password,

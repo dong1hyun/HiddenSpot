@@ -16,3 +16,8 @@ export interface RegisterFormType {
     confirm_password:string;
     nickName: string
 }
+
+export interface UserType {
+    email: string;
+    nickName: string;
+}

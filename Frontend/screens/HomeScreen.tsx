@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../lib/supabase";
 
 const data = [
     {
@@ -42,6 +43,7 @@ export default function HomeScreen() {
     }, [])
     return (
         <View>
+            <Pressable onPress={() => supabase.auth.signOut()}><Text>로그아웃</Text></Pressable>
             <FlatList
                 data={data}
                 renderItem={({ item }) => (
