@@ -21,7 +21,7 @@ export default function RegisterScreen() {
     const { control, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormType>();
     const [loading, setLoading] = useState(false);
     const {mutate} = useMutation({
-        mutationFn: ({email, nickName}: UserType) => postData("http://10.0.2.2:5000/place", {email, nickName}), 
+        mutationFn: ({email, nickName}: UserType) => postData("http://10.0.2.2:5000/user", {email, nickName}), 
         onError: (error) => {
             console.error(error);
         },
