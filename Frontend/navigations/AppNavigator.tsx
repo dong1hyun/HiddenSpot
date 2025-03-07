@@ -1,17 +1,26 @@
-import { Pressable, SafeAreaView, StyleSheet, Text } from "react-native";
-import { supabase } from "../lib/supabase";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../screens/HomeScreen";
+import { StyleSheet } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MyPageScreen from "../screens/MyPageScreen";
+import HomeNavigator from "./HomeNavigator";
+import MapScreen from "../screens/MapScreen";
 
 export default function AppNavigator() {
-  async function signOut() {
-    const { error } = await supabase.auth.signOut()
-  }
-  const Stack = createStackNavigator();
+  const Tab = createBottomTabNavigator();
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen
+        options={{
+          headerShown: false
+        }}
+        name="HomeNavigator"
+        component={HomeNavigator}
+      />
+      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen
+        name="MyPage"
+        component={MyPageScreen}
+      />
+    </Tab.Navigator>
   )
 }
 

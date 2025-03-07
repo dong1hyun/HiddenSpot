@@ -24,7 +24,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sumgo2.hidden_spot"
+      "package": "com.sumgo2.hidden_spot",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCuS544qX7glyj-pBVqYiOsGnVFq7FNfhc"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

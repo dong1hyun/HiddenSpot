@@ -8,9 +8,9 @@ export default function HomeScreen() {
     const fetchData = async () => {
         const response = await getData('http://10.0.2.2:5000/place');
         return response;
-      };
+    };
 
-    const {data, error, isLoading} = useQuery({
+    const { data, error, isLoading } = useQuery({
         queryKey: ['places'],
         queryFn: fetchData
     })
