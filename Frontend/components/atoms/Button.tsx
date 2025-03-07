@@ -3,18 +3,20 @@ import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native
 
 interface Props {
     children: ReactNode;
-    isLoading?: boolean
-    onPress:  () => void;
+    isLoading?: boolean;
+    style?: object;
+    color?: string
+    onPress: () => void;
 }
 
-export default function Button({ children, onPress, isLoading }: Props) {
+export default function Button({ children, onPress, isLoading, style, color }: Props) {
     return (
-        <Pressable 
-        disabled={isLoading}
-        style={styles.button}
-        onPress={onPress} 
+        <Pressable
+            disabled={isLoading}
+            style={[styles.button, style]}
+            onPress={onPress}
         >
-            <Text style={styles.text}>
+            <Text style={[styles.text, {color}]}>
                 {children}
             </Text>
         </Pressable>
@@ -24,11 +26,13 @@ export default function Button({ children, onPress, isLoading }: Props) {
 const styles = StyleSheet.create({
     button: {
         padding: 5,
-        backgroundColor: 'blue',
-        borderRadius: 12
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: "black",
     },
     text: {
-        color: 'white',
-        textAlign: 'center'
+        color: 'black',
+        textAlign: 'center',
+        fontWeight: "bold"
     }
 });

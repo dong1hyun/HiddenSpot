@@ -16,7 +16,7 @@ export default function HomeScreen() {
     })
 
     useEffect(() => {
-        fetchData();
+        // fetchData();
     }, [])
     return (
         <View>

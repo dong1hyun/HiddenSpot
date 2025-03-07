@@ -15,7 +15,13 @@ export default function AppNavigator() {
         name="HomeNavigator"
         component={HomeNavigator}
       />
-      <Tab.Screen name="Map" component={MapNavigator} />
+      <Tab.Screen
+        options={{
+          headerShown: false
+        }}
+        name="Map"
+        component={MapNavigator}
+      />
       <Tab.Screen
         name="MyPage"
         component={MyPageScreen}
