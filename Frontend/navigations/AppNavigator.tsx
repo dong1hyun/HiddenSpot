@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyPageScreen from "../screens/MyPageScreen";
 import HomeNavigator from "./HomeNavigator";
-import MapScreen from "../screens/MapScreen";
+import MapNavigator from "./MapNavigator";
 
 export default function AppNavigator() {
   const Tab = createBottomTabNavigator();
@@ -15,7 +15,7 @@ export default function AppNavigator() {
         name="HomeNavigator"
         component={HomeNavigator}
       />
-      <Tab.Screen name="Map" component={MapScreen} />
+      <Tab.Screen name="Map" component={MapNavigator} />
       <Tab.Screen
         name="MyPage"
         component={MyPageScreen}
