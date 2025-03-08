@@ -1,9 +1,15 @@
-import { Dispatch, SetStateAction } from "react"
-
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
 };
+
+export type MapStackParamList = {
+    Map: undefined;
+    AddPlace: {
+        latitude: number;
+        longitude: number;
+    };
+}
 
 export interface LoginFormType {
     email: string;

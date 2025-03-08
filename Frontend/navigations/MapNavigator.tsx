@@ -7,8 +7,20 @@ export default function MapNavigator() {
 
     return (
         <Stack.Navigator>
-            <Stack.Screen name="map" component={MapScreen} />
-            <Stack.Screen name="addPlace" component={AddPlaceScreen} />
+            <Stack.Screen
+                name="Map"
+                component={MapScreen}
+                options={{
+                    title: "지도"
+                }}
+            />
+            <Stack.Screen
+                name="AddPlace"
+                component={AddPlaceScreen}
+                options={{
+                    title: "숨겨왔던 나의..."
+                }}
+            />
         </Stack.Navigator>
     );
 }

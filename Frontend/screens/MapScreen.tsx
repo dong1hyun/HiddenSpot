@@ -6,12 +6,22 @@ import 'react-native-get-random-values';
 import Button from "../components/atoms/Button";
 import { Text } from "react-native";
 import ModalContainer from "../components/templates/ModalContainer";
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MapStackParamList } from "../lib/type";
+import ScreenContainer from "../components/templates/ScreenContainer";
 
-export default function MapScreen() {
+type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>;
+
+type MapScreenProps = {
+  navigation: MapScreenNavigationProp;
+};
+
+export default function MapScreen({navigation}: MapScreenProps) {
     const [location, setLocation] = useState({
         latitude: 37.5665,
         longitude: 126.9780, // 기본 위치 (서울)
     });
+
     const [query, setQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const mapRef = useRef<MapView>(null);
@@ -51,8 +61,12 @@ export default function MapScreen() {
         setLocation({ latitude, longitude });
     };
 
+    const onAddPress = () => {
+        navigation.navigate("AddPlace", location);
+        setModalVisible(false);
+    }
     return (
-        <View style={{ flex: 1 }}>
+        <ScreenContainer>
             <TextInput
                 placeholder="장소를 검색하세요"
                 onChangeText={setQuery}
@@ -80,12 +94,12 @@ export default function MapScreen() {
                 <>
                     <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
                     <View style={styles.modalButtons}>
-                        <Button style={{ width: 90, borderColor: "#20bf6b" }} color="#20bf6b" onPress={() => { }}>소개하기</Button>
+                        <Button style={{ width: 90}} onPress={onAddPress}>소개하기</Button>
                         <Button style={{ width: 90, borderColor: "red" }} color="red" onPress={() => setModalVisible(false)}>닫기</Button>
                     </View>
                 </>
             </ModalContainer>
-        </View>
+        </ScreenContainer>
     );
 }
 

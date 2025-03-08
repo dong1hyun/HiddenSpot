@@ -19,7 +19,7 @@ export default function AppNavigator() {
         options={{
           headerShown: false
         }}
-        name="Map"
+        name="MapNavigator"
         component={MapNavigator}
       />
       <Tab.Screen
