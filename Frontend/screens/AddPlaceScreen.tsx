@@ -12,7 +12,6 @@ const { width, height } = Dimensions.get('window');
 
 export default function AddPlaceScreen({ route }: { route: AddPlaceScreenRouteProp }) {
     const location = route.params;
-    const [address, setAddress] = useState("");
 
     useEffect(() => {
         Geocoder.init(GOOGLE_MAPS_API_KEY, {
@@ -20,24 +19,7 @@ export default function AddPlaceScreen({ route }: { route: AddPlaceScreenRoutePr
         });
     }, []);
 
-    const getAddress = async () => {
-        try {
-            const response = await Geocoder.from({
-                latitude: location.latitude,
-                longitude: location.longitude
-            });
-            
-            const address = response?.results[0]?.formatted_address;
-            if(address) setAddress(address);
-        }
-        catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        getAddress();
-    }, []);
+    
     return (
         <ScreenContainer>
             <View style={styles.mapContainer}>
@@ -55,7 +37,6 @@ export default function AddPlaceScreen({ route }: { route: AddPlaceScreenRoutePr
                     />
                 </MapView>
             </View>
-            <Text>{address}</Text>
         </ScreenContainer>
     );
 };

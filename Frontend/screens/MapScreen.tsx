@@ -1,5 +1,5 @@
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import MapView, { MapPressEvent, Marker } from "react-native-maps";
 import 'react-native-get-random-values';
@@ -9,14 +9,16 @@ import ModalContainer from "../components/templates/ModalContainer";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStackParamList } from "../lib/type";
 import ScreenContainer from "../components/templates/ScreenContainer";
+import Geocoder from "react-native-geocoding";
+import { fetchPlace, getAddress, getNearPlace } from "../util/map";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>;
 
 type MapScreenProps = {
-  navigation: MapScreenNavigationProp;
+    navigation: MapScreenNavigationProp;
 };
 
-export default function MapScreen({navigation}: MapScreenProps) {
+export default function MapScreen({ navigation }: MapScreenProps) {
     const [location, setLocation] = useState({
         latitude: 37.5665,
         longitude: 126.9780, // 기본 위치 (서울)
@@ -24,28 +26,27 @@ export default function MapScreen({navigation}: MapScreenProps) {
 
     const [query, setQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [address, setAddress] = useState("");
     const mapRef = useRef<MapView>(null);
 
-    const fetchPlaces = async () => {
-        const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`;
+    useEffect(() => {
+        Geocoder.init(GOOGLE_MAPS_API_KEY, {
+            language: "ko"
+        });
+    }, []);
 
+    const getPlaceData = async () => {
         try {
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data?.results?.length > 0) {
-                const place = data.results[0];
-                console.log(place)
-                const newLocation = {
-                    latitude: place.geometry.location.lat,
-                    longitude: place.geometry.location.lng,
-                };
-
+            const newLocation = await fetchPlace(query);
+            if (newLocation) {
                 setLocation(newLocation);
                 mapRef?.current?.animateToRegion({
                     ...newLocation,
                     latitudeDelta: 0.05,
                     longitudeDelta: 0.05,
                 });
+                const address = await getAddress(newLocation);
+                if (address) setAddress(address);
             }
         } catch (error) {
             console.error("Error fetching places:", error);
@@ -65,13 +66,18 @@ export default function MapScreen({navigation}: MapScreenProps) {
         navigation.navigate("AddPlace", location);
         setModalVisible(false);
     }
+
+    useEffect(() => {
+        getNearPlace(location);
+    }, [location]);
+
     return (
         <ScreenContainer>
             <TextInput
                 placeholder="장소를 검색하세요"
                 onChangeText={setQuery}
                 value={query}
-                onSubmitEditing={fetchPlaces}
+                onSubmitEditing={getPlaceData}
             />
             <MapView
                 ref={mapRef}
@@ -94,19 +100,19 @@ export default function MapScreen({navigation}: MapScreenProps) {
                 <>
                     <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
                     <View style={styles.modalButtons}>
-                        <Button style={{ width: 90}} onPress={onAddPress}>소개하기</Button>
+                        <Button style={{ width: 90 }} onPress={onAddPress}>소개하기</Button>
                         <Button style={{ width: 90, borderColor: "red" }} color="red" onPress={() => setModalVisible(false)}>닫기</Button>
                     </View>
                 </>
             </ModalContainer>
         </ScreenContainer>
-    );
+    );  
 }
 
 
 const styles = StyleSheet.create({
     searchBar: {
-        
+
     },
     container: {
         flex: 1,

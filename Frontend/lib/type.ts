@@ -3,12 +3,15 @@ export type AuthStackParamList = {
     Register: undefined;
 };
 
+export interface LocationType {
+    latitude: number;
+    longitude: number;
+}
+
+
 export type MapStackParamList = {
     Map: undefined;
-    AddPlace: {
-        latitude: number;
-        longitude: number;
-    };
+    AddPlace: LocationType;
 }
 
 export interface LoginFormType {
@@ -19,7 +22,7 @@ export interface LoginFormType {
 export interface RegisterFormType {
     email: string;
     password: string;
-    confirm_password:string;
+    confirm_password: string;
     nickName: string
 }
 
