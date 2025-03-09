@@ -5,11 +5,11 @@ import Button from '../components/atoms/Button';
 import { AuthStackParamList, LoginFormType } from '../lib/type';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import LoadingOverlay from '../components/atoms/Loading';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export default function LoginScreen() {
   const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();

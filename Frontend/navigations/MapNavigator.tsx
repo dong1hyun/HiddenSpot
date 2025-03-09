@@ -1,9 +1,10 @@
-import { createStackNavigator } from "@react-navigation/stack";
 import MapScreen from "../screens/MapScreen";
 import AddPlaceScreen from "../screens/AddPlaceScreen";
+import { MapStackParamList } from "../lib/type";
+import { createStackNavigator } from "@react-navigation/stack";
 
 export default function MapNavigator() {
-    const Stack = createStackNavigator();
+    const Stack = createStackNavigator<MapStackParamList>();
 
     return (
         <Stack.Navigator>

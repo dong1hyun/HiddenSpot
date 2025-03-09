@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { getData } from "../util/fetch";
+import BottomSlider from "../components/organisms/BottomSlider";
 
 export default function HomeScreen() {
     const fetchData = async () => {
@@ -10,16 +11,14 @@ export default function HomeScreen() {
         return response;
     };
 
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['places'],
-        queryFn: fetchData
-    })
+    // const { data, error, isLoading } = useQuery({
+    //     queryKey: ['places'],
+    //     queryFn: fetchData
+    // })
 
-    useEffect(() => {
-        // fetchData();
-    }, [])
+    const data:any = []
     return (
-        <View>
+        <View style={styles.container}>
             <Pressable onPress={() => supabase.auth.signOut()}><Text>로그아웃</Text></Pressable>
             <FlatList
                 data={data}
@@ -37,6 +36,9 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     image: {
         width: 50,
         height: 50

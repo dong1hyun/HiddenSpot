@@ -6,11 +6,13 @@ import 'react-native-get-random-values';
 import Button from "../components/atoms/Button";
 import { Text } from "react-native";
 import ModalContainer from "../components/templates/ModalContainer";
-import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStackParamList } from "../lib/type";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { fetchPlace, getAddress, getNearPlace } from "../util/map";
+import Map from "../components/organisms/Map";
+import { StackNavigationProp } from "@react-navigation/stack";
+import BottomSlider from "../components/organisms/BottomSlider";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>;
 
@@ -79,23 +81,7 @@ export default function MapScreen({ navigation }: MapScreenProps) {
                 value={query}
                 onSubmitEditing={getPlaceData}
             />
-            <MapView
-                ref={mapRef}
-                style={{ flex: 1 }}
-                initialRegion={{
-                    latitude: 37.5665,
-                    longitude: 126.9780,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                }}
-                onPress={onMapPress}
-            >
-                <Marker
-                    coordinate={location}
-                    title="선택된 장소"
-                    onPress={onMarkerPress}
-                />
-            </MapView>
+            <Map location={location} mapRef={mapRef} onMapPress={onMapPress} onMarkerPress={onMarkerPress} />
             <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
                 <>
                     <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
@@ -105,6 +91,7 @@ export default function MapScreen({ navigation }: MapScreenProps) {
                     </View>
                 </>
             </ModalContainer>
+            <BottomSlider />
         </ScreenContainer>
     );  
 }

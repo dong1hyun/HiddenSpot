@@ -8,7 +8,6 @@ export interface LocationType {
     longitude: number;
 }
 
-
 export type MapStackParamList = {
     Map: undefined;
     AddPlace: LocationType;

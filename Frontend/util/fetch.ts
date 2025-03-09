@@ -12,7 +12,7 @@ export async function postData(url: string, data: object) {
         }
         return response.json();
     } catch(error) {
-        console.error(error);
+        console.error("postData에러:", error);
         throw error;
     }
 };
@@ -27,7 +27,7 @@ export async function getData(url: string) {
         const data = await response.json();
         return data;
     } catch(error) {
-        console.error(error);
+        console.error("getData 에러:", error);
         throw error;
     }
 };

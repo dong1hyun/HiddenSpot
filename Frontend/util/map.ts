@@ -17,7 +17,7 @@ export const fetchPlace = async (query: string) => {
             return newLocation;
         }
     } catch (error) {
-        console.error("Error fetching places:", error);
+        console.error("장소 검색 에러:", error);
     }
 };
 
@@ -32,7 +32,7 @@ export const getAddress = async (location: LocationType) => {
         return address;
     }
     catch (error) {
-        console.error(error);
+        console.error("좌표를 주소로 변환중 에러:", error);
     }
 };
 
@@ -62,6 +62,6 @@ export const getNearPlace = async (location: LocationType) => {
         console.log("주변장소:", data.places.map((place:any) => place.displayName));
         
     } catch (error) {
-        console.error(error);
+        console.error("주변 장소 추천 에러:", error);
     }
 }

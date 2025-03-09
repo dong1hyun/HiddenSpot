@@ -5,12 +5,14 @@ import MapView, { Marker } from "react-native-maps";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
 
-type AddPlaceScreenRouteProp = RouteProp<MapStackParamList, "AddPlace">
+
 const { width, height } = Dimensions.get('window');
+type Props = StackScreenProps<MapStackParamList, "AddPlace">
 
-export default function AddPlaceScreen({ route }: { route: AddPlaceScreenRouteProp }) {
+export default function AddPlaceScreen({ route }: Props) {
     const location = route.params;
 
     useEffect(() => {
