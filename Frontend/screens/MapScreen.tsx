@@ -12,6 +12,7 @@ import { fetchPlace, getAddress, getNearbyPlace } from "../util/map";
 import Map from "../components/organisms/Map";
 import { StackNavigationProp } from "@react-navigation/stack";
 import BottomSlider from "../components/organisms/BottomSlider";
+import MapProvider from "../context/MapContext";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>;
 
@@ -20,14 +21,6 @@ type MapScreenProps = {
 };
 
 export default function MapScreen({ navigation }: MapScreenProps) {
-    const [location, setLocation] = useState({
-        latitude: 37.5665,
-        longitude: 126.9780, // 기본 위치 (서울)
-    });
-
-    const [query, setQuery] = useState("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [address, setAddress] = useState("");
     const mapRef = useRef<MapView>(null);
 
     useEffect(() => {
@@ -36,53 +29,28 @@ export default function MapScreen({ navigation }: MapScreenProps) {
         });
     }, []);
 
-    const getPlaceData = async () => {
-        try {
-            const newLocation = await fetchPlace(query);
-            if (newLocation) {
-                setLocation(newLocation);
-                mapRef?.current?.animateToRegion({
-                    ...newLocation,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                });
-                const address = await getAddress(newLocation);
-                if (address) setAddress(address);
-            }
-        } catch (error) {
-            console.error("Error fetching places:", error);
-        }
-    };
-
-    const onMarkerPress = () => {
-        setModalVisible(true)
-    }
-
-    const onMapPress = (e: MapPressEvent) => {
-        const { latitude, longitude } = e.nativeEvent.coordinate;
-        setLocation({ latitude, longitude });
-    };
-
-    const onAddPress = () => {
-        navigation.navigate("AddPlace", location);
-        setModalVisible(false);
-    }
+    // const onAddPress = () => {
+    //     navigation.navigate("AddPlace", location);
+    //     setModalVisible(false);
+    // }
 
     return (
-        <View style={styles.container}>
-            <Map location={location} mapRef={mapRef} onMapPress={onMapPress} onMarkerPress={onMarkerPress} />
-            <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
-                <>
-                    <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
-                    <View style={styles.modalButtons}>
-                        <Button style={{ width: 90 }} onPress={onAddPress}>소개하기</Button>
-                        <Button style={{ width: 90, borderColor: "red" }} color="red" onPress={() => setModalVisible(false)}>닫기</Button>
-                    </View>
-                </>
-            </ModalContainer>
-            <BottomSlider query={query} setQuery={setQuery} getPlaceData={getPlaceData} location={location}  />
-        </View  >
-    );  
+        <MapProvider>
+            <View style={styles.container}>
+                <Map mapRef={mapRef} />
+                {/* <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
+                    <>
+                        <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
+                        <View style={styles.modalButtons}>
+                            <Button style={{ width: 90 }} onPress={onAddPress}>소개하기</Button>
+                            <Button style={{ width: 90, borderColor: "red" }} color="red" onPress={() => setModalVisible(false)}>닫기</Button>
+                        </View>
+                    </>
+                </ModalContainer> */}
+                <BottomSlider mapRef={mapRef} />
+            </View  >
+        </MapProvider>
+    );
 }
 
 

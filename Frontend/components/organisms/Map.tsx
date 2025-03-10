@@ -1,13 +1,8 @@
-import MapView, { MapPressEvent, Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
+import { useMapContext } from "../../context/MapContext";
 
-interface Props {
-    location: { latitude: number; longitude: number };
-    onMapPress: (e: MapPressEvent) => void;
-    onMarkerPress: () => void;
-    mapRef: React.RefObject<MapView>;
-};
-
-export default function Map({ onMapPress, location, onMarkerPress, mapRef }: Props) {
+export default function Map({ mapRef }: {mapRef: React.RefObject<MapView>}) {
+    const {onMapPress, location, onMarkerPress} = useMapContext();
     return (
         <MapView
             ref={mapRef}

@@ -81,7 +81,7 @@ const fetchPlaceData = async (places: NearbyPlaceResponseType[]):Promise<PlaceTy
 export const getNearbyPlace = async (location: LocationType) => {
     const params = {
         "includedTypes": ['tourist_attraction', 'restaurant', 'cafe'],
-        "maxResultCount": 1,
+        "maxResultCount": 3,
         "locationRestriction": {
             "circle": {
                 "center": location,
@@ -110,6 +110,3 @@ export const getNearbyPlace = async (location: LocationType) => {
         console.error("주변 장소 추천 에러:", error);
     }
 }
-
-
-// https://places.googleapis.com/v1/places/ChIJ2fzCmcW7j4AR2JzfXBBoh6E/photos/AUacShh3_Dd8yvV2JZMtNjjbbSbFhSv-0VmUN-uasQ2Oj00XB63irPTks0-A_1rMNfdTunoOVZfVOExRRBNrupUf8TY4Kw5iQNQgf2rwcaM8hXNQg7KDyvMR5B-HzoCE1mwy2ba9yxvmtiJrdV-xBgO8c5iJL65BCd0slyI1/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBURs3LfQYP3tvm8wHb0VBqjTkmNd9EBXw

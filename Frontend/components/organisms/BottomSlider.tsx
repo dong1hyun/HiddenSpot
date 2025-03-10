@@ -3,18 +3,32 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { LocationType, PlaceType } from "../../lib/type";
-import { getNearbyPlace } from "../../util/map";
+import { fetchPlace, getAddress, getNearbyPlace } from "../../util/map";
 import { FlatList } from "react-native-gesture-handler";
 import NearbyPlaceItem from "../molecules/NearbyPlaceItem";
+import MapView from "react-native-maps";
+import { useMapContext } from "../../context/MapContext";
 
-interface Props {
-  query: string;
-  setQuery: Dispatch<SetStateAction<string>>;
-  getPlaceData: () => void;
-  location: LocationType
-}
+export default function BottomSlider({ mapRef }: {mapRef: React.RefObject<MapView>}) {
+  const {query, setQuery, location, setLocation, setAddress} = useMapContext();
+  const getPlaceData = async () => {
+    try {
+      const newLocation = await fetchPlace(query);
+      if (newLocation) {
+        setLocation(newLocation);
+        mapRef?.current?.animateToRegion({
+          ...newLocation,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
+        const address = await getAddress(newLocation);
+        if (address) setAddress(address);
+      }
+    } catch (error) {
+      console.error("Error fetching places:", error);
+    }
+  };
 
-export default function BottomSlider({ query, setQuery, getPlaceData, location }: Props) {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
