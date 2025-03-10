@@ -1,5 +1,6 @@
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { LocationType } from "../lib/type";
+import { LocationType, NearbyPlaceResponseType, PlaceType } from "../lib/type";
+import Geocoder from "react-native-geocoding";
 
 export const fetchPlace = async (query: string) => {
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`;
@@ -36,14 +37,55 @@ export const getAddress = async (location: LocationType) => {
     }
 };
 
-export const getNearPlace = async (location: LocationType) => {
+const fetchPhotoUrl = async (name: string) => {
+    const url = `https://places.googleapis.com/v1/${name}/media?key=${GOOGLE_MAPS_API_KEY}&maxHeightPx=400&maxWidthPx=400`;
+    try {
+        const response = await fetch(url);
+        if(!response.ok) {
+            throw new Error("이미지 fetch에 실패했습니다.");
+        }
+        return response.url;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+const fetchPlaceData = async (places: NearbyPlaceResponseType[]):Promise<PlaceType[] | undefined> => {
+    try {
+        const request = places.map((place: NearbyPlaceResponseType) => {
+            const firstPhoto = place?.photos[0]?.name;
+            if (firstPhoto) {
+                return fetchPhotoUrl(firstPhoto)
+                    .then((photoUrl) => ({
+                        placeName: place.displayName.text,
+                        photoUrl,
+                        location: place.location
+                        
+                    }))
+            } else {
+                return Promise.resolve({
+                    placeName: place.displayName.text,
+                    photoUrl: null,
+                    location: place.location
+                });
+            }
+        });
+        const result = await Promise.all(request);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getNearbyPlace = async (location: LocationType) => {
     const params = {
-        "includedTypes": ["restaurant"],
-        "maxResultCount": 10,
+        "includedTypes": ['tourist_attraction', 'restaurant', 'cafe'],
+        "maxResultCount": 1,
         "locationRestriction": {
             "circle": {
                 "center": location,
-                "radius": 500.0
+                "radius": 100
             }
         }
     };
@@ -54,14 +96,20 @@ export const getNearPlace = async (location: LocationType) => {
             headers: {
                 "Content-Type": "application/json",
                 "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
-                "X-Goog-FieldMask": "places.displayName",
+                "X-Goog-FieldMask": "places.displayName,places.photos,places.location",
                 "Accept-Language": "ko"
             }
         });
         const data = await response.json();
-        console.log("주변장소:", data.places.map((place:any) => place.displayName));
-        
+        // console.log("주변장소:", data.places.map((place:any) => place.photos.name));
+        // console.log(data.places[0].photos);
+        // console.log(data.places)
+        const places = await fetchPlaceData(data.places);
+        return places;
     } catch (error) {
         console.error("주변 장소 추천 에러:", error);
     }
 }
+
+
+// https://places.googleapis.com/v1/places/ChIJ2fzCmcW7j4AR2JzfXBBoh6E/photos/AUacShh3_Dd8yvV2JZMtNjjbbSbFhSv-0VmUN-uasQ2Oj00XB63irPTks0-A_1rMNfdTunoOVZfVOExRRBNrupUf8TY4Kw5iQNQgf2rwcaM8hXNQg7KDyvMR5B-HzoCE1mwy2ba9yxvmtiJrdV-xBgO8c5iJL65BCd0slyI1/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBURs3LfQYP3tvm8wHb0VBqjTkmNd9EBXw

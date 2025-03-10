@@ -7,9 +7,8 @@ import Button from "../components/atoms/Button";
 import { Text } from "react-native";
 import ModalContainer from "../components/templates/ModalContainer";
 import { MapStackParamList } from "../lib/type";
-import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
-import { fetchPlace, getAddress, getNearPlace } from "../util/map";
+import { fetchPlace, getAddress, getNearbyPlace } from "../util/map";
 import Map from "../components/organisms/Map";
 import { StackNavigationProp } from "@react-navigation/stack";
 import BottomSlider from "../components/organisms/BottomSlider";
@@ -69,18 +68,8 @@ export default function MapScreen({ navigation }: MapScreenProps) {
         setModalVisible(false);
     }
 
-    useEffect(() => {
-        getNearPlace(location);
-    }, [location]);
-
     return (
-        <ScreenContainer>
-            <TextInput
-                placeholder="장소를 검색하세요"
-                onChangeText={setQuery}
-                value={query}
-                onSubmitEditing={getPlaceData}
-            />
+        <View style={styles.container}>
             <Map location={location} mapRef={mapRef} onMapPress={onMapPress} onMarkerPress={onMarkerPress} />
             <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
                 <>
@@ -91,16 +80,13 @@ export default function MapScreen({ navigation }: MapScreenProps) {
                     </View>
                 </>
             </ModalContainer>
-            <BottomSlider />
-        </ScreenContainer>
+            <BottomSlider query={query} setQuery={setQuery} getPlaceData={getPlaceData} location={location}  />
+        </View  >
     );  
 }
 
 
 const styles = StyleSheet.create({
-    searchBar: {
-
-    },
     container: {
         flex: 1,
     },

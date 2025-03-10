@@ -29,3 +29,21 @@ export interface UserType {
     email: string;
     nickName: string;
 }
+
+type photo = {
+    name: string
+}
+
+export interface NearbyPlaceResponseType {
+    displayName: {
+        text: string
+    },
+    photos: photo[],
+    location: LocationType
+}
+
+export interface PlaceType {
+    placeName: string;
+    photoUrl: string | null;
+    location: LocationType
+}
