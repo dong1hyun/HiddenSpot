@@ -12,12 +12,12 @@ const ScreenContainer = ({ children }: {children: ReactNode}) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white", // 배경색 유지
+    backgroundColor: "white",
   },
   container: {
     flex: 1,
-    paddingHorizontal: 20, // 좌우 여백 설정
-    paddingVertical: 10, // 상하 여백 설정
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
 });
 

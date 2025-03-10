@@ -37,13 +37,15 @@ type photo = {
 export interface NearbyPlaceResponseType {
     displayName: {
         text: string
-    },
-    photos: photo[],
+    }
+    photos: photo[]
     location: LocationType
+    formattedAddress: string
 }
 
 export interface PlaceType {
     placeName: string;
     photoUrl: string | null;
-    location: LocationType
+    formattedAddress: string;
+    location: LocationType;
 }

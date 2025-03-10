@@ -37,11 +37,12 @@ export const getAddress = async (location: LocationType) => {
     }
 };
 
-const fetchPhotoUrl = async (name: string) => {
+const fetchPhotoUrl = async (name: string | undefined) => {
+    if (!name) return null;
     const url = `https://places.googleapis.com/v1/${name}/media?key=${GOOGLE_MAPS_API_KEY}&maxHeightPx=400&maxWidthPx=400`;
     try {
         const response = await fetch(url);
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error("이미지 fetch에 실패했습니다.");
         }
         return response.url;
@@ -51,30 +52,23 @@ const fetchPhotoUrl = async (name: string) => {
     }
 };
 
-const fetchPlaceData = async (places: NearbyPlaceResponseType[]):Promise<PlaceType[] | undefined> => {
+const fetchPlaceData = async (places: NearbyPlaceResponseType[]): Promise<PlaceType[] | undefined> => {
     try {
         const request = places.map((place: NearbyPlaceResponseType) => {
-            const firstPhoto = place?.photos[0]?.name;
-            if (firstPhoto) {
-                return fetchPhotoUrl(firstPhoto)
-                    .then((photoUrl) => ({
-                        placeName: place.displayName.text,
-                        photoUrl,
-                        location: place.location
-                        
-                    }))
-            } else {
-                return Promise.resolve({
-                    placeName: place.displayName.text,
-                    photoUrl: null,
-                    location: place.location
-                });
-            }
+            const firstPhoto = place?.photos ? place.photos[0].name : undefined;
+            return fetchPhotoUrl(firstPhoto)
+                .then((photoUrl) => {
+                    return ({
+                    placeName: place?.displayName?.text,
+                    photoUrl,
+                    location: place?.location,
+                    formattedAddress: place?.formattedAddress
+                })});
         });
         const result = await Promise.all(request);
         return result;
     } catch (error) {
-        console.error(error);
+        console.error("장소 데이터 fetch에 실패했습니다.", error);
     }
 }
 
@@ -85,7 +79,7 @@ export const getNearbyPlace = async (location: LocationType) => {
         "locationRestriction": {
             "circle": {
                 "center": location,
-                "radius": 100
+                "radius": 200
             }
         }
     };
@@ -96,16 +90,16 @@ export const getNearbyPlace = async (location: LocationType) => {
             headers: {
                 "Content-Type": "application/json",
                 "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
-                "X-Goog-FieldMask": "places.displayName,places.photos,places.location",
+                "X-Goog-FieldMask": "places.displayName,places.photos,places.location,places.formattedAddress",
                 "Accept-Language": "ko"
             }
         });
         const data = await response.json();
-        // console.log("주변장소:", data.places.map((place:any) => place.photos.name));
-        // console.log(data.places[0].photos);
-        // console.log(data.places)
-        const places = await fetchPlaceData(data.places);
-        return places;
+        if (data?.places) {
+            console.log(data?.places)
+            const places = await fetchPlaceData(data.places);
+            return places;
+        }
     } catch (error) {
         console.error("주변 장소 추천 에러:", error);
     }

@@ -1,16 +1,16 @@
 import "react-native-reanimated";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { LocationType, PlaceType } from "../../lib/type";
+import { useCallback, useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { PlaceType } from "../../lib/type";
 import { fetchPlace, getAddress, getNearbyPlace } from "../../util/map";
 import { FlatList } from "react-native-gesture-handler";
 import NearbyPlaceItem from "../molecules/NearbyPlaceItem";
 import MapView from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 
-export default function BottomSlider({ mapRef }: {mapRef: React.RefObject<MapView>}) {
-  const {query, setQuery, location, setLocation, setAddress} = useMapContext();
+export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapView> }) {
+  const { query, setQuery, location, setLocation, setAddress } = useMapContext();
   const getPlaceData = async () => {
     try {
       const newLocation = await fetchPlace(query);
@@ -37,13 +37,13 @@ export default function BottomSlider({ mapRef }: {mapRef: React.RefObject<MapVie
   useEffect(() => {
     getNearbyPlace(location)
       .then((result) => {
-        console.log(result);
         setPlaces(result);
       })
   }, [location]);
 
   return (
     <BottomSheet
+      style={styles.container}
       snapPoints={["25%", "50%", "80%"]}
       onChange={handleSheetChanges}
     >
@@ -55,24 +55,37 @@ export default function BottomSlider({ mapRef }: {mapRef: React.RefObject<MapVie
           value={query}
           onSubmitEditing={getPlaceData}
         />
-        <FlatList
+        {places ? <FlatList
           contentContainerStyle={styles.scrollContainer}
           data={places}
           keyExtractor={((item) => item.placeName)}
           renderItem={(itemData) => (
-            <NearbyPlaceItem photoUrl={itemData.item.photoUrl} placeName={itemData.item.placeName} location={itemData.item.location} />
+            <NearbyPlaceItem
+              photoUrl={itemData.item.photoUrl}
+              placeName={itemData.item.placeName}
+              location={itemData.item.location}
+              formattedAddress={itemData.item.formattedAddress}
+            />
           )}
         >
-        </FlatList>
+        </FlatList> :
+          <Text></Text>
+        }
       </BottomSheetView>
     </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   contentContainer: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#ecf0f1",
+    borderRadius: 16,
+    margin: 20,
   },
   input: {
     width: "100%",
