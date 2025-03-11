@@ -1,19 +1,33 @@
-import { Image, Pressable } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
 import { StyleSheet } from "react-native"
-import { LocationType, PlaceType } from "../../lib/type";
+import { PlaceType } from "../../lib/type";
 import { useMapContext } from "../../context/MapContext";
+import MapView from "react-native-maps";
 
-export default function NearbyPlaceItem({ photoUrl, placeName, location, formattedAddress }: PlaceType) {
+interface RefType {
+    mapRef:  React.RefObject<MapView>
+}
+
+export default function NearbyPlaceItem({ photoUrl, placeName, location, formattedAddress, mapRef }: PlaceType & RefType) {
+    const onPlacePress = () => {
+        setLocation(location);
+        mapRef?.current?.animateToRegion({
+            ...location,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          });
+
+    }
     const { setLocation } = useMapContext();
     return (
-        <Pressable onPress={() => setLocation(location)} style={styles.container}>
+        <TouchableOpacity onPress={onPlacePress} style={styles.container}>
             <Image style={styles.image} source={photoUrl ? { uri: photoUrl } : require("../../assets/alt.jpg")} />
             <View>
                 <Text>{placeName}</Text>
-                <Text>{formattedAddress}</Text>
+                <Text style={styles.address}>{formattedAddress}</Text>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     )
 }
 
@@ -30,5 +44,11 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 16
+    },
+    title: {
+
+    },
+    address: {
+        fontSize: 12
     }
 });

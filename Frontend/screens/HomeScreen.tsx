@@ -1,11 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { getData } from "../util/fetch";
-import BottomSlider from "../components/organisms/BottomSlider";
+import AntDesign from "react-native-vector-icons/AntDesign"
+import { StackNavigationProp } from "@react-navigation/stack";
+import { HomeStackParamList, RootStackParamList } from "../lib/type";
 
-export default function HomeScreen() {
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
+interface Props {
+    navigation: HomeScreenNavigationProp;
+}
+
+export default function HomeScreen({navigation}: Props) {
     const fetchData = async () => {
         const response = await getData('http://10.0.2.2:5000/place');
         return response;
@@ -31,6 +38,9 @@ export default function HomeScreen() {
                     </View>
                 )}
             />
+            <TouchableOpacity onPress={() => navigation.navigate("MapNavigator", {screen: "AddPlace"})}>
+                <AntDesign style={styles.plusIcon} name="pluscircleo" />
+            </TouchableOpacity>
         </View>
     )
 }
@@ -42,5 +52,11 @@ const styles = StyleSheet.create({
     image: {
         width: 50,
         height: 50
+    },
+    plusIcon: {
+        position: "absolute",
+        right: 10,
+        bottom: 10,
+        fontSize: 36
     }
 });

@@ -1,16 +1,30 @@
+// NavigationType
+
+import { NavigatorScreenParams } from "@react-navigation/native";
+
+export type RootStackParamList = {
+    HomeNavigator: NavigatorScreenParams<HomeStackParamList>,
+    MapNavigator: NavigatorScreenParams<MapStackParamList>,
+}
+
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
 };
 
+export type MapStackParamList = {
+    Map: undefined;
+    AddPlace: LocationType & {address: string};
+}
+
+export type HomeStackParamList = {
+    Home: undefined;
+}
+
+
 export interface LocationType {
     latitude: number;
     longitude: number;
-}
-
-export type MapStackParamList = {
-    Map: undefined;
-    AddPlace: LocationType;
 }
 
 export interface LoginFormType {

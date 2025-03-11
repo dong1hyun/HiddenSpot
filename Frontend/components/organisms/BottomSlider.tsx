@@ -1,48 +1,53 @@
 import "react-native-reanimated";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { PlaceType } from "../../lib/type";
-import { fetchPlace, getAddress, getNearbyPlace } from "../../util/map";
 import { FlatList } from "react-native-gesture-handler";
 import NearbyPlaceItem from "../molecules/NearbyPlaceItem";
 import MapView from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
+import { fetchSearchPlace } from "../../util/map";
 
 export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapView> }) {
   const { query, setQuery, location, setLocation, setAddress } = useMapContext();
-  const getPlaceData = async () => {
+  const [places, setPlaces] = useState<PlaceType[]>();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  
+  const getSearchPlaces = async () => {
     try {
-      const newLocation = await fetchPlace(query);
-      if (newLocation) {
-        setLocation(newLocation);
-        mapRef?.current?.animateToRegion({
-          ...newLocation,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        });
-        const address = await getAddress(newLocation);
-        if (address) setAddress(address);
-      }
-    } catch (error) {
-      console.error("Error fetching places:", error);
+      const places = await fetchSearchPlace(query);
+      if(places) setPlaces(places);
+    } catch(error) {
+      console.error(error);
     }
   };
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
-  const [places, setPlaces] = useState<PlaceType[]>();
+
+  const handleFocus = () => {
+    if (bottomSheetRef.current) {
+      bottomSheetRef.current.snapToIndex(2);
+    }
+  };
 
   useEffect(() => {
-    getNearbyPlace(location)
-      .then((result) => {
-        setPlaces(result);
-      })
-  }, [location]);
+    if (!query) {
+      setPlaces([]);
+      return;
+    }
 
+    const timeoutId = setTimeout(() => {
+      getSearchPlaces();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
   return (
     <BottomSheet
+      ref={bottomSheetRef}
       style={styles.container}
       snapPoints={["25%", "50%", "80%"]}
       onChange={handleSheetChanges}
@@ -53,14 +58,15 @@ export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapVi
           placeholder="장소를 검색하세요"
           onChangeText={setQuery}
           value={query}
-          onSubmitEditing={getPlaceData}
+          onPressIn={handleFocus}
         />
         {places ? <FlatList
           contentContainerStyle={styles.scrollContainer}
           data={places}
-          keyExtractor={((item) => item.placeName)}
+          keyExtractor={((_, index) => index.toString())}
           renderItem={(itemData) => (
             <NearbyPlaceItem
+              mapRef={mapRef}
               photoUrl={itemData.item.photoUrl}
               placeName={itemData.item.placeName}
               location={itemData.item.location}
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "#f5f5f5",
     borderRadius: 16,
     margin: 20,
   },
@@ -91,9 +97,11 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
+    borderColor: "#c1c1c1",
+    backgroundColor: "white",
+    borderRadius: 20,
     marginBottom: 10,
+    paddingHorizontal: 16
   },
   scrollContainer: {
     justifyContent: "flex-start",

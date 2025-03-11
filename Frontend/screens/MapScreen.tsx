@@ -3,16 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import MapView, { MapPressEvent, Marker } from "react-native-maps";
 import 'react-native-get-random-values';
-import Button from "../components/atoms/Button";
-import { Text } from "react-native";
-import ModalContainer from "../components/templates/ModalContainer";
 import { MapStackParamList } from "../lib/type";
 import Geocoder from "react-native-geocoding";
-import { fetchPlace, getAddress, getNearbyPlace } from "../util/map";
 import Map from "../components/organisms/Map";
 import { StackNavigationProp } from "@react-navigation/stack";
 import BottomSlider from "../components/organisms/BottomSlider";
-import MapProvider from "../context/MapContext";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, 'Map'>;
 
@@ -29,27 +24,11 @@ export default function MapScreen({ navigation }: MapScreenProps) {
         });
     }, []);
 
-    // const onAddPress = () => {
-    //     navigation.navigate("AddPlace", location);
-    //     setModalVisible(false);
-    // }
-
     return (
-        <MapProvider>
-            <View style={styles.container}>
-                <Map mapRef={mapRef} />
-                {/* <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
-                    <>
-                        <Text style={styles.modalTitle}>선택한 장소를 사람들에게 소개해보세요!</Text>
-                        <View style={styles.modalButtons}>
-                            <Button style={{ width: 90 }} onPress={onAddPress}>소개하기</Button>
-                            <Button style={{ width: 90, borderColor: "red" }} color="red" onPress={() => setModalVisible(false)}>닫기</Button>
-                        </View>
-                    </>
-                </ModalContainer> */}
-                <BottomSlider mapRef={mapRef} />
-            </View  >
-        </MapProvider>
+        <View style={styles.container}>
+            <Map mapRef={mapRef} />
+            <BottomSlider mapRef={mapRef} />
+        </View  >
     );
 }
 

@@ -5,8 +5,8 @@ import { LocationType } from "../lib/type";
 interface MapContextType {
     query: string;
     setQuery: Dispatch<SetStateAction<string>>;
-    location: LocationType;
-    setLocation: Dispatch<SetStateAction<LocationType>>;
+    location: LocationType | null;
+    setLocation: Dispatch<SetStateAction<LocationType | null>>;
     modalVisible: boolean;
     setModalVisible: Dispatch<SetStateAction<boolean>>;
     address: string;
@@ -18,10 +18,7 @@ interface MapContextType {
 const MapContext = createContext<MapContextType | undefined>(undefined);
 
 export default function MapProvider({ children }: { children: ReactNode }) {
-    const [location, setLocation] = useState({
-        latitude: 37.5665,
-        longitude: 126.9780, // 기본 위치 (서울)
-    });
+    const [location, setLocation] = useState<LocationType | null>(null);
 
     const [query, setQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);

@@ -2,20 +2,28 @@ import { GOOGLE_MAPS_API_KEY } from "@env";
 import { LocationType, NearbyPlaceResponseType, PlaceType } from "../lib/type";
 import Geocoder from "react-native-geocoding";
 
-export const fetchPlace = async (query: string) => {
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${GOOGLE_MAPS_API_KEY}`;
-
+export const fetchSearchPlace = async (query: string) => {
+    const url = `https://places.googleapis.com/v1/places:searchText`;
+    const params = {
+        "pageSize": 10,
+        "textQuery": query
+    }
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+                "X-Goog-FieldMask": "places.displayName,places.photos,places.location,places.formattedAddress",
+                "Accept-Language": "ko"
+            }
+        });
         const data = await response.json();
-        if (data?.results?.length > 0) {
-            const place = data.results[0];
-            const newLocation = {
-                latitude: place.geometry.location.lat,
-                longitude: place.geometry.location.lng,
-            };
-
-            return newLocation;
+        console.log(data.places);
+        if (data?.places?.length > 0) {
+            const places = await fetchPlaceData(data.places);
+            return places;
         }
     } catch (error) {
         console.error("장소 검색 에러:", error);
@@ -75,7 +83,7 @@ const fetchPlaceData = async (places: NearbyPlaceResponseType[]): Promise<PlaceT
 export const getNearbyPlace = async (location: LocationType) => {
     const params = {
         "includedTypes": ['tourist_attraction', 'restaurant', 'cafe'],
-        "maxResultCount": 3,
+        "maxResultCount": 10,
         "locationRestriction": {
             "circle": {
                 "center": location,
@@ -96,7 +104,7 @@ export const getNearbyPlace = async (location: LocationType) => {
         });
         const data = await response.json();
         if (data?.places) {
-            console.log(data?.places)
+            // console.log(data?.places);
             const places = await fetchPlaceData(data.places);
             return places;
         }

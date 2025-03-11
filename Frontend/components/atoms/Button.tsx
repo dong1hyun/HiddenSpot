@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface Props {
     children: ReactNode;
@@ -11,7 +11,7 @@ interface Props {
 
 export default function Button({ children, onPress, isLoading, style, color }: Props) {
     return (
-        <Pressable
+        <TouchableOpacity
             disabled={isLoading}
             style={[styles.button, style]}
             onPress={onPress}
@@ -19,7 +19,7 @@ export default function Button({ children, onPress, isLoading, style, color }: P
             <Text style={[styles.text, {color}]}>
                 {children}
             </Text>
-        </Pressable>
+        </TouchableOpacity>
     );
 };
 
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     text: {
         color: 'black',
         textAlign: 'center',
-        fontWeight: "bold"
+        fontWeight: "bold",
     }
 });
