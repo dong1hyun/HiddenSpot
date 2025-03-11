@@ -1,10 +1,12 @@
 import React, { ReactNode } from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 
-const ScreenContainer = ({ children }: {children: ReactNode}) => {
+const ScreenContainer = ({ children }: { children: ReactNode }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>{children}</View>
+      <ScrollView>
+        <View style={styles.container}>{children}</View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

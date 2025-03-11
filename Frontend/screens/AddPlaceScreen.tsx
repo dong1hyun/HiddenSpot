@@ -1,5 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
-import { Button, Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { LocationType, MapStackParamList } from "../lib/type";
 import MapView, { MapPressEvent, Marker } from "react-native-maps";
 import ScreenContainer from "../components/templates/ScreenContainer";
@@ -8,6 +8,7 @@ import { GOOGLE_MAPS_API_KEY } from "@env";
 import { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from 'expo-image-picker';
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,8 +21,8 @@ interface Props {
 }
 
 export default function AddPlaceScreen({ navigation, route }: Props) {
-    const {latitude, longitude, address} = route.params;
-    
+    const { latitude, longitude, address } = route.params;
+
     useEffect(() => {
         Geocoder.init(GOOGLE_MAPS_API_KEY, {
             language: "ko"
@@ -34,7 +35,6 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            aspect: [4, 3],
             quality: 1,
         });
 
@@ -66,8 +66,12 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
                     />
                 </MapView>
             </View>
-            <Button title="사진 선택" onPress={pickImage} />
-            {image && <Image source={{ uri: image }} style={styles.image} />}
+            <TouchableOpacity style={[styles.imageContainer, image && {borderWidth: 0}]} onPress={pickImage}>
+                {image ? 
+                <Image source={{ uri: image }} style={styles.image} resizeMode="cover" /> :
+                    <EvilIcons name="camera" style={styles.camera} />
+                }
+            </TouchableOpacity>
         </ScreenContainer>
     );
 };
@@ -87,8 +91,23 @@ const styles = StyleSheet.create({
     },
     address: {
     },
+    camera: {
+        fontSize: 200,
+        color: "gray"
+    },
+    imageContainer: {
+        width: "100%",
+        height: width,
+        justifyContent: "center",
+        alignItems: "center",
+        borderStyle: "dashed",
+        borderWidth: 2,
+        borderRadius: 24,
+        marginTop: 36
+    },
     image: {
-        width: 100,
-        height: 100,
+        width: "100%",
+        height: "100%",
+        borderRadius: 24,
     }
 });
