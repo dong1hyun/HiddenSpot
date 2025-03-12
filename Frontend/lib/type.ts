@@ -22,10 +22,7 @@ export type HomeStackParamList = {
 }
 
 
-export interface LocationType {
-    latitude: number;
-    longitude: number;
-}
+//FormType
 
 export interface LoginFormType {
     email: string;
@@ -37,6 +34,21 @@ export interface RegisterFormType {
     password: string;
     confirm_password: string;
     nickName: string
+}
+
+export interface PostFormType {
+    title: string;
+    description: string;
+    photoUrl: string;
+    // address: string;
+    // latitude: string;
+    // longitude: string;
+}
+
+
+export interface LocationType {
+    latitude: number;
+    longitude: number;
 }
 
 export interface UserType {

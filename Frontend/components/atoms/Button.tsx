@@ -3,17 +3,17 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface Props {
     children: ReactNode;
-    isLoading?: boolean;
+    disabled?: boolean;
     style?: object;
     color?: string
     onPress: () => void;
 }
 
-export default function Button({ children, onPress, isLoading, style, color }: Props) {
+export default function Button({ children, onPress, disabled, style, color }: Props) {
     return (
         <TouchableOpacity
-            disabled={isLoading}
-            style={[styles.button, style]}
+            disabled={disabled}
+            style={[styles.button, disabled && {opacity: 0.5} , style]}
             onPress={onPress}
         >
             <Text style={[styles.text, {color}]}>

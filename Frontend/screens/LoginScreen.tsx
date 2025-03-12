@@ -66,7 +66,7 @@ export default function LoginScreen() {
       />
       <Error message={errors.password?.message} />
       <Pressable onPress={() => { navigation.navigate("Register") }}><Text style={sytles.toggleButton}>회원가입</Text></Pressable>
-      <Button onPress={handleSubmit(onSubmit)} isLoading={loading}>로그인</Button>
+      <Button onPress={handleSubmit(onSubmit)} disabled={loading}>로그인</Button>
       {loading && <LoadingOverlay />}
     </ScreenContainer>
   );

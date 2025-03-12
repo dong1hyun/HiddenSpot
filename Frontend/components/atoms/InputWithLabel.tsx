@@ -7,11 +7,13 @@ interface Props<T extends FieldValues> {
     name: Path<T>;
     placeHolder: string;
     rules?: RegisterOptions<T>;
-    invisible: boolean,
-    label: string
+    invisible?: boolean;
+    multiline?: boolean;
+    style?: object;
+    label: string;
 }
 
-export default function InputWithLabel<T extends FieldValues>({ control, name, rules, placeHolder, invisible, label }: Props<T>) {
+export default function InputWithLabel<T extends FieldValues>({ control, name, rules, placeHolder, invisible, label, multiline, style }: Props<T>) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{label}</Text>
@@ -21,11 +23,14 @@ export default function InputWithLabel<T extends FieldValues>({ control, name, r
                 rules={rules}
                 render={({ field: { value, onChange } }) => (
                     <TextInput
-                        style={styles.text}
+                        style={[styles.text, style]}
                         placeholder={placeHolder}
                         value={value}
                         onChangeText={onChange}
-                        secureTextEntry={invisible}
+                        secureTextEntry={invisible || false}
+                        multiline={multiline || false}
+                        textAlignVertical="top"
+                        textAlign="left"
                     />
                 )}
             />
@@ -35,15 +40,14 @@ export default function InputWithLabel<T extends FieldValues>({ control, name, r
 
 const styles = StyleSheet.create({
     container: {
-        // marginHorizontal: 20,
         marginVertical: 10
     },
     title: {
         marginBottom: 5
     },
     text: {
-        borderColor: 'black',
-        borderWidth: 1,
+        borderColor: '#dfe6e9',
+        borderWidth: 2,
         borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 8
