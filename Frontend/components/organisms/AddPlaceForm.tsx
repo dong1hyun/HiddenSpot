@@ -138,7 +138,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
                 완료
             </Button>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

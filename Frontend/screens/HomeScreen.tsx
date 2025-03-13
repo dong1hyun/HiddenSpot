@@ -17,23 +17,25 @@ export default function HomeScreen({navigation}: Props) {
         return response;
     };
 
-    // const { data, error, isLoading } = useQuery({
-    //     queryKey: ['places'],
-    //     queryFn: fetchData
-    // })
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['places'],
+        queryFn: fetchData
+    });
+    console.log(data);
 
-    const data:any = []
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => supabase.auth.signOut()}><Text>로그아웃</Text></Pressable>
             <FlatList
                 data={data}
                 renderItem={({ item }) => (
                     <View>
+                        <Image style={styles.image} source={{ uri: item.photoUrl }} />
                         <Text>
                             {item.title}
                         </Text>
-                        <Image style={styles.image} source={{ uri: item.image }} />
+                        <Text>
+                            {item.description}
+                        </Text>
                     </View>
                 )}
             />
