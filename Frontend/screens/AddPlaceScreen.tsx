@@ -1,15 +1,12 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { MapStackParamList, PostFormType } from "../lib/type";
-import MapView, { MapPressEvent, Marker } from "react-native-maps";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { MapStackParamList } from "../lib/type";
+import MapView, { Marker } from "react-native-maps";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import * as ImagePicker from 'expo-image-picker';
-import { useForm } from "react-hook-form";
-import Button from "../components/atoms/Button";
 import AddPlaceForm from "../components/organisms/AddPlaceForm";
 
 const { width, height } = Dimensions.get('window');
@@ -54,7 +51,7 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
                         />
                     </MapView>
                 </View>
-                <AddPlaceForm />
+                <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
             </ScreenContainer>
         </View>
     );

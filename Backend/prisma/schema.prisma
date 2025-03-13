@@ -11,6 +11,21 @@ model User {
   id Int @id @default(autoincrement())
   email String @unique
   nickName String
+  places Place[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Place {
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  address String
+  photoUrl String
+  latitude Float
+  longitude Float
+  userEmail String
+  user       User     @relation(fields: [userEmail], references: [email])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

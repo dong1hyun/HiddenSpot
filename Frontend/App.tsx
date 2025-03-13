@@ -7,19 +7,25 @@ import AppNavigator from "./navigations/AppNavigator";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AuthStore from "./store/AuthStore";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-
+  const {setEmail} = AuthStore();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
+      setSession(session);
+    });
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
+      setSession(session);
+    });
   }, []);
+
+  useEffect(() => {
+    const email = session?.user?.email;
+    if(email) setEmail(email);
+  }, [session]);
 
   const queryClient = new QueryClient();
 

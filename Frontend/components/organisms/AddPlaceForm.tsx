@@ -6,9 +6,22 @@ import { useForm } from "react-hook-form";
 import { PostFormType } from "../../lib/type";
 import Button from "../atoms/Button";
 import Error from "../atoms/Error";
+import { postData } from "../../util/fetch";
+import AuthStore from "../../store/AuthStore";
+import { supabase } from "../../lib/supabase";
+import { Buffer } from 'buffer';
+import { useState } from "react";
 
-export default function AddPlaceForm() {
+interface Props {
+    latitude: number;
+    longitude: number;
+    address: string;
+}
+
+export default function AddPlaceForm({ address, latitude, longitude }: Props) {
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>();
+    const [isLoading, setIsLoading] = useState(false);
+    const { email } = AuthStore();
     const image = watch("photoUrl");
     const title = watch("title");
     const description = watch("description");
@@ -19,20 +32,68 @@ export default function AddPlaceForm() {
             allowsEditing: true,
             quality: 1,
         });
-
         if (!result.canceled) {
             const url = result.assets[0].uri;
-            setValue("photoUrl", url);  
+            setValue("photoUrl", url);
         }
     };
 
-    const onSubmit = (data: PostFormType) => {
-        console.log(data);
+    const uploadPhotoAndGetPublicUrl = async () => {
+        try {
+            // 이미지 url에서 데이터를 가져옴
+            const response = await fetch(image);
+
+            // 컨테츠 타입 추론
+            const contentType = response.headers.get("content-type") || "application/octet-stream";
+
+            // arrayBuffer(이진 데이터를 저장하는 고정 크기의 메모리 버퍼) 생성
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const { data, error } = await supabase.storage
+                .from("photos")
+                .upload(`public/${Date.now()}.png`, buffer, {
+                    contentType: contentType,
+                });
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+            else {
+                const imageUrl = supabase.storage
+                    .from('photos')
+                    .getPublicUrl(data.path).data.publicUrl;
+                return imageUrl;
+            }
+        } catch (error) {
+            console.error("이미지 업로드 에러", error);
+        }
+    }
+
+    const onSubmit = async (data: PostFormType) => {
+        try {
+            setIsLoading(true);
+            const photoUrl = await uploadPhotoAndGetPublicUrl();
+            postData("http://10.0.2.2:5000/place", {
+                userEmail: email,
+                title: data.title,
+                description: data.description,
+                photoUrl,
+                latitude,
+                longitude,
+                address
+            });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <View>
-            <TouchableOpacity style={[styles.imageContainer, image && { borderWidth: 0 }, errors?.photoUrl?.message && {borderColor: "red"}]} onPress={pickImage}>
+            <TouchableOpacity style={[styles.imageContainer, image && { borderWidth: 0 }, errors?.photoUrl?.message && { borderColor: "red" }]} onPress={pickImage}>
                 {image ?
                     <Image source={{ uri: image }} style={styles.image} resizeMode="cover" /> :
                     <EvilIcons name="camera" style={styles.camera} />
@@ -71,7 +132,7 @@ export default function AddPlaceForm() {
             <Button
                 style={styles.submitButton}
                 color="white"
-                disabled={!(title && description && image)}
+                disabled={!(title && description && image) || isLoading}
                 onPress={handleSubmit(onSubmit)}
             >
                 완료

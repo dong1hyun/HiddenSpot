@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { getData } from "../util/fetch";
-import AntDesign from "react-native-vector-icons/AntDesign"
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HomeStackParamList, RootStackParamList } from "../lib/type";
 
@@ -38,9 +37,6 @@ export default function HomeScreen({navigation}: Props) {
                     </View>
                 )}
             />
-            <TouchableOpacity onPress={() => navigation.navigate("MapNavigator", {screen: "AddPlace"})}>
-                <AntDesign style={styles.plusIcon} name="pluscircleo" />
-            </TouchableOpacity>
         </View>
     )
 }
