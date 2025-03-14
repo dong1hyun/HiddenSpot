@@ -1,25 +1,27 @@
 import MapView, { Marker, Region } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
-import { MapStackParamList, PlaceType } from "../../lib/type";
+import { MapStackParamList, PlaceType, PostResponseType } from "../../lib/type";
 import Button from "../atoms/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { getAddress } from "../../util/map";
+import { getData } from "../../util/fetch";
+import Markers from "./Markers";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, "Map">
 
 export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
     const navigation = useNavigation<MapScreenNavigationProp>();
+    const [markers, setMarkers] = useState<PostResponseType[]>();
     const { onMapPress, location, onMarkerPress, setLocation } = useMapContext();
     const [address, setAddress] = useState("");
-    const [places, setPlaces] = useState<PlaceType[]>();
     const fetchPlaces = async (region: Region) => {
         const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
 
-        if (latitudeDelta > 0.1) {
-            setPlaces([]); // 줌 아웃 시 장소 숨김
+        if (latitudeDelta > 0.05) {
+            setMarkers([]); // 줌 아웃 시 장소 숨김
             return;
         }
 
@@ -27,6 +29,9 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
         const maxLat = latitude + latitudeDelta / 2;
         const minLng = longitude - longitudeDelta / 2;
         const maxLng = longitude + longitudeDelta / 2;
+        
+        const markers = await getData(`http://10.0.2.2:5000/place/marker?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`);
+        setMarkers(markers);
     };
 
     const onAddPress = () => {
@@ -75,6 +80,7 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
                         onPress={onMarkerPress}
                     />
                 }
+                <Markers markers={markers} />
             </MapView>
             {location &&
                 <View style={styles.overlay}>

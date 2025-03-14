@@ -3,7 +3,7 @@ import InputWithLabel from "../atoms/InputWithLabel";
 import * as ImagePicker from 'expo-image-picker';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { useForm } from "react-hook-form";
-import { PostFormType } from "../../lib/type";
+import { PostFormType, RootStackParamList } from "../../lib/type";
 import Button from "../atoms/Button";
 import Error from "../atoms/Error";
 import { postData } from "../../util/fetch";
@@ -11,6 +11,9 @@ import AuthStore from "../../store/AuthStore";
 import { supabase } from "../../lib/supabase";
 import { Buffer } from 'buffer';
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
     latitude: number;
@@ -18,14 +21,18 @@ interface Props {
     address: string;
 }
 
+type AddPlaceScreenNavigation = StackNavigationProp<RootStackParamList, "HomeNavigator">;
+
 export default function AddPlaceForm({ address, latitude, longitude }: Props) {
+    const navigation = useNavigation<AddPlaceScreenNavigation>();
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>();
     const [isLoading, setIsLoading] = useState(false);
     const { email } = AuthStore();
     const image = watch("photoUrl");
     const title = watch("title");
     const description = watch("description");
-
+    const queryClient = useQueryClient();
+    
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
@@ -40,6 +47,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
 
     const uploadPhotoAndGetPublicUrl = async () => {
         try {
+            console.log("여기")
             // 이미지 url에서 데이터를 가져옴
             const response = await fetch(image);
 
@@ -75,7 +83,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
         try {
             setIsLoading(true);
             const photoUrl = await uploadPhotoAndGetPublicUrl();
-            postData("http://10.0.2.2:5000/place", {
+            await postData("http://10.0.2.2:5000/place", {
                 userEmail: email,
                 title: data.title,
                 description: data.description,
@@ -84,6 +92,8 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
                 longitude,
                 address
             });
+            queryClient.invalidateQueries({ queryKey: ['places'] });
+            navigation.reset({index: 0, routes: [{name: "HomeNavigator", params: {screen: "Home"}}]});
         } catch (error) {
             console.error(error);
         } finally {
@@ -154,7 +164,8 @@ const styles = StyleSheet.create({
         borderStyle: "dashed",
         borderWidth: 2,
         borderRadius: 24,
-        marginTop: 36
+        borderColor: "gray",
+        marginVertical: 42,
     },
     image: {
         width: "100%",

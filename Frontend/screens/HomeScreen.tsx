@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { supabase } from "../lib/supabase";
 import { getData } from "../util/fetch";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { HomeStackParamList, RootStackParamList } from "../lib/type";
+import {  RootStackParamList } from "../lib/type";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 interface Props {
@@ -19,9 +18,8 @@ export default function HomeScreen({navigation}: Props) {
 
     const { data, error, isLoading } = useQuery({
         queryKey: ['places'],
-        queryFn: fetchData
+        queryFn: fetchData,
     });
-    console.log(data);
 
     return (
         <View style={styles.container}>

@@ -36,16 +36,20 @@ export interface RegisterFormType {
     nickName: string
 }
 
-export interface PostFormBasicType {
+export interface PostFormType {
     title: string;
     description: string;
     photoUrl: string;
 }
 
-export interface PostFormType extends PostFormBasicType {
+export interface PostResponseType extends PostFormType {
+    id: number;
     address: string;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
+    userEmail: string;
+    created_at: Date;
+    updated_at: Date;
 }
 
 

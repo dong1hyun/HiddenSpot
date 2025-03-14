@@ -14,8 +14,8 @@ export default function NearbyPlaceItem({ photoUrl, placeName, location, formatt
         setLocation(location);
         mapRef?.current?.animateToRegion({
             ...location,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
           });
 
     }

@@ -10,7 +10,7 @@ import { useMapContext } from "../../context/MapContext";
 import { fetchSearchPlace } from "../../util/map";
 
 export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapView> }) {
-  const { query, setQuery, location, setLocation, setAddress } = useMapContext();
+  const { query, setQuery } = useMapContext();
   const [places, setPlaces] = useState<PlaceType[]>();
   const bottomSheetRef = useRef<BottomSheet>(null);
   
@@ -24,7 +24,7 @@ export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapVi
   };
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
+    // console.log("handleSheetChanges", index);
   }, []);
 
   const handleFocus = () => {

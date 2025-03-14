@@ -8,6 +8,7 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AuthStore from "./store/AuthStore";
+import queryClient from "./util/queryClient";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -26,8 +27,6 @@ export default function App() {
     const email = session?.user?.email;
     if(email) setEmail(email);
   }, [session]);
-
-  const queryClient = new QueryClient();
 
   return (
     <SafeAreaView style={styles.container}>
