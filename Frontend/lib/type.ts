@@ -14,7 +14,7 @@ export type AuthStackParamList = {
 
 export type MapStackParamList = {
     Map: undefined;
-    AddPlace: LocationType & {address: string};
+    AddPlace: LocationType & { address: string };
 }
 
 export type HomeStackParamList = {
@@ -81,4 +81,9 @@ export interface PlaceType {
     photoUrl: string | null;
     formattedAddress: string;
     location: LocationType;
+}
+
+export interface UserExistCheckType {
+    emailExist: boolean,
+    nickNameExist: boolean
 }

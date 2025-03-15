@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getData } from "../util/fetch";
 import { StackNavigationProp } from "@react-navigation/stack";
-import {  RootStackParamList } from "../lib/type";
+import {  PostResponseType, RootStackParamList } from "../lib/type";
+import PlaceItem from "../components/molecules/PlaceItem";
+import ScreenContainer from "../components/templates/ScreenContainer";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 interface Props {
@@ -11,7 +13,7 @@ interface Props {
 }
 
 export default function HomeScreen({navigation}: Props) {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<PostResponseType[]> => {
         const response = await getData('http://10.0.2.2:5000/place');
         return response;
     };
@@ -22,22 +24,14 @@ export default function HomeScreen({navigation}: Props) {
     });
 
     return (
-        <View style={styles.container}>
+        <ScreenContainer>
             <FlatList
                 data={data}
-                renderItem={({ item }) => (
-                    <View>
-                        <Image style={styles.image} source={{ uri: item.photoUrl }} />
-                        <Text>
-                            {item.title}
-                        </Text>
-                        <Text>
-                            {item.description}
-                        </Text>
-                    </View>
+                renderItem={({item}) => (
+                    <PlaceItem placeData={item} />
                 )}
             />
-        </View>
+        </ScreenContainer>
     )
 }
 

@@ -1,7 +1,7 @@
 import MapView, { Marker, Region } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
-import { MapStackParamList, PlaceType, PostResponseType } from "../../lib/type";
+import { MapStackParamList, PostResponseType } from "../../lib/type";
 import Button from "../atoms/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";

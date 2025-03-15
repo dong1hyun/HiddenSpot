@@ -7,11 +7,12 @@ export async function postData(url: string, data: object) {
             },
             body: JSON.stringify(data),
         });
-        if (!response.ok) { 
-            throw new Error('post error');
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData);
         }
         return response.json();
-    } catch(error) {
+    } catch (error) {
         console.error("postData에러:", error);
         throw error;
     }
@@ -20,13 +21,13 @@ export async function postData(url: string, data: object) {
 export async function getData(url: string) {
     try {
         const response = await fetch(url);
-        if (!response.ok) { 
+        if (!response.ok) {
             throw new Error('get error');
         }
 
         const data = await response.json();
         return data;
-    } catch(error) {
+    } catch (error) {
         console.error("getData 에러:", error);
         throw error;
     }
