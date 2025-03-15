@@ -47,7 +47,7 @@ export interface PostResponseType extends PostFormType {
     address: string;
     latitude: number;
     longitude: number;
-    userEmail: string;
+    nickName: string;
     created_at: Date;
     updated_at: Date;
 }

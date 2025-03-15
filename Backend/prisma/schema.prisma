@@ -24,6 +24,7 @@ model Place {
   photoUrl String
   latitude Float
   longitude Float
+  nickName String
   userEmail String
   user       User     @relation(fields: [userEmail], references: [email])
   created_at DateTime @default(now())

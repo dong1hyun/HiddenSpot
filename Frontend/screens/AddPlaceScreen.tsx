@@ -1,5 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { MapStackParamList } from "../lib/type";
 import MapView, { Marker } from "react-native-maps";
 import ScreenContainer from "../components/templates/ScreenContainer";
@@ -30,29 +30,31 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
 
     return (
         <View style={styles.container}>
-            <ScreenContainer>
-                <Text style={styles.address}>주소: {address}</Text>
-                <View style={styles.mapContainer}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={{
-                            latitude,
-                            longitude,
-                            latitudeDelta: 0.05,
-                            longitudeDelta: 0.05,
-                        }}
-                    >
-                        <Marker
-                            title="선택된 장소"
-                            coordinate={{
+            <ScrollView>
+                <ScreenContainer>
+                    <Text style={styles.address}>주소: {address}</Text>
+                    <View style={styles.mapContainer}>
+                        <MapView
+                            style={styles.map}
+                            initialRegion={{
                                 latitude,
-                                longitude
+                                longitude,
+                                latitudeDelta: 0.05,
+                                longitudeDelta: 0.05,
                             }}
-                        />
-                    </MapView>
-                </View>
-                <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
-            </ScreenContainer>
+                        >
+                            <Marker
+                                title="선택된 장소"
+                                coordinate={{
+                                    latitude,
+                                    longitude
+                                }}
+                            />
+                        </MapView>
+                    </View>
+                    <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
+                </ScreenContainer>
+            </ScrollView>
         </View>
     );
 };

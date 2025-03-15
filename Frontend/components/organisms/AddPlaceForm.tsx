@@ -27,7 +27,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>();
     const [isLoading, setIsLoading] = useState(false);
-    const { email } = AuthStore();
+    const { nickName, email } = AuthStore();
     const image = watch("photoUrl");
     const title = watch("title");
     const description = watch("description");
@@ -47,7 +47,6 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
 
     const uploadPhotoAndGetPublicUrl = async () => {
         try {
-            console.log("여기")
             // 이미지 url에서 데이터를 가져옴
             const response = await fetch(image);
 
@@ -85,6 +84,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
             const photoUrl = await uploadPhotoAndGetPublicUrl();
             await postData("http://10.0.2.2:5000/place", {
                 userEmail: email,
+                nickName,
                 title: data.title,
                 description: data.description,
                 photoUrl,
@@ -100,7 +100,6 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
             setIsLoading(false);
         }
     };
-
     return (
         <View>
             <TouchableOpacity style={[styles.imageContainer, image && { borderWidth: 0 }, errors?.photoUrl?.message && { borderColor: "red" }]} onPress={pickImage}>
@@ -117,8 +116,8 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
                 rules={{
                     required: "제목을 입력해주세요.",
                     maxLength: {
-                        value: 20,
-                        message: "제목은 최대 20자까지 입력할 수 있습니다."
+                        value: 15,
+                        message: "제목은 최대 15자까지 입력할 수 있습니다."
                     }
                 }}
             />

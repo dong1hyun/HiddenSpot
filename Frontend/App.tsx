@@ -12,7 +12,7 @@ import queryClient from "./util/queryClient";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-  const {setEmail} = AuthStore();
+  const {setEmail, setNickName} = AuthStore();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -25,7 +25,9 @@ export default function App() {
 
   useEffect(() => {
     const email = session?.user?.email;
+    const nickName = session?.user?.user_metadata?.nickName;
     if(email) setEmail(email);
+    if(nickName) setNickName(nickName);
   }, [session]);
 
   return (
