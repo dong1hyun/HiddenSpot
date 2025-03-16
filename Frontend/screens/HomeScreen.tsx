@@ -26,7 +26,6 @@ export default function HomeScreen({ navigation }: Props) {
     });
 
     return (
-        <ScrollView>
             <ScreenContainer>
                 <FlatList
                     data={data}
@@ -36,7 +35,6 @@ export default function HomeScreen({ navigation }: Props) {
                     scrollEnabled={false}
                 />
             </ScreenContainer>
-        </ScrollView>
     )
 }
 

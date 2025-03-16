@@ -1,13 +1,13 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { MapStackParamList } from "../lib/type";
-import MapView, { Marker } from "react-native-maps";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
 import { useEffect } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AddPlaceForm from "../components/organisms/AddPlaceForm";
+import StaticMap from "../components/molecules/StaticMap";
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,33 +29,13 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <ScrollView>
-                <ScreenContainer>
-                    <Text style={styles.address}>주소: {address}</Text>
-                    <View style={styles.mapContainer}>
-                        <MapView
-                            style={styles.map}
-                            initialRegion={{
-                                latitude,
-                                longitude,
-                                latitudeDelta: 0.05,
-                                longitudeDelta: 0.05,
-                            }}
-                        >
-                            <Marker
-                                title="선택된 장소"
-                                coordinate={{
-                                    latitude,
-                                    longitude
-                                }}
-                            />
-                        </MapView>
-                    </View>
-                    <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
-                </ScreenContainer>
-            </ScrollView>
-        </View>
+        <ScreenContainer>
+            <Text style={styles.address}>주소: {address}</Text>
+            <View style={styles.mapContainer}>
+                <StaticMap latitude={latitude} longitude={longitude} style={styles.map} />
+            </View>
+            <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
+        </ScreenContainer>
     );
 };
 

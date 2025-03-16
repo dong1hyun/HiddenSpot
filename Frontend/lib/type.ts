@@ -19,6 +19,9 @@ export type MapStackParamList = {
 
 export type HomeStackParamList = {
     Home: undefined;
+    PlaceDetail: {
+        id: number
+    };
 }
 
 

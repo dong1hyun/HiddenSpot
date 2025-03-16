@@ -1,4 +1,5 @@
-export const getRelativeTime = (isoDate: string): string => {
+export const getRelativeTime = (isoDate: string | undefined): string => {
+    if(!isoDate) return ""
     const now = new Date();
     const past = new Date(isoDate);
     const diffMs = now.getTime() - past.getTime();

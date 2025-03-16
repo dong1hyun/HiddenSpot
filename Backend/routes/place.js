@@ -49,4 +49,19 @@ router.get('/marker', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const place = await db.Place.findUnique({
+            where: {
+                id: +id
+            }
+        });
+        res.status(200).json(place);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "장소를 불러오는데 실패했습니다." });
+    }
+});
+
 module.exports = router;

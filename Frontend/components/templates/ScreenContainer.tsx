@@ -4,7 +4,9 @@ import { View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 const ScreenContainer = ({ children }: { children: ReactNode }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ScrollView>
         <View style={styles.container}>{children}</View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

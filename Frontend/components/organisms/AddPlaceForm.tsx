@@ -132,8 +132,8 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
                 rules={{
                     required: "내용을 입력해주세요.",
                     maxLength: {
-                        value: 500,
-                        message: "설명은 최대 500자까지 입력할 수 있습니다."
+                        value: 1000,
+                        message: "설명은 최대 1000자까지 입력할 수 있습니다."
                     }
                 }}
             />

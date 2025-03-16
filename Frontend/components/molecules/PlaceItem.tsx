@@ -1,12 +1,17 @@
 import { Image, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
-import { PostResponseType } from "../../lib/type";
+import { HomeStackParamList, PostResponseType } from "../../lib/type";
 import { getRelativeTime } from "../../util/date";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-export default function PlaceItem({placeData}: {placeData: PostResponseType}) {
-    const {id, title, address, created_at, photoUrl, nickName} = placeData;
+type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
+
+export default function PlaceItem({ placeData }: { placeData: PostResponseType }) {
+    const { id, title, address, created_at, photoUrl, nickName } = placeData;
+    const navigation = useNavigation<HomeScreenNavigationProp>();
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate("PlaceDetail", {id})} style={styles.container}>
             <Image style={styles.image} source={{ uri: photoUrl }} />
             <View>
                 <View style={styles.topContainer}>
