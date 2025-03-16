@@ -10,8 +10,8 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-const placeRouter = require("./routes/place");
-const userRouter = require("./routes/user");
+const placeRouter = require("../routes/place");
+const userRouter = require("../routes/user");
 
 app.use("/place", placeRouter);
 app.use("/user", userRouter);
@@ -20,6 +20,10 @@ app.get('/', (req, res) => {
   res.send('Express Server is running!');
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`✅ Server is running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
