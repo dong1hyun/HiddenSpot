@@ -15,7 +15,7 @@ interface Props {
 
 export default function HomeScreen({ navigation }: Props) {
     const fetchData = async (): Promise<PostResponseType[]> => {
-        const response = await getData('http://10.0.2.2:5000/place');
+        const response = await getData('http://10.0.2.2:3000/place');
         return response;
     };
 

@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 export default function PlaceDetailScreen({ route }: { route: PlaceDetailScreenProp }) {
     const id = route.params.id;
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`http://10.0.2.2:5000/place/${id}`);
+        const response = await getData(`http://10.0.2.2:3000/place/${id}`);
 
         return response;
     }
