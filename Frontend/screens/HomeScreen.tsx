@@ -7,6 +7,7 @@ import { PostResponseType, RootStackParamList } from "../lib/type";
 import PlaceItem from "../components/molecules/PlaceItem";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import { ScrollView } from "react-native";
+import { API_URL } from "@env";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 interface Props {
@@ -15,7 +16,7 @@ interface Props {
 
 export default function HomeScreen({ navigation }: Props) {
     const fetchData = async (): Promise<PostResponseType[]> => {
-        const response = await getData('http://10.0.2.2:3000/place');
+        const response = await getData(`${API_URL}/place`);
         return response;
     };
 

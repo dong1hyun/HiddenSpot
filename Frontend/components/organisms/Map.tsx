@@ -9,6 +9,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { getAddress } from "../../util/map";
 import { getData } from "../../util/fetch";
 import Markers from "./Markers";
+import { API_URL } from "@env";
 
 type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, "Map">
 
@@ -30,7 +31,7 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
         const minLng = longitude - longitudeDelta / 2;
         const maxLng = longitude + longitudeDelta / 2;
         
-        const markers = await getData(`http://10.0.2.2:5000/place/marker?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`);
+        const markers = await getData(`${API_URL}/place/marker?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`);
         setMarkers(markers);
     };
 

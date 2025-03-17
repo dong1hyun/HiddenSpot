@@ -8,18 +8,19 @@ import { useNavigation } from '@react-navigation/native';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import LoadingOverlay from '../components/atoms/Loading';
+import Spinner from '../components/atoms/SpinLoading';
 import { useMutation } from '@tanstack/react-query';
 import { postData } from '../util/fetch';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { checkUserExists } from '../util/user';
+import { API_URL } from '@env';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
     const { control, handleSubmit, watch, setError, formState: { errors } } = useForm<RegisterFormType>();
     const [loading, setLoading] = useState(false);
     const { mutate } = useMutation({
-        mutationFn: ({ email, nickName }: UserType) => postData("http://10.0.2.2:5000/user", { email, nickName }),
+        mutationFn: ({ email, nickName }: UserType) => postData(`${API_URL}/user`, { email, nickName }),
         onError: (error) => {
             console.error("error:", error);
         },
@@ -138,7 +139,7 @@ export default function RegisterScreen() {
             <Error message={errors.nickName?.message} />
             <Pressable style={sytles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text>로그인</Text></Pressable>
             <Button onPress={handleSubmit(onSubmit)}>계정생성</Button>
-            {loading && <LoadingOverlay />}
+            {loading && <Spinner />}
         </ScreenContainer>
     );
 };

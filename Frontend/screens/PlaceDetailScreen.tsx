@@ -1,5 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, Image, ScrollView, StyleSheet, Text } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { HomeStackParamList, PostResponseType } from "../lib/type";
 import { getData } from "../util/fetch";
@@ -7,14 +7,17 @@ import { useQuery } from "@tanstack/react-query";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
-import LoadingOverlay from "../components/atoms/Loading";
+import Spinner from "../components/atoms/SpinLoading";
+import { API_URL } from "@env";
+import AuthStore from "../store/AuthStore";
 
 type PlaceDetailScreenProp = RouteProp<HomeStackParamList, "PlaceDetail">;
 const { width, height } = Dimensions.get('window');
 export default function PlaceDetailScreen({ route }: { route: PlaceDetailScreenProp }) {
+    const { nickName } = AuthStore();
     const id = route.params.id;
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`http://10.0.2.2:3000/place/${id}`);
+        const response = await getData(`${API_URL}/place/${id}`);
 
         return response;
     }
@@ -26,26 +29,35 @@ export default function PlaceDetailScreen({ route }: { route: PlaceDetailScreenP
     });
 
     return (
-        <ScrollView style={styles.container}>
-            {isLoading && <LoadingOverlay />}
-            <Image source={{ uri: data?.photoUrl }} style={styles.image} resizeMode="cover" />
-            <View style={styles.contentContainer}>
-                <View style={styles.uerContainer}>
-                    <FontAwesome6Icon style={styles.userIcon} name="circle-user" />
-                    <Text>{data?.nickName}</Text>
+        <View style={styles.container}>
+            <ScrollView style={styles.container}>
+                {isLoading && <Spinner />}
+                <Image source={{ uri: data?.photoUrl }} style={styles.image} resizeMode="cover" />
+                <View style={styles.contentContainer}>
+                    <View style={styles.uerContainer}>
+                        <FontAwesome6Icon style={styles.userIcon} name="circle-user" />
+                        <Text>{data?.nickName}</Text>
+                    </View>
+                    <Text style={styles.title}>{data?.title}</Text>
+                    <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
+                    <Text style={styles.description}>{data?.description}</Text>
+                    <Text>{data?.address}</Text>
+                    <View style={styles.mapContainer}>
+                        {
+                            data &&
+                            <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
+                        }
+                    </View>
                 </View>
-                <Text style={styles.title}>{data?.title}</Text>
-                <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
-                <Text style={styles.description}>{data?.description}</Text>
-                <Text>{data?.address}</Text>
-                <View style={styles.mapContainer}>
-                    {
-                        data &&
-                        <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
-                    }
+            </ScrollView>
+            {
+                nickName === data?.nickName &&
+                <View style={styles.editButtonContainer}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: "#74b9ff"}]}><Text style={styles.buttonText}>수정</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: "red"}]}><Text style={styles.buttonText}>삭제</Text></TouchableOpacity>
                 </View>
-            </View>
-        </ScrollView>
+            }
+        </View>
     );
 };
 
@@ -98,4 +110,25 @@ const styles = StyleSheet.create({
         borderColor: "#dfe6e9",
         overflow: 'hidden',
     },
+    editButtonContainer: {
+        position: 'absolute', // 화면 고정
+        bottom: 10, // 하단에 고정
+        left: 0,
+        right: 0,
+        padding: 10,
+        alignItems: 'center',
+        backgroundColor: "white",
+        flexDirection: "row",
+        justifyContent: "space-around",
+    },
+    button: {
+        backgroundColor: "black",
+        paddingHorizontal: 24,
+        paddingVertical: 2,
+        borderRadius: 8
+    },
+    buttonText: {
+        color:"white",
+        fontWeight: "bold"
+    }
 });

@@ -10,23 +10,25 @@ import { postData } from "../../util/fetch";
 import AuthStore from "../../store/AuthStore";
 import { supabase } from "../../lib/supabase";
 import { Buffer } from 'buffer';
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { API_URL } from "@env";
 
 interface Props {
     latitude: number;
     longitude: number;
     address: string;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+    isLoading: boolean;
 }
 
 type AddPlaceScreenNavigation = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 
-export default function AddPlaceForm({ address, latitude, longitude }: Props) {
+export default function AddPlaceForm({ address, latitude, longitude, setIsLoading, isLoading }: Props) {
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>();
-    const [isLoading, setIsLoading] = useState(false);
     const { nickName, email } = AuthStore();
     const image = watch("photoUrl");
     const title = watch("title");
@@ -82,7 +84,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
         try {
             setIsLoading(true);
             const photoUrl = await uploadPhotoAndGetPublicUrl();
-            await postData("http://10.0.2.2:5000/place", {
+            await postData(`${API_URL}/place`, {
                 userEmail: email,
                 nickName,
                 title: data.title,
@@ -101,7 +103,7 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
         }
     };
     return (
-        <View>
+        <View style={styles.container}>
             <TouchableOpacity style={[styles.imageContainer, image && { borderWidth: 0 }, errors?.photoUrl?.message && { borderColor: "red" }]} onPress={pickImage}>
                 {image ?
                     <Image source={{ uri: image }} style={styles.image} resizeMode="cover" /> :
@@ -151,6 +153,10 @@ export default function AddPlaceForm({ address, latitude, longitude }: Props) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        position: "relative",
+    },
     camera: {
         fontSize: 200,
         color: "gray"

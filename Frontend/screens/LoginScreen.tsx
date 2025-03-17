@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
 import InputWithLabel from '../components/atoms/InputWithLabel';
-import LoadingOverlay from '../components/atoms/Loading';
+import Spinner from '../components/atoms/SpinLoading';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export default function LoginScreen() {
@@ -67,7 +67,7 @@ export default function LoginScreen() {
       <Error message={errors.password?.message} />
       <Pressable onPress={() => { navigation.navigate("Register") }}><Text style={sytles.toggleButton}>회원가입</Text></Pressable>
       <Button onPress={handleSubmit(onSubmit)} disabled={loading}>로그인</Button>
-      {loading && <LoadingOverlay />}
+      {loading && <Spinner />}
     </ScreenContainer>
   );
 };

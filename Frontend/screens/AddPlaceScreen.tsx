@@ -4,10 +4,11 @@ import { MapStackParamList } from "../lib/type";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AddPlaceForm from "../components/organisms/AddPlaceForm";
 import StaticMap from "../components/molecules/StaticMap";
+import FullScreenLoader from "../components/atoms/FullScreenLoader";
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,6 +22,7 @@ interface Props {
 
 export default function AddPlaceScreen({ navigation, route }: Props) {
     const { latitude, longitude, address } = route.params;
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         Geocoder.init(GOOGLE_MAPS_API_KEY, {
@@ -34,7 +36,8 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
             <View style={styles.mapContainer}>
                 <StaticMap latitude={latitude} longitude={longitude} style={styles.map} />
             </View>
-            <AddPlaceForm address={address} latitude={latitude} longitude={longitude} />
+            <AddPlaceForm address={address} latitude={latitude} longitude={longitude} isLoading={isLoading} setIsLoading={setIsLoading} />
+            <FullScreenLoader loading={isLoading} />
         </ScreenContainer>
     );
 };
