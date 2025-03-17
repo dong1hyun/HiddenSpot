@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import { HomeStackParamList, PostResponseType } from "../lib/type";
+import { HomeStackParamList, MapStackParamList, PostResponseType, RootStackParamList } from "../lib/type";
 import { getData } from "../util/fetch";
 import { useQuery } from "@tanstack/react-query";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
@@ -10,10 +10,19 @@ import StaticMap from "../components/molecules/StaticMap";
 import Spinner from "../components/atoms/SpinLoading";
 import { API_URL } from "@env";
 import AuthStore from "../store/AuthStore";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import Button from "../components/atoms/Button";
 
-type PlaceDetailScreenProp = RouteProp<HomeStackParamList, "PlaceDetail">;
+type PlaceDetailScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
+
+interface Props {
+    route: PlaceDetailScreenRouteProp;
+    navigation: PlaceDetailScreenNavigationProp;
+}
+
 const { width, height } = Dimensions.get('window');
-export default function PlaceDetailScreen({ route }: { route: PlaceDetailScreenProp }) {
+export default function PlaceDetailScreen({ route, navigation }: Props) {
     const { nickName } = AuthStore();
     const id = route.params.id;
     const fetchData = async (): Promise<PostResponseType> => {
@@ -53,8 +62,31 @@ export default function PlaceDetailScreen({ route }: { route: PlaceDetailScreenP
             {
                 nickName === data?.nickName &&
                 <View style={styles.editButtonContainer}>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: "#74b9ff"}]}><Text style={styles.buttonText}>수정</Text></TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: "red"}]}><Text style={styles.buttonText}>삭제</Text></TouchableOpacity>
+                    <Button
+                        buttonStyle={[styles.button, { backgroundColor: "#74b9ff" }]}
+                        textStyle={styles.buttonText}
+                        onPress={() => navigation.navigate("MapNavigator", {
+                            screen: "AddPlace",
+                            params: {
+                                id: data.id,
+                                address: data.address,
+                                latitude: data.latitude,
+                                longitude: data.longitude,
+                                title: data.title,
+                                description: data.description,
+                                photoUrl: data.photoUrl,
+                            }
+                        })}
+                    >
+                        수정
+                    </Button>
+                    <Button
+                        buttonStyle={[styles.button, { backgroundColor: "red" }]}
+                        textStyle={styles.buttonText}
+                        onPress={() => { }}
+                    >
+                        삭제
+                    </Button>
                 </View>
             }
         </View>
@@ -120,15 +152,16 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         flexDirection: "row",
         justifyContent: "space-around",
+        elevation: 12
     },
     button: {
         backgroundColor: "black",
         paddingHorizontal: 24,
-        paddingVertical: 2,
+        paddingVertical: 4,
         borderRadius: 8
     },
     buttonText: {
-        color:"white",
+        color: "white",
         fontWeight: "bold"
     }
 });

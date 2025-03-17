@@ -13,9 +13,30 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    try {
+        const id = +req.params.id;
+        const data = req.body;
+        const updatedPlace = await db.Place.update({
+            where: {
+                id
+            },
+            data
+        });
+        res.status(200).json(updatedPlace);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+});
+
 router.get('/', async (req, res) => {
     try {
-        const places = await db.Place.findMany();
+        const places = await db.Place.findMany({
+            orderBy: {
+                created_at: 'desc',
+            }
+        });
         res.status(201).json(places);
     } catch (error) {
         console.error(error);
@@ -51,10 +72,10 @@ router.get('/marker', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = +req.params.id;
         const place = await db.Place.findUnique({
             where: {
-                id: +id
+                id
             }
         });
         res.status(200).json(place);

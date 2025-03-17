@@ -32,3 +32,26 @@ export async function getData(url: string) {
         throw error;
     }
 };
+
+export const updateData = async (url: string, data: object) => {
+    try {
+        console.log("update")
+      const response = await fetch(url, {
+        method: 'PUT', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result);
+      } else {
+        console.log('수정 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('updateData 에러:', error);
+    }
+  };
+  

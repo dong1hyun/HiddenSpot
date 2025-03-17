@@ -6,7 +6,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { PostResponseType, RootStackParamList } from "../lib/type";
 import PlaceItem from "../components/molecules/PlaceItem";
 import ScreenContainer from "../components/templates/ScreenContainer";
-import { ScrollView } from "react-native";
 import { API_URL } from "@env";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
@@ -23,9 +22,9 @@ export default function HomeScreen({ navigation }: Props) {
     const { data, error, isLoading } = useQuery({
         queryKey: ['places'],
         queryFn: fetchData,
-        refetchInterval: 60000
+        refetchInterval: 5000
     });
-
+    console.log(data);
     return (
             <ScreenContainer>
                 <FlatList

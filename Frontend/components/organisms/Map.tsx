@@ -39,7 +39,7 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
         if(location) navigation.navigate("AddPlace", {
             latitude: location.latitude,
             longitude: location.longitude,
-            address
+            address,
         });
     }
 
@@ -89,12 +89,12 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
                     <Text>{address}</Text>
                     <View style={styles.buttons}>
                         <Button
-                            style={{backgroundColor: "#74b9ff", borderWidth: 0}}
+                            buttonStyle={{backgroundColor: "#74b9ff", borderWidth: 0}}
                             onPress={onAddPress}>
                             확인
                         </Button>
                         <Button
-                            style={{backgroundColor: "#ff7675", borderWidth: 0}}
+                            buttonStyle={{backgroundColor: "#ff7675", borderWidth: 0}}
                             onPress={onCancelPress}>
                             취소
                         </Button>

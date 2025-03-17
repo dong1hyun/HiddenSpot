@@ -4,19 +4,19 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 interface Props {
     children: ReactNode;
     disabled?: boolean;
-    style?: object;
-    color?: string
+    buttonStyle?: object;
+    textStyle?: object
     onPress: () => void;
 }
 
-export default function Button({ children, onPress, disabled, style, color }: Props) {
+export default function Button({ children, onPress, disabled, buttonStyle, textStyle }: Props) {
     return (
         <TouchableOpacity
             disabled={disabled}
-            style={[styles.button, disabled && {opacity: 0.5} , style]}
+            style={[styles.button, disabled && {opacity: 0.5} , buttonStyle]}
             onPress={onPress}
         >
-            <Text style={[styles.text, {color}]}>
+            <Text style={[styles.text, textStyle]}>
                 {children}
             </Text>
         </TouchableOpacity>
@@ -27,11 +27,10 @@ const styles = StyleSheet.create({
     button: {
         padding: 5,
         borderRadius: 8,
-        borderWidth: 1,
-        borderColor: "black",
+        backgroundColor: "black"
     },
     text: {
-        color: 'black',
+        color: 'white',
         textAlign: 'center',
         fontWeight: "bold",
     }
