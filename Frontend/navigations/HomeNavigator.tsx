@@ -3,6 +3,7 @@ import BottomSheet from "../components/organisms/BottomSlider";
 import { createStackNavigator } from "@react-navigation/stack";
 import PlaceDetailScreen from "../screens/PlaceDetailScreen";
 import { HomeStackParamList } from "../lib/type";
+import AddPlaceScreen from "../screens/AddPlaceScreen";
 
 export default function HomeNavigator() {
     const Stack = createStackNavigator<HomeStackParamList>();
@@ -21,6 +22,13 @@ export default function HomeNavigator() {
                 component={PlaceDetailScreen}
                 options={{
                     title: "세부정보"
+                }}
+            />
+            <Stack.Screen
+                name="AddPlace"
+                component={AddPlaceScreen}
+                options={{
+                    title: "숨겨왔던 나의..."
                 }}
             />
         </Stack.Navigator>

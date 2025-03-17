@@ -1,7 +1,7 @@
 import MapView, { Marker, Region } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
-import { MapStackParamList, PostResponseType } from "../../lib/type";
+import { MapStackParamList, PostResponseType, RootStackParamList } from "../../lib/type";
 import Button from "../atoms/Button";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,7 +11,7 @@ import { getData } from "../../util/fetch";
 import Markers from "./Markers";
 import { API_URL } from "@env";
 
-type MapScreenNavigationProp = StackNavigationProp<MapStackParamList, "Map">
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">
 
 export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
     const navigation = useNavigation<MapScreenNavigationProp>();
@@ -36,10 +36,13 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
     };
 
     const onAddPress = () => {
-        if(location) navigation.navigate("AddPlace", {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            address,
+        if(location) navigation.navigate("HomeNavigator", {
+            screen: "AddPlace",
+            params: {
+                address,
+                latitude: location.latitude,
+                longitude: location.longitude
+            }
         });
     }
 
@@ -89,12 +92,12 @@ export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
                     <Text>{address}</Text>
                     <View style={styles.buttons}>
                         <Button
-                            buttonStyle={{backgroundColor: "#74b9ff", borderWidth: 0}}
+                            buttonStyle={{ backgroundColor: "#74b9ff", borderWidth: 0 }}
                             onPress={onAddPress}>
                             확인
                         </Button>
                         <Button
-                            buttonStyle={{backgroundColor: "#ff7675", borderWidth: 0}}
+                            buttonStyle={{ backgroundColor: "#ff7675", borderWidth: 0 }}
                             onPress={onCancelPress}>
                             취소
                         </Button>

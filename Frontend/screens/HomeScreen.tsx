@@ -24,7 +24,6 @@ export default function HomeScreen({ navigation }: Props) {
         queryFn: fetchData,
         refetchInterval: 5000
     });
-    console.log(data);
     return (
             <ScreenContainer>
                 <FlatList

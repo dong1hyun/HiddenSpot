@@ -1,6 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { MapStackParamList } from "../lib/type";
+import { HomeStackParamList, MapStackParamList } from "../lib/type";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
@@ -12,8 +12,8 @@ import FullScreenLoader from "../components/atoms/FullScreenLoader";
 
 const { width, height } = Dimensions.get('window');
 
-type AddPlaceScreenNavigationProp = StackNavigationProp<MapStackParamList, "AddPlace">;
-type AddPlaceScreenProp = RouteProp<MapStackParamList, "AddPlace">;
+type AddPlaceScreenNavigationProp = StackNavigationProp<HomeStackParamList, "AddPlace">;
+type AddPlaceScreenProp = RouteProp<HomeStackParamList, "AddPlace">;
 
 interface Props {
     navigation: AddPlaceScreenNavigationProp,

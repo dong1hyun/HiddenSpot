@@ -14,19 +14,19 @@ export type AuthStackParamList = {
 
 export type MapStackParamList = {
     Map: undefined;
-    AddPlace: LocationType & { 
-        address: string;
-        id?: number;
-        photoUrl?: string;
-        title?: string;
-        description?: string;
-    };
 }
 
 export type HomeStackParamList = {
     Home: undefined;
     PlaceDetail: {
         id: number
+    };
+    AddPlace: LocationType & {
+        address: string;
+        id?: number;
+        photoUrl?: string;
+        title?: string;
+        description?: string;
     };
 }
 

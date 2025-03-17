@@ -20,7 +20,6 @@ export const fetchSearchPlace = async (query: string) => {
             }
         });
         const data = await response.json();
-        console.log(data.places);
         if (data?.places?.length > 0) {
             const places = await fetchPlaceData(data.places);
             return places;
@@ -104,7 +103,6 @@ export const getNearbyPlace = async (location: LocationType) => {
         });
         const data = await response.json();
         if (data?.places) {
-            // console.log(data?.places);
             const places = await fetchPlaceData(data.places);
             return places;
         }

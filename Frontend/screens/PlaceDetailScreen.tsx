@@ -13,7 +13,7 @@ import AuthStore from "../store/AuthStore";
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import Button from "../components/atoms/Button";
 
-type PlaceDetailScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
 
 interface Props {
@@ -65,17 +65,14 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                     <Button
                         buttonStyle={[styles.button, { backgroundColor: "#74b9ff" }]}
                         textStyle={styles.buttonText}
-                        onPress={() => navigation.navigate("MapNavigator", {
-                            screen: "AddPlace",
-                            params: {
-                                id: data.id,
-                                address: data.address,
-                                latitude: data.latitude,
-                                longitude: data.longitude,
-                                title: data.title,
-                                description: data.description,
-                                photoUrl: data.photoUrl,
-                            }
+                        onPress={() => navigation.navigate("AddPlace", {
+                            id: data.id,
+                            address: data.address,
+                            latitude: data.latitude,
+                            longitude: data.longitude,
+                            title: data.title,
+                            description: data.description,
+                            photoUrl: data.photoUrl,
                         })}
                     >
                         수정

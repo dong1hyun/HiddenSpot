@@ -3,7 +3,7 @@ import InputWithLabel from "../atoms/InputWithLabel";
 import * as ImagePicker from 'expo-image-picker';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { useForm } from "react-hook-form";
-import { MapStackParamList, PostFormType, RootStackParamList } from "../../lib/type";
+import { HomeStackParamList, MapStackParamList, PostFormType, RootStackParamList } from "../../lib/type";
 import Button from "../atoms/Button";
 import Error from "../atoms/Error";
 import { postData, updateData } from "../../util/fetch";
@@ -21,14 +21,14 @@ interface Props {
     isLoading: boolean;
 }
 
-type AddPlaceScreenNavigation = StackNavigationProp<RootStackParamList, "HomeNavigator">;
-type AddPlaceRouteProp = RouteProp<MapStackParamList, "AddPlace">;
+type AddPlaceScreenNavigation = StackNavigationProp<HomeStackParamList, "PlaceDetail">;
+type AddPlaceRouteProp = RouteProp<HomeStackParamList, "AddPlace">;
 
 export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const route = useRoute<AddPlaceRouteProp>();
     const prevData = route.params;
-    const {id, address, latitude, longitude} = prevData;
+    const { id, address, latitude, longitude } = prevData;
     const isEditing = Boolean(prevData.id);
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>(prevData.title ? {
         defaultValues: {
@@ -42,7 +42,7 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
     const title = watch("title");
     const description = watch("description");
     const queryClient = useQueryClient();
-    
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
@@ -102,14 +102,21 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                 longitude,
                 address
             }
+
+            let id = prevData.id;
             if (isEditing) {
-                await updateData(`http://10.0.2.2:5000/place/${id}`, PlaceData);
+                await updateData(`${API_URL}/place/${id}`, PlaceData);
             }
             else {
-                await postData(`${API_URL}/place`, PlaceData);
+                const response = await postData(`${API_URL}/place`, PlaceData);
+                id = response.id;
             }
             queryClient.invalidateQueries({ queryKey: ['places'] });
-            navigation.reset({index: 0, routes: [{name: "HomeNavigator", params: {screen: "Home"}}]});
+            if (id) {
+                navigation.navigate("PlaceDetail", {
+                    id
+                });
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -154,14 +161,14 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                 }}
             />
             <Error message={errors.description?.message} />
-            <Button
-                buttonStyle={styles.submitButton}
-                textStyle={{color: "white"}}
-                disabled={!(title && description && image) || isLoading}
-                onPress={handleSubmit(onSubmit)}
-            >
-                {isEditing ? "수정 완료" : "완료"}
-            </Button>
+                <Button
+                    buttonStyle={styles.submitButton}
+                    textStyle={{ color: "white" }}
+                    disabled={!(title && description && image) || isLoading}
+                    onPress={handleSubmit(onSubmit)}
+                >
+                    {isEditing ? "수정 완료" : "완료"}
+                </Button>
         </View>
     );
 }

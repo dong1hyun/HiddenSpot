@@ -35,7 +35,6 @@ export async function getData(url: string) {
 
 export const updateData = async (url: string, data: object) => {
     try {
-        console.log("update")
       const response = await fetch(url, {
         method: 'PUT', 
         headers: {
@@ -43,13 +42,6 @@ export const updateData = async (url: string, data: object) => {
         },
         body: JSON.stringify(data),
       });
-  
-      if (response.ok) {
-        const result = await response.json();
-        console.log(result);
-      } else {
-        console.log('수정 실패:', response.statusText);
-      }
     } catch (error) {
       console.error('updateData 에러:', error);
     }
