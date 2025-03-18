@@ -15,7 +15,7 @@ import Button from "../components/atoms/Button";
 import { useState } from "react";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import ModalContainer from "../components/templates/ModalContainer";
-import EditButtons from "../components/molecules/editButtons";
+import EditButtons from "../components/molecules/EditButtons";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
