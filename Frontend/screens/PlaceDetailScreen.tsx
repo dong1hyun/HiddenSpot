@@ -15,7 +15,7 @@ import Button from "../components/atoms/Button";
 import { useState } from "react";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import ModalContainer from "../components/templates/ModalContainer";
-import EditButtons from "../components/molecules/editButtons";
+import EditButtons from "../components/molecules/EditButtons";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -46,8 +46,10 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
 
     const deletePlace = async () => {
         try {
+            console.log("시작")
             setDeleteLoading(true);
-            deleteData(`http://10.0.2.2:5000/place/${id}`);
+            await deleteData(`${API_URL}/place/${id}`);
+            console.log("노에러")
             queryClient.invalidateQueries({queryKey: ['places']});
             navigation.navigate("Home");
         } catch(error) {
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: "white",
         gap: 12,
-        padding: 16,
+        padding: 32,
         borderRadius: 24,
     },
     buttons: {
