@@ -19,7 +19,7 @@ export default function AppNavigator() {
           paddingTop: 5,
           height: 50
         },
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
       }}
     >
       <Tab.Screen
@@ -29,6 +29,7 @@ export default function AppNavigator() {
           tabBarIcon: (({size, color}) => {
             return <FontAwesome name="home" size={size} color={color} />
           }),
+          popToTopOnBlur: true
         }}
         name="HomeNavigator"
         component={HomeNavigator}

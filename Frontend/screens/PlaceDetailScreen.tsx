@@ -1,17 +1,21 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
-import { HomeStackParamList, MapStackParamList, PostResponseType, RootStackParamList } from "../lib/type";
-import { getData } from "../util/fetch";
-import { useQuery } from "@tanstack/react-query";
+import { HomeStackParamList, PostResponseType } from "../lib/type";
+import { deleteData, getData } from "../util/fetch";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
 import Spinner from "../components/atoms/SpinLoading";
 import { API_URL } from "@env";
 import AuthStore from "../store/AuthStore";
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import Button from "../components/atoms/Button";
+import { useState } from "react";
+import FullScreenLoader from "../components/atoms/FullScreenLoader";
+import ModalContainer from "../components/templates/ModalContainer";
+import EditButtons from "../components/molecules/editButtons";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -23,11 +27,14 @@ interface Props {
 
 const { width, height } = Dimensions.get('window');
 export default function PlaceDetailScreen({ route, navigation }: Props) {
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const { nickName } = AuthStore();
     const id = route.params.id;
+    const queryClient = useQueryClient();
+
     const fetchData = async (): Promise<PostResponseType> => {
         const response = await getData(`${API_URL}/place/${id}`);
-
         return response;
     }
 
@@ -37,6 +44,18 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
         refetchInterval: 60000
     });
 
+    const deletePlace = async () => {
+        try {
+            setDeleteLoading(true);
+            deleteData(`http://10.0.2.2:5000/place/${id}`);
+            queryClient.invalidateQueries({queryKey: ['places']});
+            navigation.navigate("Home");
+        } catch(error) {
+            console.error("장소 제거 에러", error);
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
     return (
         <View style={styles.container}>
             <ScrollView style={styles.container}>
@@ -61,31 +80,18 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
             </ScrollView>
             {
                 nickName === data?.nickName &&
-                <View style={styles.editButtonContainer}>
-                    <Button
-                        buttonStyle={[styles.button, { backgroundColor: "#74b9ff" }]}
-                        textStyle={styles.buttonText}
-                        onPress={() => navigation.navigate("AddPlace", {
-                            id: data.id,
-                            address: data.address,
-                            latitude: data.latitude,
-                            longitude: data.longitude,
-                            title: data.title,
-                            description: data.description,
-                            photoUrl: data.photoUrl,
-                        })}
-                    >
-                        수정
-                    </Button>
-                    <Button
-                        buttonStyle={[styles.button, { backgroundColor: "red" }]}
-                        textStyle={styles.buttonText}
-                        onPress={() => { }}
-                    >
-                        삭제
-                    </Button>
-                </View>
+                <EditButtons id={id} data={data} setModalVisible={setModalVisible} />
             }
+            <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
+                <View style={styles.modalContainer}>
+                    <Text>정말 삭제하시겠습니까?</Text>
+                    <View style={styles.buttons}>
+                        <Button buttonStyle={styles.button} onPress={() => setModalVisible(false)}>취소</Button>
+                        <Button buttonStyle={styles.button} onPress={() => {deletePlace()}}>확인</Button>
+                    </View>
+                </View>
+            </ModalContainer>
+            <FullScreenLoader loading={deleteLoading} />
         </View>
     );
 };
@@ -139,26 +145,18 @@ const styles = StyleSheet.create({
         borderColor: "#dfe6e9",
         overflow: 'hidden',
     },
-    editButtonContainer: {
-        position: 'absolute', // 화면 고정
-        bottom: 10, // 하단에 고정
-        left: 0,
-        right: 0,
-        padding: 10,
-        alignItems: 'center',
+    modalContainer: {
         backgroundColor: "white",
+        gap: 12,
+        padding: 16,
+        borderRadius: 24,
+    },
+    buttons: {
         flexDirection: "row",
-        justifyContent: "space-around",
-        elevation: 12
+        justifyContent: "center",
+        gap: 32,
     },
     button: {
-        backgroundColor: "black",
-        paddingHorizontal: 24,
-        paddingVertical: 4,
-        borderRadius: 8
-    },
-    buttonText: {
-        color: "white",
-        fontWeight: "bold"
+        paddingHorizontal: 12
     }
 });

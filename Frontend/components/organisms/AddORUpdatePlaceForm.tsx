@@ -3,18 +3,17 @@ import InputWithLabel from "../atoms/InputWithLabel";
 import * as ImagePicker from 'expo-image-picker';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { useForm } from "react-hook-form";
-import { HomeStackParamList, MapStackParamList, PostFormType, RootStackParamList } from "../../lib/type";
+import { HomeStackParamList, PostFormType } from "../../lib/type";
 import Button from "../atoms/Button";
 import Error from "../atoms/Error";
 import { postData, updateData } from "../../util/fetch";
 import AuthStore from "../../store/AuthStore";
-import { supabase } from "../../lib/supabase";
-import { Buffer } from 'buffer';
 import { Dispatch, SetStateAction, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { API_URL } from "@env";
+import { uploadPhotoAndGetPublicUrl } from "../../util/place";
 
 interface Props {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -55,43 +54,10 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
         }
     };
 
-    const uploadPhotoAndGetPublicUrl = async () => {
-        try {
-            // 이미지 url에서 데이터를 가져옴
-            const response = await fetch(image);
-
-            // 컨테츠 타입 추론
-            const contentType = response.headers.get("content-type") || "application/octet-stream";
-
-            // arrayBuffer(이진 데이터를 저장하는 고정 크기의 메모리 버퍼) 생성
-            const arrayBuffer = await response.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-
-            const { data, error } = await supabase.storage
-                .from("photos")
-                .upload(`public/${Date.now()}.png`, buffer, {
-                    contentType: contentType,
-                });
-
-            if (error) {
-                console.error(error);
-                return;
-            }
-            else {
-                const imageUrl = supabase.storage
-                    .from('photos')
-                    .getPublicUrl(data.path).data.publicUrl;
-                return imageUrl;
-            }
-        } catch (error) {
-            console.error("이미지 업로드 에러", error);
-        }
-    }
-
     const onSubmit = async (data: PostFormType) => {
         try {
             setIsLoading(true);
-            const photoUrl = await uploadPhotoAndGetPublicUrl();
+            const photoUrl = await uploadPhotoAndGetPublicUrl(image);
             const PlaceData = {
                 userEmail: email,
                 nickName,

@@ -35,15 +35,35 @@ export async function getData(url: string) {
 
 export const updateData = async (url: string, data: object) => {
     try {
-      const response = await fetch(url, {
-        method: 'PUT', 
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData);
+        }
     } catch (error) {
-      console.error('updateData 에러:', error);
+        console.error('updateData 에러:', error);
     }
-  };
-  
+};
+
+export const deleteData = async (url: string) => {
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+            const responseData = await response.json();
+            throw new Error(responseData);
+        }
+    } catch (error) {
+
+    }
+}
