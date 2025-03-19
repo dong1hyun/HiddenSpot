@@ -84,7 +84,7 @@ router.get('/:id', async (req, res) => {
                 }
             }
         });
-        if(place.favoritedBy.length === 0) delete place.favoritedBy;
+        if(place.favoritedBy.length === 0) place.favoritedBy = null;
         res.status(200).json(place);
     } catch (error) {
         console.error(error);

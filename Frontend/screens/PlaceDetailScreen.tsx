@@ -17,7 +17,7 @@ import { useState } from "react";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import ModalContainer from "../components/templates/ModalContainer";
 import EditButtons from "../components/molecules/EditButtons";
-import { addOrDeleteToFavorites } from "../util/place";
+import { useFavoriteMutation } from "../util/place";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -35,7 +35,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const id = route.params.id;
     const queryClient = useQueryClient();
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`http://10.0.2.2:5000/place/${id}?email=${email}`);
+        const response = await getData(`${API_URL}/place/${id}?email=${email}`);
         return response;
     }
 
@@ -44,6 +44,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
         queryFn: fetchData,
         refetchInterval: 60000
     });
+    const {mutate} = useFavoriteMutation(email, id, !!data?.favoritedBy);
 
     const deletePlace = async () => {
         try {
@@ -70,7 +71,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Text style={styles.title}>{data?.title}</Text>
-                        <AntDesign onPress={() => {addOrDeleteToFavorites(email, +id, !!data?.favoritedBy)}} name={data?.favoritedBy ? "star" : "staro"} style={styles.starIcon} />
+                        <AntDesign onPress={() => {mutate()}} name={data?.favoritedBy ? "star" : "staro"} style={styles.starIcon} />
                     </View>
                     <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
                     <Text style={styles.description}>{data?.description}</Text>
