@@ -14,6 +14,7 @@ model User {
   places Place[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  favorites Favorite[]
 }
 
 model Place {
@@ -29,4 +30,15 @@ model Place {
   user       User     @relation(fields: [userEmail], references: [email])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  favoritedBy Favorite[]
+}
+
+model Favorite {
+  id      Int   @id @default(autoincrement())
+  userEmail String
+  placeId Int
+  user    User  @relation(fields: [userEmail], references: [email])
+  place   Place @relation(fields: [placeId], references: [id])
+
+  @@unique([userEmail, placeId])
 }

@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 
-const ScreenContainer = ({ children }: { children: ReactNode }) => {
+const ScreenContainer = ({ children, style }: { children: ReactNode, style?: object }) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, style]}>
       <ScrollView>
         <View style={styles.container}>{children}</View>
       </ScrollView>

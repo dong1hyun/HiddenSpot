@@ -4,7 +4,8 @@ import { View } from "react-native";
 import { HomeStackParamList, PostResponseType } from "../lib/type";
 import { deleteData, getData } from "../util/fetch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import AntDesign from "react-native-vector-icons/AntDesign";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
 import Spinner from "../components/atoms/SpinLoading";
@@ -15,6 +16,7 @@ import Button from "../components/atoms/Button";
 import { useState } from "react";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import ModalContainer from "../components/templates/ModalContainer";
+import { addOrDeleteToFavorites } from "../util/place";
 import EditButtons from "../components/molecules/EditButtons";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
@@ -29,12 +31,11 @@ const { width, height } = Dimensions.get('window');
 export default function PlaceDetailScreen({ route, navigation }: Props) {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const { nickName } = AuthStore();
+    const { nickName, email } = AuthStore();
     const id = route.params.id;
     const queryClient = useQueryClient();
-
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`${API_URL}/place/${id}`);
+        const response = await getData(`http://10.0.2.2:5000/place/${id}?email=${email}`);
         return response;
     }
 
@@ -47,7 +48,8 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const deletePlace = async () => {
         try {
             setDeleteLoading(true);
-            deleteData(`http://10.0.2.2:5000/place/${id}`);
+            await deleteData(`${API_URL}/place/${id}`);
+            setModalVisible(false);
             queryClient.invalidateQueries({queryKey: ['places']});
             navigation.navigate("Home");
         } catch(error) {
@@ -63,10 +65,13 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                 <Image source={{ uri: data?.photoUrl }} style={styles.image} resizeMode="cover" />
                 <View style={styles.contentContainer}>
                     <View style={styles.uerContainer}>
-                        <FontAwesome6Icon style={styles.userIcon} name="circle-user" />
+                        <FontAwesome style={styles.userIcon} name="user-circle-o" />
                         <Text>{data?.nickName}</Text>
                     </View>
-                    <Text style={styles.title}>{data?.title}</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Text style={styles.title}>{data?.title}</Text>
+                        <AntDesign onPress={() => {addOrDeleteToFavorites(email, +id, !!data?.favoritedBy)}} name={data?.favoritedBy ? "star" : "staro"} style={styles.starIcon} />
+                    </View>
                     <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
                     <Text style={styles.description}>{data?.description}</Text>
                     <Text>{data?.address}</Text>
@@ -80,7 +85,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
             </ScrollView>
             {
                 nickName === data?.nickName &&
-                <EditButtons id={id} data={data} setModalVisible={setModalVisible} />
+                <EditButtons data={data} setModalVisible={setModalVisible} />
             }
             <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
                 <View style={styles.modalContainer}>
@@ -102,7 +107,6 @@ const styles = StyleSheet.create({
     },
     userIcon: {
         fontSize: 36,
-        color: "gray"
     },
     uerContainer: {
         flexDirection: 'row',
@@ -110,7 +114,8 @@ const styles = StyleSheet.create({
         gap: 5,
         borderBottomWidth: 2,
         borderBottomColor: "#dfe6e9",
-        paddingBottom: 12,
+        paddingBottom: 8,
+        marginBottom: 12,
     },
     image: {
         height: width * 2 / 3,
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: "white",
         gap: 12,
-        padding: 16,
+        padding: 32,
         borderRadius: 24,
     },
     buttons: {
@@ -158,5 +163,9 @@ const styles = StyleSheet.create({
     },
     button: {
         paddingHorizontal: 12
+    },
+    starIcon: {
+        fontSize: 28,
+        color: "#fdcb6e"
     }
 });

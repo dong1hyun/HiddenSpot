@@ -6,14 +6,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
 interface Props {
-    id: number;
     data: PostResponseType;
     setModalVisible: Dispatch<SetStateAction<boolean>>;
 }
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 
-export default function EditButtons({ id, data, setModalVisible }: Props) {
+export default function EditButtons({ data, setModalVisible }: Props) {
     const navigation = useNavigation<PlaceDetailScreenNavigationProp>();
 
     return (

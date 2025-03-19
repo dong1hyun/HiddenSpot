@@ -47,7 +47,7 @@ export default function AppNavigator() {
       />
       <Tab.Screen
         options={{
-          title: "마이페이지",
+          title: "나의 정보",
           tabBarIcon: (({size, color}) => {
             return <FontAwesome name="user" size={size} color={color} />
           }),
