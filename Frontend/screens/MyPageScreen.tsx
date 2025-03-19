@@ -1,5 +1,3 @@
-import { Pressable, Text, View } from "react-native";
-import { supabase } from "../lib/supabase";
 import AccountInfo from "../components/molecules/AccountInfo";
 import ScreenContainer from "../components/templates/ScreenContainer";
 

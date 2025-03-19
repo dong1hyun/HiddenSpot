@@ -1,6 +1,9 @@
 import { supabase } from "../lib/supabase";
-import { deleteData } from "./fetch";
 import { Buffer } from 'buffer';
+import { deleteData, postData } from "./fetch";
+import { useQueryClient } from "@tanstack/react-query";
+import queryClient from "./queryClient";
+import { API_URL } from "@env";
 
 export const uploadPhotoAndGetPublicUrl = async (image: string) => {
     try {
@@ -35,11 +38,19 @@ export const uploadPhotoAndGetPublicUrl = async (image: string) => {
     }
 };
 
-export const deletePlace = async (id: number) => {
+export const addOrDeleteToFavorites = async (userEmail: string, placeId: number, isDelete: boolean) => {
+    const url = `${API_URL}/place/favorite`;
     try {
-        deleteData(`http://10.0.2.2:5000/place/${id}`);
-        
+        if (isDelete) {
+            await deleteData(`${url}?userEmail=${userEmail}&placeId=${placeId}`);
+        } else {
+            await postData(url, {
+                userEmail,
+                placeId
+            });
+        }
+    queryClient.invalidateQueries({queryKey: ['place', 'detail', placeId]})
     } catch(error) {
-        console.error("장소 제거 에러", error);
+        console.error("즐겨찾기 설정 에러", error);
     }
-};
+}

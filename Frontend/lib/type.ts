@@ -58,6 +58,7 @@ export interface PostResponseType extends PostFormType {
     nickName: string;
     created_at: Date;
     updated_at: Date;
+    favoritedBy?: FavoriteType[]
 }
 
 
@@ -94,4 +95,10 @@ export interface PlaceType {
 export interface UserExistCheckType {
     emailExist: boolean,
     nickNameExist: boolean
+}
+
+export interface FavoriteType { 
+    id: number;
+    userEmail: string;
+    placeId: number;
 }
