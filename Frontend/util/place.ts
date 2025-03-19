@@ -1,9 +1,10 @@
 import { supabase } from "../lib/supabase";
 import { Buffer } from 'buffer';
 import { deleteData, postData } from "./fetch";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import queryClient from "./queryClient";
 import { API_URL } from "@env";
+import { PostResponseType } from "../lib/type";
 
 export const uploadPhotoAndGetPublicUrl = async (image: string) => {
     try {
@@ -38,19 +39,46 @@ export const uploadPhotoAndGetPublicUrl = async (image: string) => {
     }
 };
 
-export const addOrDeleteToFavorites = async (userEmail: string, placeId: number, isDelete: boolean) => {
-    const url = `${API_URL}/place/favorite`;
-    try {
-        if (isDelete) {
-            await deleteData(`${url}?userEmail=${userEmail}&placeId=${placeId}`);
-        } else {
-            await postData(url, {
-                userEmail,
-                placeId
+export const useFavoriteMutation = (userEmail: string, placeId: number, isFavorited: boolean) => {
+    return useMutation({
+        mutationFn: async () => {
+            const url = `${API_URL}/place/favorite`;
+
+            if (isFavorited) {
+                await deleteData(`${url}?userEmail=${userEmail}&placeId=${placeId}`);
+            } else {
+                await postData(url, {
+                    userEmail,
+                    placeId
+                });
+            }
+        },
+
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ["place", "detail", placeId] });
+
+            const previousData = queryClient.getQueryData(["place", "detail", placeId]);
+
+            queryClient.setQueryData(["place", "detail", placeId], (oldData: PostResponseType) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    favoritedBy: isFavorited ? null : [{ id: Date.now(), userEmail, placeId }],
+                };
             });
-        }
-    queryClient.invalidateQueries({queryKey: ['place', 'detail', placeId]})
-    } catch(error) {
-        console.error("즐겨찾기 설정 에러", error);
-    }
-}
+
+            return { previousData };
+        },
+
+        onError: (error, _, context) => {
+            console.error("즐겨찾기 요청 오류:", error);
+            if (context?.previousData) {
+                queryClient.setQueryData(["place", "detail", placeId], context.previousData);
+            }
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["place", "detail", placeId] });
+        },
+    });
+};

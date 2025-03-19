@@ -58,7 +58,7 @@ export interface PostResponseType extends PostFormType {
     nickName: string;
     created_at: Date;
     updated_at: Date;
-    favoritedBy?: FavoriteType[]
+    favoritedBy?: FavoriteType[] | null;
 }
 
 
