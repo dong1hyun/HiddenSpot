@@ -4,12 +4,12 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { email, nickName } = req.body;
-
+        const { email, nickName, interests } = req.body;
         const newUser = await db.User.create({
             data: {
                 email,
                 nickName,
+                interests
             },
         });
         res.status(201).json(newUser);

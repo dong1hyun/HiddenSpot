@@ -14,6 +14,8 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { API_URL } from "@env";
 import { uploadPhotoAndGetPublicUrl } from "../../util/place";
+import queryClient from "../../util/queryClient";
+import TagForm from "../molecules/TagForm";
 
 interface Props {
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -28,6 +30,7 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
     const route = useRoute<AddPlaceRouteProp>();
     const prevData = route.params;
     const { id, address, latitude, longitude } = prevData;
+    const [interests, setInterests] = useState<string[]>([]);
     const isEditing = Boolean(prevData.id);
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>(prevData.title ? {
         defaultValues: {
@@ -40,7 +43,6 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
     const image = watch("photoUrl");
     const title = watch("title");
     const description = watch("description");
-    const queryClient = useQueryClient();
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -126,11 +128,12 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                     }
                 }}
             />
+            <TagForm interests={interests} setInterests={setInterests} errorMessage="" title="사진에 해당하는 태그를 선택해주새요" maxNumber={2} />
             <Error message={errors.description?.message} />
                 <Button
                     buttonStyle={styles.submitButton}
                     textStyle={{ color: "white" }}
-                    disabled={!(title && description && image) || isLoading}
+                    disabled={!(title && description && image && interests.length) || isLoading}
                     onPress={handleSubmit(onSubmit)}
                 >
                     {isEditing ? "수정 완료" : "완료"}

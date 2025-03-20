@@ -7,10 +7,16 @@ export default function AuthNavigator() {
     return (
         <Stack.Navigator>
             <Stack.Screen
+                options={{
+                    headerTitle: "로그인"
+                }}
                 name="Login"
                 component={LoginScreen}
             />
             <Stack.Screen
+                options={{
+                    headerTitle: "회원가입"
+                }}
                 name="Register"
                 component={RegisterScreen}
             />

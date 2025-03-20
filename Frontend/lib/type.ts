@@ -41,7 +41,8 @@ export interface RegisterFormType {
     email: string;
     password: string;
     confirm_password: string;
-    nickName: string
+    nickName: string;
+    interests: string[];
 }
 
 export interface PostFormType {
@@ -73,6 +74,7 @@ export interface LocationType {
 export interface UserType {
     email: string;
     nickName: string;
+    interests: string[];
 }
 
 type photo = {

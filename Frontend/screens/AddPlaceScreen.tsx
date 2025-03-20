@@ -43,11 +43,6 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingBottom: 40,
-        backgroundColor: "white"
-    },
     mapContainer: {
         width: "100%",
         height: height / 3,
@@ -64,24 +59,5 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
         marginVertical: 5
-    },
-    camera: {
-        fontSize: 200,
-        color: "gray"
-    },
-    imageContainer: {
-        width: "100%",
-        height: width,
-        justifyContent: "center",
-        alignItems: "center",
-        borderStyle: "dashed",
-        borderWidth: 2,
-        borderRadius: 24,
-        marginTop: 36
-    },
-    image: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 24,
     },
 });

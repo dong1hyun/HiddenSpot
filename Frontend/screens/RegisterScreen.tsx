@@ -1,7 +1,7 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { AuthStackParamList, RegisterFormType, UserType } from '../lib/type';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import Button from '../components/atoms/Button';
 import { useNavigation } from '@react-navigation/native';
@@ -14,20 +14,27 @@ import { postData } from '../util/fetch';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { checkUserExists } from '../util/user';
 import { API_URL } from '@env';
+import TagForm from '../components/molecules/TagForm';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
-    const { control, handleSubmit, watch, setError, formState: { errors } } = useForm<RegisterFormType>();
+    const { control, handleSubmit, watch, setError, clearErrors, formState: { errors } } = useForm<RegisterFormType>();
     const [loading, setLoading] = useState(false);
+    const [interests, setInterests] = useState<string[]>([]);
     const { mutate } = useMutation({
-        mutationFn: ({ email, nickName }: UserType) => postData(`${API_URL}/user`, { email, nickName }),
+        mutationFn: ({ email, nickName, interests }: UserType) => postData(`http://10.0.2.2:5000/user`, { email, nickName, interests }),
         onError: (error) => {
             console.error("error:", error);
         },
     });
-    async function signUpAndCreateUser({ email, password, nickName }: RegisterFormType) {
+    async function signUpAndCreateUser({ email, password, nickName, interests, }: RegisterFormType) {
         try {
             setLoading(true);
+            if(interests.length === 0) {
+                setError("interests", {message: "관심사를 최소 1개 이상 선택해주세요"});
+                return;
+            }
             const existCheck = await checkUserExists(email, nickName);
             let exist = false;
             if (existCheck.emailExist) {
@@ -42,7 +49,7 @@ export default function RegisterScreen() {
                 return;
             }
 
-            mutate({ email, nickName });
+            mutate({ email, nickName, interests });
             const {
                 error,
             } = await supabase.auth.signUp({
@@ -50,7 +57,8 @@ export default function RegisterScreen() {
                 password: password,
                 options: {
                     data: {
-                        nickName
+                        nickName,
+                        interests
                     }
                 }
             });
@@ -68,9 +76,15 @@ export default function RegisterScreen() {
             email: data.email,
             password: data.password,
             confirm_password: data.confirm_password,
-            nickName: data.nickName
+            nickName: data.nickName,
+            interests
         });
     }
+    useEffect(() => {
+        if (interests.length > 0) {
+          clearErrors("interests");
+        }
+      }, [interests]);
     return (
         <ScreenContainer>
             <InputWithLabel
@@ -137,19 +151,29 @@ export default function RegisterScreen() {
                 }}
             />
             <Error message={errors.nickName?.message} />
-            <Pressable style={sytles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text>로그인</Text></Pressable>
+            <TagForm
+                setInterests={setInterests}
+                interests={interests}
+                errorMessage={errors.interests?.message}
+                maxNumber={5}
+                title='관심있는 태그를 선택해보세요'
+            />
+            <Pressable style={styles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text style={styles.link}>로그인</Text><AntDesign name='arrowright' /></Pressable>
             <Button onPress={handleSubmit(onSubmit)}>계정생성</Button>
             {loading && <Spinner />}
         </ScreenContainer>
     );
 };
 
-const sytles = StyleSheet.create({
-    container: {
-
-    },
+const styles = StyleSheet.create({
     toggleButton: {
         marginVertical: 20,
         color: "#7f8c8d",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6
+    },
+    link: {
+      color: "#7f8c8d",
     }
 });

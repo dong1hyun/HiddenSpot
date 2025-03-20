@@ -10,6 +10,7 @@ import ScreenContainer from '../components/templates/ScreenContainer';
 import InputWithLabel from '../components/atoms/InputWithLabel';
 import Spinner from '../components/atoms/SpinLoading';
 import { StackNavigationProp } from '@react-navigation/stack';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 export default function LoginScreen() {
   const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
@@ -65,16 +66,21 @@ export default function LoginScreen() {
         }}
       />
       <Error message={errors.password?.message} />
-      <Pressable onPress={() => { navigation.navigate("Register") }}><Text style={sytles.toggleButton}>회원가입</Text></Pressable>
+      <Pressable style={styles.toggleButton} onPress={() => { navigation.navigate("Register") }}><Text style={styles.link}>회원가입</Text><AntDesign name='arrowright' /></Pressable>
       <Button onPress={handleSubmit(onSubmit)} disabled={loading}>로그인</Button>
       {loading && <Spinner />}
     </ScreenContainer>
   );
 };
 
-const sytles = StyleSheet.create({
+const styles = StyleSheet.create({
   toggleButton: {
     marginVertical: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6
+  },
+  link: {
     color: "#7f8c8d",
   }
 });

@@ -15,6 +15,7 @@ import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import EditButtons from "../components/molecules/EditButtons";
 import PlaceDeleteModal from "../components/molecules/PlaceDeleteModal";
 import LikeAndFavoriteButton from "../components/molecules/LikeAndFavoriteButton";
+import { API_URL } from "@env";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -31,7 +32,7 @@ export default function PlaceDetailScreen({ route }: Props) {
     const { nickName, email } = AuthStore();
     const id = route.params.id;
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`http://10.0.2.2:5000/place/${id}?email=${email}`);
+        const response = await getData(`${API_URL}/place/${id}?email=${email}`);
         return response;
     }
 
