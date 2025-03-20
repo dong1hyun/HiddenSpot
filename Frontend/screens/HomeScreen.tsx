@@ -19,21 +19,21 @@ export default function HomeScreen({ navigation }: Props) {
         return response;
     };
 
-    const { data, error, isLoading } = useQuery({
+    const { data } = useQuery({
         queryKey: ['places'],
         queryFn: fetchData,
         refetchInterval: 5000
     });
     return (
-            <ScreenContainer>
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => (
-                        <PlaceItem placeData={item} />
-                    )}
-                    scrollEnabled={false}
-                />
-            </ScreenContainer>
+        <ScreenContainer>
+            <FlatList
+                data={data}
+                renderItem={({ item }) => (
+                    <PlaceItem placeData={item} />
+                )}
+                scrollEnabled={false}
+            />
+        </ScreenContainer>
     )
 }
 

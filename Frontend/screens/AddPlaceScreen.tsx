@@ -1,6 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { HomeStackParamList, MapStackParamList } from "../lib/type";
+import { HomeStackParamList } from "../lib/type";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";

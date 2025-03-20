@@ -4,11 +4,12 @@ import { HomeStackParamList, PostResponseType } from "../../lib/type";
 import { getRelativeTime } from "../../util/date";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
 
 export default function PlaceItem({ placeData }: { placeData: PostResponseType }) {
-    const { id, title, address, created_at, photoUrl, nickName } = placeData;
+    const { id, title, address, created_at, photoUrl, nickName, likeCount } = placeData;
     const navigation = useNavigation<HomeScreenNavigationProp>();
     return (
         <TouchableOpacity onPress={() => navigation.navigate("PlaceDetail", {id})} style={styles.container}>
@@ -20,6 +21,10 @@ export default function PlaceItem({ placeData }: { placeData: PostResponseType }
                 </View>
                 <Text style={styles.address}>{address}</Text>
                 <Text style={styles.nickName}>{nickName}</Text>
+            </View>
+            <View style={styles.likeContainer}>
+                <AntDesign name="heart" />
+                <Text style={styles.likeCount}>{likeCount}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -62,5 +67,16 @@ const styles = StyleSheet.create({
     nickName: {
         fontWeight: "500",
         marginTop: 8
-    }
+    },
+    likeContainer: {
+        position: "absolute",
+        right: 3,
+        bottom: 3,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8
+    },
+    likeCount: {
+
+    },
 });

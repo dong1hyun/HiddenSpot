@@ -26,7 +26,7 @@ router.put('/:id', async (req, res) => {
         res.status(200).json(updatedPlace);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error:"장소정보 수정에 실패했습니다."});
+        res.status(500).json({error:"장소 정보 수정에 실패했습니다."});
     }
 });
 
@@ -35,9 +35,22 @@ router.get('/', async (req, res) => {
         const places = await db.Place.findMany({
             orderBy: {
                 created_at: 'desc',
+            },
+            include: {
+                likedBy: true,
             }
         });
-        res.status(201).json(places);
+
+        const newPlaces = places.map((place) => {
+            const likeCount = place.likedBy.length || 0;
+            delete place.likedBy;
+            return ({
+                ...place,
+                likeCount
+            });
+        });
+
+        res.status(201).json(newPlaces);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "장소를 불러오는데 실패했습니다." });
