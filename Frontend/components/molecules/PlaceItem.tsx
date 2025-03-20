@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     },
     likeContainer: {
         position: "absolute",
-        right: 3,
-        bottom: 3,
+        right: 12,
+        bottom: 6,
         flexDirection: "row",
         alignItems: "center",
-        gap: 8
+        gap: 6
     },
     likeCount: {
 

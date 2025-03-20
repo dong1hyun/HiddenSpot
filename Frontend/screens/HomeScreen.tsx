@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getData } from "../util/fetch";
@@ -14,32 +14,44 @@ interface Props {
 }
 
 export default function HomeScreen({ navigation }: Props) {
-    const fetchData = async (): Promise<PostResponseType[]> => {
-        const response = await getData(`${API_URL}/place`);
+    const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
+        const response = await getData(`http://10.0.2.2:5000/place?page=${pageParam}`);
         return response;
     };
 
-    const { data } = useQuery({
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
         queryKey: ['places'],
-        queryFn: fetchData,
-        refetchInterval: 5000
+        queryFn: ({ pageParam }) => fetchData(pageParam),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length ? allPages.length + 1 : undefined;
+        },
+        refetchInterval: 60000
     });
+    const onEndReached = () => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    }
+    const places = data?.pages.flat();
     return (
-        <ScreenContainer>
+        <View style={styles.container}>
             <FlatList
-                data={data}
+                data={places}
                 renderItem={({ item }) => (
                     <PlaceItem placeData={item} />
                 )}
-                scrollEnabled={false}
+                onEndReached={onEndReached}
+                onEndReachedThreshold={0.5}
             />
-        </ScreenContainer>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "white"
     },
     image: {
         width: 50,

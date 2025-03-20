@@ -32,7 +32,11 @@ router.put('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
+        const {page} = req.query;
+        const limit = 8;
         const places = await db.Place.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
             orderBy: {
                 created_at: 'desc',
             },
