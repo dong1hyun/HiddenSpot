@@ -29,6 +29,7 @@ model Place {
   longitude Float
   nickName String
   userEmail String
+  tags String[]
   user       User     @relation(fields: [userEmail], references: [email])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

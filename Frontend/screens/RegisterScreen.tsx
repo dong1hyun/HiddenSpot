@@ -23,7 +23,7 @@ export default function RegisterScreen() {
     const [loading, setLoading] = useState(false);
     const [interests, setInterests] = useState<string[]>([]);
     const { mutate } = useMutation({
-        mutationFn: ({ email, nickName, interests }: UserType) => postData(`http://10.0.2.2:5000/user`, { email, nickName, interests }),
+        mutationFn: ({ email, nickName, interests }: UserType) => postData(`${API_URL}/user`, { email, nickName, interests }),
         onError: (error) => {
             console.error("error:", error);
         },

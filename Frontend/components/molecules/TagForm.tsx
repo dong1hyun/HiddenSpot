@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     tagContainer: {
         flex: 1,
         flexDirection: "row",
-        flexWrap: "wrap",  // 여러 줄로 나열
-        justifyContent: "space-between",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
         padding: 10,
         gap: 12
     },

@@ -9,7 +9,6 @@ import Error from "../atoms/Error";
 import { postData, updateData } from "../../util/fetch";
 import AuthStore from "../../store/AuthStore";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { API_URL } from "@env";
@@ -29,7 +28,7 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const route = useRoute<AddPlaceRouteProp>();
     const prevData = route.params;
-    const { id, address, latitude, longitude } = prevData;
+    const { address, latitude, longitude } = prevData;
     const [interests, setInterests] = useState<string[]>([]);
     const isEditing = Boolean(prevData.id);
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>(prevData.title ? {
@@ -68,7 +67,8 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                 photoUrl,
                 latitude,
                 longitude,
-                address
+                address,
+                tags: interests
             }
 
             let id = prevData.id;
