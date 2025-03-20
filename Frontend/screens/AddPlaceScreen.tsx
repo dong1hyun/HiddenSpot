@@ -6,9 +6,9 @@ import Geocoder from "react-native-geocoding";
 import { GOOGLE_MAPS_API_KEY } from "@env";
 import { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AddPlaceForm from "../components/organisms/AddOrUpdatePlaceForm";
 import StaticMap from "../components/molecules/StaticMap";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
+import AddPlaceForm from "../components/organisms/AddOrUpdatePlaceForm";
 
 const { width, height } = Dimensions.get('window');
 
