@@ -79,13 +79,26 @@ router.get('/:id', async (req, res) => {
                 id
             },
             include: {
-                favoritedBy: {
-                    where: {userEmail}
-                }
+                favoritedBy: true,
+                likedBy: true,
             }
         });
-        if(place.favoritedBy.length === 0) place.favoritedBy = null;
-        res.status(200).json(place);
+
+        const isFavorited = place?.favoritedBy.some(fav => fav.userEmail === userEmail);
+        const isLiked = place?.likedBy.some(like => like.userEmail === userEmail);
+
+        const favoriteCount = place.favoritedBy.length || 0;
+        const likeCount = place.likedBy.length || 0;
+
+        delete place.favoritedBy;
+        delete place.likedBy;
+        res.status(200).json({
+            ...place,
+            isFavorited,
+            isLiked,
+            favoriteCount,
+            likeCount
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "세부정보를 불러오는데 실패했습니다." });
@@ -110,6 +123,24 @@ router.delete(`/favorite`, async (req, res) => {
     }
 });
 
+router.delete(`/like`, async (req, res) => {
+    try {
+        const {userEmail, placeId} = req.query;
+        const response = await db.Like.delete({
+            where: {
+                userEmail_placeId: {
+                    userEmail: userEmail,
+                    placeId: Number(placeId),
+                },
+            }
+        });
+        res.status(200).json(response);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({error: "좋아요 삭제에 실패했습니다."});
+    }
+});
+
 router.delete('/:id', async (req, res) => {
     try {
         const id = +req.params.id;
@@ -129,6 +160,22 @@ router.post(`/favorite`, async (req, res) => {
     try {
         const {userEmail, placeId} = req.body;
         const response = await db.Favorite.create({
+            data: {
+                userEmail,
+                placeId
+            }
+        });
+        res.status(200).json(response);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({error: "즐겨찾기에 실패했습니다."});
+    }
+});
+
+router.post(`/like`, async (req, res) => {
+    try {
+        const {userEmail, placeId} = req.body;
+        const response = await db.Like.create({
             data: {
                 userEmail,
                 placeId

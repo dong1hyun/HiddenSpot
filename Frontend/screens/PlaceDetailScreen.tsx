@@ -2,22 +2,19 @@ import { RouteProp } from "@react-navigation/native";
 import { Dimensions, Image, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import { HomeStackParamList, PostResponseType } from "../lib/type";
-import { deleteData, getData } from "../util/fetch";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getData } from "../util/fetch";
+import { useQuery } from "@tanstack/react-query";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
 import Spinner from "../components/atoms/SpinLoading";
-import { API_URL } from "@env";
 import AuthStore from "../store/AuthStore";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Button from "../components/atoms/Button";
 import { useState } from "react";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
-import ModalContainer from "../components/templates/ModalContainer";
 import EditButtons from "../components/molecules/EditButtons";
-import { useFavoriteMutation } from "../util/place";
+import PlaceDeleteModal from "../components/molecules/PlaceDeleteModal";
+import LikeAndFavoriteButton from "../components/molecules/LikeAndFavoriteButton";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -28,14 +25,13 @@ interface Props {
 }
 
 const { width, height } = Dimensions.get('window');
-export default function PlaceDetailScreen({ route, navigation }: Props) {
+export default function PlaceDetailScreen({ route }: Props) {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const { nickName, email } = AuthStore();
     const id = route.params.id;
-    const queryClient = useQueryClient();
     const fetchData = async (): Promise<PostResponseType> => {
-        const response = await getData(`${API_URL}/place/${id}?email=${email}`);
+        const response = await getData(`http://10.0.2.2:5000/place/${id}?email=${email}`);
         return response;
     }
 
@@ -44,21 +40,6 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
         queryFn: fetchData,
         refetchInterval: 60000
     });
-    const {mutate} = useFavoriteMutation(email, id, !!data?.favoritedBy);
-
-    const deletePlace = async () => {
-        try {
-            setDeleteLoading(true);
-            await deleteData(`${API_URL}/place/${id}`);
-            setModalVisible(false);
-            queryClient.invalidateQueries({queryKey: ['places']});
-            navigation.navigate("Home");
-        } catch(error) {
-            console.error("장소 제거 에러", error);
-        } finally {
-            setDeleteLoading(false);
-        }
-    };
     return (
         <View style={styles.container}>
             <ScrollView style={styles.container}>
@@ -69,18 +50,25 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                         <FontAwesome style={styles.userIcon} name="user-circle-o" />
                         <Text>{data?.nickName}</Text>
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View style={styles.infoContainer}>
                         <Text style={styles.title}>{data?.title}</Text>
-                        <AntDesign onPress={() => {mutate()}} name={data?.favoritedBy ? "star" : "staro"} style={styles.starIcon} />
-                    </View>
-                    <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
-                    <Text style={styles.description}>{data?.description}</Text>
-                    <Text>{data?.address}</Text>
-                    <View style={styles.mapContainer}>
-                        {
-                            data &&
-                            <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
-                        }
+                        <LikeAndFavoriteButton
+                            email={email}
+                            placeId={id}
+                            isFavorited={!!data?.isFavorited}
+                            isLiked={!!data?.isLiked}
+                            favoriteCount={data?.favoriteCount || 0}
+                            likeCount={data?.likeCount || 0}
+                        />
+                        <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
+                        <Text style={styles.description}>{data?.description}</Text>
+                        <Text>{data?.address}</Text>
+                        <View style={styles.mapContainer}>
+                            {
+                                data &&
+                                <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
+                            }
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -88,15 +76,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                 nickName === data?.nickName &&
                 <EditButtons data={data} setModalVisible={setModalVisible} />
             }
-            <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
-                <View style={styles.modalContainer}>
-                    <Text>정말 삭제하시겠습니까?</Text>
-                    <View style={styles.buttons}>
-                        <Button buttonStyle={styles.button} onPress={() => setModalVisible(false)}>취소</Button>
-                        <Button buttonStyle={styles.button} onPress={() => {deletePlace()}}>확인</Button>
-                    </View>
-                </View>
-            </ModalContainer>
+            <PlaceDeleteModal id={id} modalVisible={modalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setModalVisible} />
             <FullScreenLoader loading={deleteLoading} />
         </View>
     );
@@ -126,6 +106,9 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
+    infoContainer: {
+        flex: 1,
+    },
     title: {
         fontWeight: "bold",
         fontSize: 24,
@@ -151,22 +134,4 @@ const styles = StyleSheet.create({
         borderColor: "#dfe6e9",
         overflow: 'hidden',
     },
-    modalContainer: {
-        backgroundColor: "white",
-        gap: 12,
-        padding: 32,
-        borderRadius: 24,
-    },
-    buttons: {
-        flexDirection: "row",
-        justifyContent: "center",
-        gap: 32,
-    },
-    button: {
-        paddingHorizontal: 12
-    },
-    starIcon: {
-        fontSize: 28,
-        color: "#fdcb6e"
-    }
 });

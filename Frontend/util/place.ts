@@ -63,7 +63,8 @@ export const useFavoriteMutation = (userEmail: string, placeId: number, isFavori
                 if (!oldData) return oldData;
                 return {
                     ...oldData,
-                    favoritedBy: isFavorited ? null : [{ id: Date.now(), userEmail, placeId }],
+                    isFavorited: !oldData.isFavorited,
+                    favoriteCount: oldData.isFavorited ? oldData.favoriteCount - 1 : oldData.favoriteCount + 1
                 };
             });
 
@@ -72,6 +73,51 @@ export const useFavoriteMutation = (userEmail: string, placeId: number, isFavori
 
         onError: (error, _, context) => {
             console.error("즐겨찾기 요청 오류:", error);
+            if (context?.previousData) {
+                queryClient.setQueryData(["place", "detail", placeId], context.previousData);
+            }
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["place", "detail", placeId] });
+        },
+    });
+};
+
+export const useLikeMutation = (userEmail: string, placeId: number, isLiked: boolean) => {
+    return useMutation({
+        mutationFn: async () => {
+            const url = `${API_URL}/place/like`;
+
+            if (isLiked) {
+                await deleteData(`${url}?userEmail=${userEmail}&placeId=${placeId}`);
+            } else {
+                await postData(url, {
+                    userEmail,
+                    placeId
+                });
+            }
+        },
+
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ["place", "detail", placeId] });
+
+            const previousData = queryClient.getQueryData(["place", "detail", placeId]);
+
+            queryClient.setQueryData(["place", "detail", placeId], (oldData: PostResponseType) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    isLiked: !oldData.isLiked,
+                    likeCount: oldData.isLiked ? oldData.likeCount - 1 : oldData.likeCount + 1
+                };
+            });
+
+            return { previousData };
+        },
+
+        onError: (error, _, context) => {
+            console.error("좋아요 요청 오류:", error);
             if (context?.previousData) {
                 queryClient.setQueryData(["place", "detail", placeId], context.previousData);
             }
