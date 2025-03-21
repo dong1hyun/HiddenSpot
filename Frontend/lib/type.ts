@@ -108,6 +108,7 @@ export interface PlaceType {
     photoUrl: string | null;
     formattedAddress: string;
     location: LocationType;
+    likeCount?: number;
 }
 
 export interface UserExistCheckType {

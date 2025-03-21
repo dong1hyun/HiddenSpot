@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { getData } from "../../util/fetch";
 import { useQuery } from "@tanstack/react-query";
 import BottomSliderPlaceItem from "./BottomSliderPlaceItem";
@@ -6,6 +6,7 @@ import { RecommendationPlaceResponseType } from "../../lib/type";
 import { View } from "react-native";
 import { useMapContext } from "../../context/MapContext";
 import { API_URL } from "@env";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function RecommendatedPlace() {
     const getRecommendedPlaces = async (): Promise<RecommendationPlaceResponseType[] | undefined> => {
@@ -23,9 +24,8 @@ export default function RecommendatedPlace() {
         queryFn: getRecommendedPlaces,
         queryKey: ["recommendatedPlace"]
     });
-
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={styles.title}>
                 추천 장소
             </Text>
@@ -34,6 +34,7 @@ export default function RecommendatedPlace() {
                     <FlatList
                         data={data}
                         contentContainerStyle={styles.scrollContainer}
+                        keyExtractor={((_, index) => index.toString())}
                         renderItem={({item}) => (
                             <BottomSliderPlaceItem
                                 photoUrl={item.photoUrl}
@@ -43,6 +44,7 @@ export default function RecommendatedPlace() {
                                     longitude: item.longitude
                                 }}
                                 placeName={item.title}
+                                likeCount={item._count.likedBy}
                                 mapRef={mapRef}
                             />
                         )}
@@ -53,11 +55,15 @@ export default function RecommendatedPlace() {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
     title: {
         marginVertical: 12,
     },
     scrollContainer: {
         justifyContent: "flex-start",
-        gap: 30
+        gap: 30,
+        padding: 12,
       },
 });

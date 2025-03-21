@@ -24,7 +24,7 @@ export default function HomePlaceItem({ placeData }: { placeData: PostResponseTy
             </View>
             <View style={styles.likeContainer}>
                 <AntDesign name="heart" />
-                <Text style={styles.likeCount}>{likeCount}</Text>
+                <Text>{likeCount}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -75,8 +75,5 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 6
-    },
-    likeCount: {
-
     },
 });

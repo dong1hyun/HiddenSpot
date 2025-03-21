@@ -44,6 +44,7 @@ export default function BottomSlider() {
 
     return () => clearTimeout(timeoutId);
   }, [query]);
+  
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -89,19 +90,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 10,
     paddingHorizontal: 16
-  },
-  scrollContainer: {
-    justifyContent: "flex-start",
-    gap: 30
-  },
-  handleContainer: {
-    alignItems: "center",
-    paddingVertical: 10,
-  },
-  handleBar: {
-    width: 40,
-    height: 5,
-    backgroundColor: "#ccc",
-    borderRadius: 5,
-  },
+  }
 });
