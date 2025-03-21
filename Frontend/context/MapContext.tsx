@@ -1,5 +1,5 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
-import { MapPressEvent } from "react-native-maps";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useRef, useState } from "react";
+import MapView, { MapPressEvent } from "react-native-maps";
 import { LocationType } from "../lib/type";
 
 interface MapContextType {
@@ -13,13 +13,13 @@ interface MapContextType {
     setAddress: Dispatch<SetStateAction<string>>;
     onMarkerPress: () => void;
     onMapPress: (e: MapPressEvent) => void;
+    mapRef: React.RefObject<MapView>;
 }
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
 
 export default function MapProvider({ children }: { children: ReactNode }) {
     const [location, setLocation] = useState<LocationType | null>(null);
-
     const [query, setQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [address, setAddress] = useState("");
@@ -30,6 +30,7 @@ export default function MapProvider({ children }: { children: ReactNode }) {
         const { latitude, longitude } = e.nativeEvent.coordinate;
         setLocation({ latitude, longitude });
     };
+    const mapRef = useRef<MapView>(null);
 
     return (
         <MapContext.Provider value={{
@@ -43,6 +44,7 @@ export default function MapProvider({ children }: { children: ReactNode }) {
             onMarkerPress,
             address,
             setAddress,
+            mapRef
         }}>
             {children}
         </MapContext.Provider>

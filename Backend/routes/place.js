@@ -54,10 +54,32 @@ router.get('/', async (req, res) => {
             });
         });
 
-        res.status(201).json(newPlaces);
+        res.status(200).json(newPlaces);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "장소를 불러오는데 실패했습니다." });
+    }
+});
+
+router.get('/recommendation', async (req, res) => {
+    try {
+        const places = await db.place.findMany({
+            include: {
+              _count: {
+                select: { likedBy: true }
+              }
+            },
+            orderBy: {
+              likedBy: {
+                _count: 'desc'
+              }
+            },
+            take: 10
+          });
+        res.status(200).json(places);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "마커를 불러오는데 실패했습니다." });
     }
 });
 
@@ -80,7 +102,7 @@ router.get('/marker', async (req, res) => {
                 },
             },
         });
-        res.status(201).json(places);
+        res.status(200).json(places);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "마커를 불러오는데 실패했습니다." });

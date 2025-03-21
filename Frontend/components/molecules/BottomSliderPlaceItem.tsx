@@ -9,7 +9,7 @@ interface RefType {
     mapRef:  React.RefObject<MapView>
 }
 
-export default function NearbyPlaceItem({ photoUrl, placeName, location, formattedAddress, mapRef }: PlaceType & RefType) {
+export default function BottomSliderPlaceItem({ photoUrl, placeName, location, formattedAddress, mapRef }: PlaceType & RefType) {
     const onPlacePress = () => {
         setLocation(location);
         mapRef?.current?.animateToRegion({

@@ -4,7 +4,7 @@ import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } 
 import { getData } from "../util/fetch";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PostResponseType, RootStackParamList } from "../lib/type";
-import PlaceItem from "../components/molecules/PlaceItem";
+import HomePlaceItem from "../components/molecules/HomePlaceItem";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import { API_URL } from "@env";
 
@@ -15,7 +15,7 @@ interface Props {
 
 export default function HomeScreen({ navigation }: Props) {
     const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
-        const response = await getData(`http://10.0.2.2:5000/place?page=${pageParam}`);
+        const response = await getData(`${API_URL}/place?page=${pageParam}`);
         return response;
     };
 
@@ -39,7 +39,7 @@ export default function HomeScreen({ navigation }: Props) {
             <FlatList
                 data={places}
                 renderItem={({ item }) => (
-                    <PlaceItem placeData={item} />
+                    <HomePlaceItem placeData={item} />
                 )}
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}

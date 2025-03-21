@@ -16,8 +16,6 @@ type MapScreenProps = {
 };
 
 export default function MapScreen({ navigation }: MapScreenProps) {
-    const mapRef = useRef<MapView>(null);
-
     useEffect(() => {
         Geocoder.init(GOOGLE_MAPS_API_KEY, {
             language: "ko"
@@ -26,8 +24,8 @@ export default function MapScreen({ navigation }: MapScreenProps) {
 
     return (
         <View style={styles.container}>
-            <Map mapRef={mapRef} />
-            <BottomSlider mapRef={mapRef} />
+            <Map />
+            <BottomSlider />
         </View  >
     );
 }

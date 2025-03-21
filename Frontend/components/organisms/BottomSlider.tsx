@@ -1,16 +1,15 @@
 import "react-native-reanimated";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import { PlaceType } from "../../lib/type";
-import { FlatList } from "react-native-gesture-handler";
-import NearbyPlaceItem from "../molecules/NearbyPlaceItem";
-import MapView from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { fetchSearchPlace } from "../../util/map";
+import RecommendatedPlace from "../molecules/RecommendatedPlace";
+import SearchedPlace from "../molecules/SearchedPlace";
 
-export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapView> }) {
-  const { query, setQuery } = useMapContext();
+export default function BottomSlider() {
+  const { query, setQuery, mapRef } = useMapContext();
   const [places, setPlaces] = useState<PlaceType[]>();
   const bottomSheetRef = useRef<BottomSheet>(null);
   
@@ -60,22 +59,10 @@ export default function BottomSlider({ mapRef }: { mapRef: React.RefObject<MapVi
           value={query}
           onPressIn={handleFocus}
         />
-        {places ? <FlatList
-          contentContainerStyle={styles.scrollContainer}
-          data={places}
-          keyExtractor={((_, index) => index.toString())}
-          renderItem={(itemData) => (
-            <NearbyPlaceItem
-              mapRef={mapRef}
-              photoUrl={itemData.item.photoUrl}
-              placeName={itemData.item.placeName}
-              location={itemData.item.location}
-              formattedAddress={itemData.item.formattedAddress}
-            />
-          )}
-        >
-        </FlatList> :
-          <Text></Text>
+        {places && places.length > 0 ?
+          <SearchedPlace places={places} /> 
+          :
+          <RecommendatedPlace />
         }
       </BottomSheetView>
     </BottomSheet>

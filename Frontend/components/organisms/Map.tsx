@@ -13,10 +13,10 @@ import { API_URL } from "@env";
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">
 
-export default function Map({ mapRef }: { mapRef: React.RefObject<MapView> }) {
+export default function Map() {
     const navigation = useNavigation<MapScreenNavigationProp>();
     const [markers, setMarkers] = useState<PostResponseType[]>();
-    const { onMapPress, location, onMarkerPress, setLocation } = useMapContext();
+    const { onMapPress, location, onMarkerPress, setLocation, mapRef } = useMapContext();
     const [address, setAddress] = useState("");
     const fetchPlaces = async (region: Region) => {
         const { latitude, longitude, latitudeDelta, longitudeDelta } = region;

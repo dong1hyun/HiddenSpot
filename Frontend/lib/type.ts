@@ -51,6 +51,8 @@ export interface PostFormType {
     photoUrl: string;
 }
 
+// ResponseType
+
 export interface PostResponseType extends PostFormType {
     id: number;
     address: string;
@@ -77,10 +79,6 @@ export interface UserType {
     interests: string[];
 }
 
-type photo = {
-    name: string
-}
-
 export interface NearbyPlaceResponseType {
     displayName: {
         text: string
@@ -88,6 +86,21 @@ export interface NearbyPlaceResponseType {
     photos: photo[]
     location: LocationType
     formattedAddress: string
+}
+
+type photo = {
+    name: string
+}
+
+export interface RecommendationPlaceResponseType extends PostFormType {
+    id: number;
+    address: string;
+    latitude: number;
+    longitude: number;
+    nickName: string;
+    created_at: Date;
+    updated_at: Date;
+    _count: {likedBy: number}
 }
 
 export interface PlaceType {

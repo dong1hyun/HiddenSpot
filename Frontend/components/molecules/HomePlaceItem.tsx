@@ -8,11 +8,11 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
 
-export default function PlaceItem({ placeData }: { placeData: PostResponseType }) {
+export default function HomePlaceItem({ placeData }: { placeData: PostResponseType }) {
     const { id, title, address, created_at, photoUrl, nickName, likeCount } = placeData;
     const navigation = useNavigation<HomeScreenNavigationProp>();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("PlaceDetail", {id})} style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate("PlaceDetail", { id })} style={styles.container}>
             <Image style={styles.image} source={{ uri: photoUrl }} />
             <View>
                 <View style={styles.topContainer}>
