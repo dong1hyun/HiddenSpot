@@ -11,9 +11,16 @@ interface MapContextType {
     setModalVisible: Dispatch<SetStateAction<boolean>>;
     address: string;
     setAddress: Dispatch<SetStateAction<string>>;
-    onMarkerPress: () => void;
     onMapPress: (e: MapPressEvent) => void;
     mapRef: React.RefObject<MapView>;
+    mapPressed: boolean;
+    setMapPressed: Dispatch<SetStateAction<boolean>>;
+    photoUrl: string;
+    setPhotoUrl: Dispatch<SetStateAction<string>>;
+    title: string;
+    setTitle: Dispatch<SetStateAction<string>>;
+    id: number;
+    setId: Dispatch<SetStateAction<number>>;
 }
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
@@ -23,12 +30,15 @@ export default function MapProvider({ children }: { children: ReactNode }) {
     const [query, setQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [address, setAddress] = useState("");
-    const onMarkerPress = () => {
-        setModalVisible(true)
-    }
+    const [mapPressed, setMapPressed] = useState(false);
+    const [title, setTitle] = useState("");
+    const [photoUrl, setPhotoUrl] = useState("");
+    const [id, setId] = useState(0);
+
     const onMapPress = (e: MapPressEvent) => {
         const { latitude, longitude } = e.nativeEvent.coordinate;
         setLocation({ latitude, longitude });
+        setMapPressed(true);
     };
     const mapRef = useRef<MapView>(null);
 
@@ -41,10 +51,17 @@ export default function MapProvider({ children }: { children: ReactNode }) {
             onMapPress,
             modalVisible,
             setModalVisible,
-            onMarkerPress,
             address,
             setAddress,
-            mapRef
+            mapRef,
+            mapPressed,
+            setMapPressed,
+            photoUrl,
+            setPhotoUrl,
+            setTitle,
+            title,
+            id,
+            setId
         }}>
             {children}
         </MapContext.Provider>

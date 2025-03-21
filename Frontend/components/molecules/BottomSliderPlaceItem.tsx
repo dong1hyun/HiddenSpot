@@ -11,6 +11,7 @@ interface RefType {
 }
 
 export default function BottomSliderPlaceItem({ photoUrl, placeName, location, formattedAddress, mapRef, likeCount }: PlaceType & RefType) {
+    const {setMapPressed, setModalVisible} = useMapContext();
     const onPlacePress = () => {
         setLocation(location);
         mapRef?.current?.animateToRegion({
@@ -18,7 +19,10 @@ export default function BottomSliderPlaceItem({ photoUrl, placeName, location, f
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
         });
-
+        if(likeCount) { // 추천 게시물인 경우(좋아요가 존재하면 추천게시물)
+            setMapPressed(false);
+        }
+        else setMapPressed(true);
     }
     const { setLocation } = useMapContext();
     return (

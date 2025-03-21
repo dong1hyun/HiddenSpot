@@ -144,6 +144,21 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const id = +req.params.id;
+        const response = await db.Place.delete({
+            where: {
+                id
+            }
+        });
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "장소 삭제에 실패했습니다."});
+    }
+});
+
 router.delete(`/favorite`, async (req, res) => {
     try {
         const {userEmail, placeId} = req.query;
@@ -177,21 +192,6 @@ router.delete(`/like`, async (req, res) => {
     } catch(error) {
         console.error(error);
         res.status(500).json({error: "좋아요 삭제에 실패했습니다."});
-    }
-});
-
-router.delete('/:id', async (req, res) => {
-    try {
-        const id = +req.params.id;
-        const response = await db.Place.delete({
-            where: {
-                id
-            }
-        });
-        res.status(200).json(response);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({error: "장소 삭제에 실패했습니다."});
     }
 });
 

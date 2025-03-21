@@ -1,22 +1,18 @@
 import MapView, { Marker, Region } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
-import { MapStackParamList, PostResponseType, RootStackParamList } from "../../lib/type";
-import Button from "../atoms/Button";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { PostResponseType } from "../../lib/type";
+import { StyleSheet, View } from "react-native";
 import { getAddress } from "../../util/map";
 import { getData } from "../../util/fetch";
 import Markers from "./Markers";
 import { API_URL } from "@env";
-
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">
+import MapToPostNavigator from "../molecules/MapToPostNavigator";
+import MapToDetailNavigatorModal from "../molecules/MapToDetailNavigatorModal";
 
 export default function Map() {
-    const navigation = useNavigation<MapScreenNavigationProp>();
     const [markers, setMarkers] = useState<PostResponseType[]>();
-    const { onMapPress, location, onMarkerPress, setLocation, mapRef } = useMapContext();
+    const { onMapPress, location, mapRef, mapPressed } = useMapContext();
     const [address, setAddress] = useState("");
     const fetchPlaces = async (region: Region) => {
         const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
@@ -35,21 +31,6 @@ export default function Map() {
         setMarkers(markers);
     };
 
-    const onAddPress = () => {
-        if(location) navigation.navigate("HomeNavigator", {
-            screen: "AddPlace",
-            params: {
-                address,
-                latitude: location.latitude,
-                longitude: location.longitude
-            }
-        });
-    }
-
-    const onCancelPress = () => {
-        setLocation(null);
-    }
-
     useEffect(() => {
         if(location) {
             getAddress(location)
@@ -61,7 +42,6 @@ export default function Map() {
             });
         }
     }, [location]);
-
     return (
         <View style={styles.container}>
             <MapView
@@ -77,35 +57,22 @@ export default function Map() {
                 onRegionChangeComplete={fetchPlaces}
             >
                 {
-                    location &&
+                    location && mapPressed &&
                     <Marker
                         coordinate={location}
                         title="선택된 장소"
-                        onPress={onMarkerPress}
                     />
                 }
                 <Markers markers={markers} />
             </MapView>
-            {location &&
-                <View style={styles.overlay}>
-                    <Text>선택된 장소를 소개해보세요.</Text>
-                    <Text>{address}</Text>
-                    <View style={styles.buttons}>
-                        <Button
-                            buttonStyle={{ backgroundColor: "#74b9ff", borderWidth: 0 }}
-                            onPress={onAddPress}>
-                            확인
-                        </Button>
-                        <Button
-                            buttonStyle={{ backgroundColor: "#ff7675", borderWidth: 0 }}
-                            onPress={onCancelPress}>
-                            취소
-                        </Button>
-                    </View>
-                </View>
+            {location && mapPressed &&
+                <MapToPostNavigator address={address} latitude={location.latitude} longitude={location.longitude} />
+            }
+            {
+                location && !mapPressed &&
+                <MapToDetailNavigatorModal />
             }
         </View>
-
     );
 };
 
@@ -113,21 +80,5 @@ export default function Map() {
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    overlay: {
-        position: 'absolute',
-        top: 50,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        backgroundColor: "white",
-        padding: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 10
-    },
-    buttons: {
-        flexDirection: "row",
-        gap: 10
     }
 });
