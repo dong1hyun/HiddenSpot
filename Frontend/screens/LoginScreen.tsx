@@ -16,6 +16,7 @@ export default function LoginScreen() {
   const navigation = useNavigation<StackNavigationProp<AuthStackParamList>>();
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormType>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   async function signInWithEmail({ email, password }: LoginFormType) {
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({
@@ -23,7 +24,9 @@ export default function LoginScreen() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message)
+    if(error) {
+      setError("존재하지 않는 계정입니다");
+    }
     setLoading(false)
   }
 
@@ -65,7 +68,7 @@ export default function LoginScreen() {
           }
         }}
       />
-      <Error message={errors.password?.message} />
+      <Error message={errors.password?.message || error} />
       <Pressable style={styles.toggleButton} onPress={() => { navigation.navigate("Register") }}><Text style={styles.link}>회원가입</Text><AntDesign name='arrowright' /></Pressable>
       <Button onPress={handleSubmit(onSubmit)} disabled={loading}>로그인</Button>
       {loading && <Spinner />}
