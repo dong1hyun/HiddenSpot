@@ -81,6 +81,7 @@ export const useFavoriteMutation = (userEmail: string, placeId: number, isFavori
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["place", "detail", placeId] });
             queryClient.invalidateQueries({ queryKey: ["places"] });
+            queryClient.invalidateQueries({ queryKey: ["recommendationPlaces"] });
         },
     });
 };
@@ -127,6 +128,7 @@ export const useLikeMutation = (userEmail: string, placeId: number, isLiked: boo
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["place", "detail", placeId] });
             queryClient.invalidateQueries({ queryKey: ["places"] });
+            queryClient.invalidateQueries({ queryKey: ["recommendationPlaces"] });
         },
     });
 };

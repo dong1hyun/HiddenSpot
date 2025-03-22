@@ -11,7 +11,8 @@ interface RefType {
 }
 
 export default function BottomSliderPlaceItem({ photoUrl, placeName, location, formattedAddress, mapRef, likeCount }: PlaceType & RefType) {
-    const {setMapPressed, setModalVisible} = useMapContext();
+    const {setMapPressed} = useMapContext();
+    const isRecommendated = likeCount !== undefined; // 추천 게시물인 경우(좋아요가 존재하면 추천게시물)
     const onPlacePress = () => {
         setLocation(location);
         mapRef?.current?.animateToRegion({
@@ -19,7 +20,7 @@ export default function BottomSliderPlaceItem({ photoUrl, placeName, location, f
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
         });
-        if(likeCount) { // 추천 게시물인 경우(좋아요가 존재하면 추천게시물)
+        if(isRecommendated) {
             setMapPressed(false);
         }
         else setMapPressed(true);
@@ -33,7 +34,7 @@ export default function BottomSliderPlaceItem({ photoUrl, placeName, location, f
                 <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail">{formattedAddress}</Text>
             </View>
             {
-                !!likeCount &&
+                isRecommendated &&
                 <View style={styles.likeContainer}>
                     <AntDesign name="heart" />
                     <Text>{likeCount}</Text>

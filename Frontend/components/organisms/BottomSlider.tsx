@@ -44,7 +44,6 @@ export default function BottomSlider() {
 
     return () => clearTimeout(timeoutId);
   }, [query]);
-  
   return (
     <BottomSheet
       ref={bottomSheetRef}

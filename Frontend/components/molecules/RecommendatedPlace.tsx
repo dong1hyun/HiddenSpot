@@ -18,38 +18,35 @@ export default function RecommendatedPlace() {
         }
     }
 
-    const {mapRef} = useMapContext();
+    const { mapRef } = useMapContext();
 
-    const {data} = useQuery({
+    const { data = [] } = useQuery({
         queryFn: getRecommendedPlaces,
-        queryKey: ["places"]
+        queryKey: ["recommendationPlaces"]
     });
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
                 추천 장소
             </Text>
-            {
-                data ?
-                    <FlatList
-                        data={data}
-                        contentContainerStyle={styles.scrollContainer}
-                        keyExtractor={((_, index) => index.toString())}
-                        renderItem={({item}) => (
-                            <BottomSliderPlaceItem
-                                photoUrl={item.photoUrl}
-                                formattedAddress={item.address}
-                                location={{
-                                    latitude: item.latitude,
-                                    longitude: item.longitude
-                                }}
-                                placeName={item.title}
-                                likeCount={item._count.likedBy}
-                                mapRef={mapRef}
-                            />
-                        )}
-                    /> : null
-            }
+            <FlatList
+                data={data}
+                contentContainerStyle={styles.scrollContainer}
+                keyExtractor={((_, index) => index.toString())}
+                renderItem={({ item }) => (
+                    <BottomSliderPlaceItem
+                        photoUrl={item.photoUrl}
+                        formattedAddress={item.address}
+                        location={{
+                            latitude: item.latitude,
+                            longitude: item.longitude
+                        }}
+                        placeName={item.title}
+                        likeCount={item._count.likedBy}
+                        mapRef={mapRef}
+                    />
+                )}
+            />
         </View>
     );
 };
@@ -65,5 +62,5 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         gap: 30,
         padding: 12,
-      },
+    },
 });
