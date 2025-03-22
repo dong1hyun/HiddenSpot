@@ -34,11 +34,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         flexDirection: "row",
         right: 0,
+        top: 48,
         gap: 24
     },
     buttonContainer: {
         flexDirection: "row",
-        gap: 12
+        gap: 6
     },
     starIcon: {
         fontSize: 28,

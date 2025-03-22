@@ -65,6 +65,7 @@ export interface PostResponseType extends PostFormType {
     likeCount: number;
     isFavorited: boolean;
     isLiked: boolean;
+    tags: string[];
 }
 
 

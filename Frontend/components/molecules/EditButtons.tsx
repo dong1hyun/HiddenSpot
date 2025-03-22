@@ -18,7 +18,7 @@ export default function EditButtons({ data, setModalVisible }: Props) {
     return (
         <View style={styles.editButtonContainer}>
             <Button
-                buttonStyle={[styles.button, { backgroundColor: "#74b9ff" }]}
+                buttonStyle={[styles.button]}
                 textStyle={styles.buttonText}
                 onPress={() => navigation.navigate("AddPlace", {
                     id: data.id,
@@ -33,7 +33,7 @@ export default function EditButtons({ data, setModalVisible }: Props) {
                 수정
             </Button>
             <Button
-                buttonStyle={[styles.button, { backgroundColor: "red" }]}
+                buttonStyle={[styles.button]}
                 textStyle={styles.buttonText}
                 onPress={() => { setModalVisible(true) }}
             >

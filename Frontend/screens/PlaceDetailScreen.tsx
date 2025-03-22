@@ -36,7 +36,7 @@ export default function PlaceDetailScreen({ route }: Props) {
         return response;
     }
 
-    const { data, error, isLoading } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['place', 'detail', id],
         queryFn: fetchData,
         refetchInterval: 60000
@@ -53,15 +53,14 @@ export default function PlaceDetailScreen({ route }: Props) {
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.title}>{data?.title}</Text>
-                        <LikeAndFavoriteButton
-                            email={email}
-                            placeId={id}
-                            isFavorited={!!data?.isFavorited}
-                            isLiked={!!data?.isLiked}
-                            favoriteCount={data?.favoriteCount || 0}
-                            likeCount={data?.likeCount || 0}
-                        />
                         <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
+                        <View style={styles.tags}>
+                            {
+                                data?.tags.map((tag) => (
+                                    <Text key={tag}>#{tag}</Text>
+                                ))
+                            }
+                        </View>
                         <Text style={styles.description}>{data?.description}</Text>
                         <Text>{data?.address}</Text>
                         <View style={styles.mapContainer}>
@@ -70,6 +69,14 @@ export default function PlaceDetailScreen({ route }: Props) {
                                 <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
                             }
                         </View>
+                        <LikeAndFavoriteButton
+                            email={email}
+                            placeId={id}
+                            isFavorited={!!data?.isFavorited}
+                            isLiked={!!data?.isLiked}
+                            favoriteCount={data?.favoriteCount || 0}
+                            likeCount={data?.likeCount || 0}
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -109,6 +116,14 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         flex: 1,
+    },
+    tags: {
+        flexDirection: "row",
+        gap: 8,
+        marginTop: 4
+    },
+    tag: {
+
     },
     title: {
         fontWeight: "bold",

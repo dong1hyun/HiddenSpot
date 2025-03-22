@@ -32,9 +32,15 @@ router.put('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const {page} = req.query;
+        const {page, tags} = req.query;
+        const selectedTags = tags ? tags.split(",") : [];
         const limit = 8;
         const places = await db.Place.findMany({
+            where: selectedTags.length > 0 ? {
+                tags: {
+                    hasSome: selectedTags
+                }
+            } : {},
             skip: (page - 1) * limit,
             take: limit,
             orderBy: {

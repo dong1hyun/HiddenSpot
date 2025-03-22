@@ -7,6 +7,7 @@ import { PostResponseType, RootStackParamList } from "../lib/type";
 import HomePlaceItem from "../components/molecules/HomePlaceItem";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import { API_URL } from "@env";
+import TagFilter from "../components/molecules/TagFilter";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 interface Props {
@@ -14,13 +15,15 @@ interface Props {
 }
 
 export default function HomeScreen({ navigation }: Props) {
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
-        const response = await getData(`${API_URL}/place?page=${pageParam}`);
+        const tagQuery = selectedTags.length > 0 ? `&tags=${selectedTags.join(',')}` : "";
+        const response = await getData(`${API_URL}/place?page=${pageParam}${tagQuery}`);
         return response;
     };
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ['places'],
+        queryKey: ['places', selectedTags],
         queryFn: ({ pageParam }) => fetchData(pageParam),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
@@ -36,6 +39,7 @@ export default function HomeScreen({ navigation }: Props) {
     const places = data?.pages.flat();
     return (
         <View style={styles.container}>
+            <TagFilter selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
             <FlatList
                 data={places}
                 renderItem={({ item }) => (
