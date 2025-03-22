@@ -22,7 +22,7 @@ export default function RecommendatedPlace() {
 
     const {data} = useQuery({
         queryFn: getRecommendedPlaces,
-        queryKey: ["recommendatedPlace"]
+        queryKey: ["places"]
     });
     return (
         <View style={styles.container}>
