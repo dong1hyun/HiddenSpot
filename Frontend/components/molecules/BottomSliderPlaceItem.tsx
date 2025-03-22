@@ -33,7 +33,7 @@ export default function BottomSliderPlaceItem({ photoUrl, placeName, location, f
                 <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail">{formattedAddress}</Text>
             </View>
             {
-                likeCount &&
+                !!likeCount &&
                 <View style={styles.likeContainer}>
                     <AntDesign name="heart" />
                     <Text>{likeCount}</Text>

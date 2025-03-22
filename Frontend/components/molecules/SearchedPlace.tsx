@@ -25,7 +25,6 @@ export default function SearchedPlace({ places }: { places: PlaceType[] }) {
                 )}
             />
         </View>
-
     )
 }
 

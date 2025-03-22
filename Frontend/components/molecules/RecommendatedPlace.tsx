@@ -48,7 +48,7 @@ export default function RecommendatedPlace() {
                                 mapRef={mapRef}
                             />
                         )}
-                    /> : <Text>없음</Text>
+                    /> : null
             }
         </View>
     );

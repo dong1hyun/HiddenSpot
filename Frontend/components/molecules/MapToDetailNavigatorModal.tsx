@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 36, 
         fontWeight: "300",
+        color: "white"
     },
     image: {
         height: width * 4 / 5,

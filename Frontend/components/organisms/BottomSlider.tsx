@@ -9,7 +9,7 @@ import RecommendatedPlace from "../molecules/RecommendatedPlace";
 import SearchedPlace from "../molecules/SearchedPlace";
 
 export default function BottomSlider() {
-  const { query, setQuery, mapRef } = useMapContext();
+  const { query, setQuery } = useMapContext();
   const [places, setPlaces] = useState<PlaceType[]>();
   const bottomSheetRef = useRef<BottomSheet>(null);
   

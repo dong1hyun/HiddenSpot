@@ -30,7 +30,7 @@ model Place {
   nickName String
   userEmail String
   tags String[]
-  user       User     @relation(fields: [userEmail], references: [email])
+  user       User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   favoritedBy Favorite[]
@@ -41,8 +41,8 @@ model Favorite {
   id      Int   @id @default(autoincrement())
   userEmail String
   placeId Int
-  user    User  @relation(fields: [userEmail], references: [email])
-  place   Place @relation(fields: [placeId], references: [id])
+  user    User  @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   @@unique([userEmail, placeId])
 }
@@ -51,8 +51,8 @@ model Like {
   id      Int   @id @default(autoincrement())
   userEmail String
   placeId Int
-  user    User  @relation(fields: [userEmail], references: [email])
-  place   Place @relation(fields: [placeId], references: [id])
+  user    User  @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   @@unique([userEmail, placeId])
 }
