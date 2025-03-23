@@ -1,10 +1,11 @@
 import { RouteProp } from "@react-navigation/native";
-import { Dimensions, Image, ScrollView, StyleSheet, Text } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { HomeStackParamList, PostResponseType } from "../lib/type";
 import { getData } from "../util/fetch";
 import { useQuery } from "@tanstack/react-query";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
 import Spinner from "../components/atoms/SpinLoading";
@@ -16,6 +17,8 @@ import EditButtons from "../components/molecules/EditButtons";
 import PlaceDeleteModal from "../components/molecules/PlaceDeleteModal";
 import LikeAndFavoriteButton from "../components/molecules/LikeAndFavoriteButton";
 import { API_URL } from "@env";
+import ModalContainer from "../components/templates/ModalContainer";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -28,7 +31,8 @@ interface Props {
 const { width, height } = Dimensions.get('window');
 export default function PlaceDetailScreen({ route }: Props) {
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [imageModalVisible, setImageModalVisible] = useState(false);
     const { nickName, email } = AuthStore();
     const id = route.params.id;
     const fetchData = async (): Promise<PostResponseType> => {
@@ -41,11 +45,32 @@ export default function PlaceDetailScreen({ route }: Props) {
         queryFn: fetchData,
         refetchInterval: 60000
     });
+
+    const onCloseImagePress = () => {
+        setImageModalVisible(false);
+    }
     return (
         <View style={styles.container}>
+            <ModalContainer modalVisible={imageModalVisible} setModalVisible={setImageModalVisible}>
+                <View style={styles.zoomImage}>
+                    <EvilIcons style={styles.closeIcon} name="close" onPress={onCloseImagePress} />
+                    <ImageViewer
+                        backgroundColor="transparent"
+                        imageUrls={[{ url: data?.photoUrl || "" }]}
+                        enableSwipeDown={true}
+                        onSwipeDown={onCloseImagePress}
+                    />
+                </View>
+            </ModalContainer>
             <ScrollView style={styles.container}>
                 <Spinner isLoading={isLoading} />
-                <Image source={{ uri: data?.photoUrl }} style={styles.image} resizeMode="cover" />
+                <TouchableOpacity onPress={() => setImageModalVisible(true)}>
+                    <Image
+                        source={{ uri: data?.photoUrl }}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />
+                </TouchableOpacity>
                 <View style={styles.contentContainer}>
                     <View style={styles.uerContainer}>
                         <FontAwesome style={styles.userIcon} name="user-circle-o" />
@@ -82,9 +107,9 @@ export default function PlaceDetailScreen({ route }: Props) {
             </ScrollView>
             {
                 nickName === data?.nickName &&
-                <EditButtons data={data} setModalVisible={setModalVisible} />
+                <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
             }
-            <PlaceDeleteModal id={id} modalVisible={modalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setModalVisible} />
+            <PlaceDeleteModal id={id} modalVisible={deleteModalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setDeleteModalVisible} />
             <FullScreenLoader loading={deleteLoading} />
         </View>
     );
@@ -152,4 +177,18 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         marginTop: 12,
     },
+    zoomImage: {
+        position: "relative",
+        width: "100%", 
+        height: "100%",
+    },
+    closeIcon: {
+        position: "absolute",
+        color: "white",
+        fontSize: 30,
+        right: 10,
+        top: 30,
+        zIndex: 10,
+        padding: 10
+    }
 });
