@@ -20,3 +20,5 @@ export const MyPageLinks: MyPageLinkType[] = [
         type: "favorite"
     }
 ];
+
+export const alt_image_url = "https://xyeyxqhiwfnytcpvwrxv.supabase.co/storage/v1/object/public/photos/public/alt_image.jpg";

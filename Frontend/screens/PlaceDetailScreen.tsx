@@ -19,6 +19,7 @@ import LikeAndFavoriteButton from "../components/molecules/LikeAndFavoriteButton
 import { API_URL } from "@env";
 import ModalContainer from "../components/templates/ModalContainer";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { alt_image_url } from "../lib/const";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -56,7 +57,7 @@ export default function PlaceDetailScreen({ route }: Props) {
                     <EvilIcons style={styles.closeIcon} name="close" onPress={onCloseImagePress} />
                     <ImageViewer
                         backgroundColor="transparent"
-                        imageUrls={[{ url: data?.photoUrl || "" }]}
+                        imageUrls={[{ url: data?.photoUrl || alt_image_url }]}
                         enableSwipeDown={true}
                         onSwipeDown={onCloseImagePress}
                     />
