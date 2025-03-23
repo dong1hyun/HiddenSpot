@@ -1,5 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { supabase } from "../../lib/supabase";
+import { StyleSheet, Text, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AuthStore from "../../store/AuthStore";
 
@@ -9,9 +8,11 @@ export default function AccountInfo() {
         <View style={styles.container}>
             <View style={styles.user}>
                 <FontAwesome style={styles.userIcon} name="user-circle-o" />
-                <Text style={styles.nickName}>{nickName}</Text>
+                <View style={styles.userIds}>
+                    <Text style={styles.nickName}>{nickName}</Text>
+                    <Text style={styles.email}>{email}</Text>
+                </View>
             </View>
-            <Pressable onPress={() => supabase.auth.signOut()}><Text>로그아웃</Text></Pressable>
         </View>
     );
 }
@@ -21,16 +22,24 @@ const styles = StyleSheet.create({
         padding: 24,
         backgroundColor: "white",
         borderRadius: 24,
+        marginTop: 24,
     },
     userIcon: {
         fontSize: 36,
     },
+    userIds: {
+        gap: 3
+    },
     user: {
         flexDirection: "row",
-        gap: 12,
+        gap: 24,
+        alignItems: "center"
     },
     nickName: {
         fontWeight: "bold",
         fontSize: 24,
+    },
+    email: {
+        color: "#636e72"
     }
 });

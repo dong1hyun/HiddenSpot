@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("../util/db");
+const { pageListLimit } = require("../lib/const");
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -34,15 +35,14 @@ router.get('/', async (req, res) => {
     try {
         const {page, tags} = req.query;
         const selectedTags = tags ? tags.split(",") : [];
-        const limit = 8;
         const places = await db.Place.findMany({
             where: selectedTags.length > 0 ? {
                 tags: {
                     hasSome: selectedTags
                 }
             } : {},
-            skip: (page - 1) * limit,
-            take: limit,
+            skip: (page - 1) * pageListLimit,
+            take: pageListLimit,
             orderBy: {
                 created_at: 'desc',
             },
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
         });
 
         const newPlaces = places.map((place) => {
-            const likeCount = place.likedBy.length || 0;
+            const likeCount = place.likedBy.length;
             delete place.likedBy;
             return ({
                 ...place,
@@ -112,6 +112,60 @@ router.get('/marker', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "마커를 불러오는데 실패했습니다." });
+    }
+});
+
+router.get("/favorite", async (req, res) => {
+    try {
+        const { userEmail, page } = req.query;
+        const response = await db.Favorite.findMany({
+            where: { userEmail },
+            skip: (page - 1) * pageListLimit,
+            take: pageListLimit,
+            include: {
+                place: {
+                include: {
+                    likedBy: true
+                }
+            } },
+        });
+        const favoritePlaces = response.map((favorite) => favorite.place);
+        const newPlaces = favoritePlaces.map((place) => {
+            const likeCount = place.likedBy.length;
+            delete place.likedBy;
+            return ({
+                ...place,
+                likeCount
+            });
+        });
+        res.status(200).json(newPlaces);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get("/myPosts", async (req, res) => {
+    try {
+        const { userEmail, page } = req.query;
+        const response = await db.Place.findMany({
+            where: { userEmail },
+            skip: (page - 1) * pageListLimit,
+            take: pageListLimit,
+            include: {
+                likedBy: true
+            }
+        });
+        const places = response.map((place) => {
+            const likeCount = place.likedBy.length;
+            delete place.likedBy;
+            return ({
+                ...place,
+                likeCount
+            });
+        });
+        res.status(200).json(places);
+    } catch (error) {
+        console.error(error);
     }
 });
 

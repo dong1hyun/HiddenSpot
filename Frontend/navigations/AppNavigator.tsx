@@ -1,10 +1,9 @@
-import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MyPageScreen from "../screens/MyPageScreen";
 import HomeNavigator from "./HomeNavigator";
 import MapNavigator from "./MapNavigator";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import MyPageNavigator from "./MyPageNavigator";
 
 
 export default function AppNavigator() {
@@ -37,7 +36,6 @@ export default function AppNavigator() {
       <Tab.Screen
         options={{
           headerShown: false,
-          title: "지도",
           tabBarIcon: (({size, color}) => {
             return <FontAwesome6Icon name="map-location-dot" size={size} color={color} />
           }),
@@ -47,20 +45,14 @@ export default function AppNavigator() {
       />
       <Tab.Screen
         options={{
-          title: "나의 정보",
+          headerShown: false,
           tabBarIcon: (({size, color}) => {
             return <FontAwesome name="user" size={size} color={color} />
           }),
         }}
         name="MyPage"
-        component={MyPageScreen}
+        component={MyPageNavigator}
       />
     </Tab.Navigator>
   )
 }
-
-const styles = StyleSheet.create({
-  button: {
-    fontSize: 50,
-  }
-});

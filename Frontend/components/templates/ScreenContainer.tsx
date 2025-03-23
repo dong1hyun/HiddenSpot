@@ -5,7 +5,9 @@ const ScreenContainer = ({ children, style }: { children: ReactNode, style?: obj
   return (
     <SafeAreaView style={[styles.safeArea, style]}>
       <ScrollView>
-        <View style={styles.container}>{children}</View>
+        <View style={styles.container}>
+          {children}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

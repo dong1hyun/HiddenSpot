@@ -30,6 +30,13 @@ export type HomeStackParamList = {
     };
 }
 
+export type MyPageStackParamList = {
+    MyPage: undefined,
+    PlaceList: {
+        type: "favorite" | "myPosts" 
+    }
+}
+
 //FormType
 
 export interface LoginFormType {

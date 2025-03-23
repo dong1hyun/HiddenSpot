@@ -25,7 +25,7 @@ export default function Button({ children, onPress, disabled, buttonStyle, textS
 
 const styles = StyleSheet.create({
     button: {
-        padding: 5,
+        padding: 10,
         borderRadius: 8,
         backgroundColor: "black"
     },
