@@ -7,6 +7,8 @@ import { getData } from "../util/fetch";
 import AuthStore from "../store/AuthStore";
 import { RouteProp } from "@react-navigation/native";
 import MyPagePlaceItem from "../components/molecules/MyPagePlaceItem";
+import Spinner from "../components/atoms/SpinLoading";
+import { API_URL } from "@env";
 
 type PlaceListScreenRouteProp = RouteProp<MyPageStackParamList, "PlaceList">;
 
@@ -14,11 +16,11 @@ export default function PlaceListScreen({route}: {route: PlaceListScreenRoutePro
     const { email } = AuthStore();
     const {type} = route.params;
     const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
-        const response = await getData(`http://10.0.2.2:5000/place/${type}?userEmail=${email}&page=${pageParam}`);
+        const response = await getData(`${API_URL}/place/${type}?userEmail=${email}&page=${pageParam}`);
         return response;
     };
 
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
         queryKey: ['places', type, email],
         queryFn: ({ pageParam }) => fetchData(pageParam),
         initialPageParam: 1,
@@ -43,6 +45,7 @@ export default function PlaceListScreen({route}: {route: PlaceListScreenRoutePro
                 onEndReached={onEndReached}
                 onEndReachedThreshold={0.5}
             />
+            <Spinner isLoading={isLoading} />
         </View>
     )
 }

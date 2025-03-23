@@ -7,6 +7,7 @@ import { View } from "react-native";
 import { useMapContext } from "../../context/MapContext";
 import { API_URL } from "@env";
 import { FlatList } from "react-native-gesture-handler";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export default function RecommendatedPlace() {
     const getRecommendedPlaces = async (): Promise<RecommendationPlaceResponseType[] | undefined> => {
@@ -26,11 +27,15 @@ export default function RecommendatedPlace() {
     });
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>
-                추천 장소
-            </Text>
+            <View style={styles.titleContainer}>
+                <MaterialIcons style={styles.thumbIcon} name="recommend" />
+                <Text style={styles.title}>
+                    추천 장소
+                </Text>
+            </View>
             <FlatList
                 data={data}
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContainer}
                 keyExtractor={((_, index) => index.toString())}
                 renderItem={({ item }) => (
@@ -55,7 +60,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    titleContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6
+    },
+    thumbIcon: {
+        fontSize: 20,
+    },
     title: {
+        fontWeight: "bold",
         marginVertical: 12,
     },
     scrollContainer: {

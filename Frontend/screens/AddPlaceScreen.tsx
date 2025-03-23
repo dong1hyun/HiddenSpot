@@ -31,14 +31,16 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
     }, []);
 
     return (
-        <ScreenContainer>
-            <Text style={styles.address}>주소: {address}</Text>
-            <View style={styles.mapContainer}>
-                <StaticMap latitude={latitude} longitude={longitude} style={styles.map} />
-            </View>
-            <AddPlaceForm isLoading={isLoading} setIsLoading={setIsLoading} />
+        <View style={{ flex: 1 }}>
+            <ScreenContainer>
+                <Text style={styles.address}>주소: {address}</Text>
+                <View style={styles.mapContainer}>
+                    <StaticMap latitude={latitude} longitude={longitude} style={styles.map} />
+                </View>
+                <AddPlaceForm isLoading={isLoading} setIsLoading={setIsLoading} />
+            </ScreenContainer>
             <FullScreenLoader loading={isLoading} />
-        </ScreenContainer>
+        </View>
     );
 };
 

@@ -12,7 +12,7 @@ export const MyPageLinks: MyPageLinkType[] = [
     {
         title: "작성한 글",
         icon: "pencil-square",
-        type: "myPosts"
+        type: "myPosts",
     },
     {
         title: "찜한 장소",

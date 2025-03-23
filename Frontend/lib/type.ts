@@ -33,7 +33,8 @@ export type HomeStackParamList = {
 export type MyPageStackParamList = {
     MyPage: undefined,
     PlaceList: {
-        type: "favorite" | "myPosts" 
+        type: "favorite" | "myPosts",
+        headerTitle: string,
     }
 }
 

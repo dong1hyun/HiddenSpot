@@ -31,8 +31,8 @@ export default function RegisterScreen() {
     async function signUpAndCreateUser({ email, password, nickName, interests, }: RegisterFormType) {
         try {
             setLoading(true);
-            if(interests.length === 0) {
-                setError("interests", {message: "관심사를 최소 1개 이상 선택해주세요"});
+            if (interests.length === 0) {
+                setError("interests", { message: "관심사를 최소 1개 이상 선택해주세요" });
                 return;
             }
             const existCheck = await checkUserExists(email, nickName);
@@ -82,9 +82,9 @@ export default function RegisterScreen() {
     }
     useEffect(() => {
         if (interests.length > 0) {
-          clearErrors("interests");
+            clearErrors("interests");
         }
-      }, [interests]);
+    }, [interests]);
     return (
         <ScreenContainer>
             <InputWithLabel
@@ -160,7 +160,7 @@ export default function RegisterScreen() {
             />
             <Pressable style={styles.toggleButton} onPress={() => { navigation.navigate("Login") }}><Text style={styles.link}>로그인</Text><AntDesign name='arrowright' /></Pressable>
             <Button onPress={handleSubmit(onSubmit)}>계정생성</Button>
-            {loading && <Spinner />}
+            <Spinner isLoading={loading} />
         </ScreenContainer>
     );
 };
@@ -174,6 +174,6 @@ const styles = StyleSheet.create({
         gap: 6
     },
     link: {
-      color: "#7f8c8d",
+        color: "#7f8c8d",
     }
 });

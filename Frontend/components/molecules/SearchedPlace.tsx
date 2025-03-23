@@ -4,13 +4,18 @@ import { useMapContext } from "../../context/MapContext";
 import { PlaceType } from "../../lib/type";
 import { View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function SearchedPlace({ places }: { places: PlaceType[] }) {
     const { mapRef } = useMapContext();
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>검색결과</Text>
+            <View style={styles.titleContainer}>
+                <FontAwesome name="search" style={styles.searchIcon} />
+                <Text style={styles.title}>검색결과</Text>
+            </View>
             <FlatList
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContainer}
                 data={places}
                 keyExtractor={((_, index) => index.toString())}
@@ -32,7 +37,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    titleContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6
+    },
+    searchIcon: {
+        fontSize: 16,
+    },
     title: {
+        fontWeight: "bold",
         marginVertical: 12,
     },
     scrollContainer: {

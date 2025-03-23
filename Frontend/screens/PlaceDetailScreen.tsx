@@ -44,7 +44,7 @@ export default function PlaceDetailScreen({ route }: Props) {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.container}>
-                {isLoading && <Spinner />}
+                <Spinner isLoading={isLoading} />
                 <Image source={{ uri: data?.photoUrl }} style={styles.image} resizeMode="cover" />
                 <View style={styles.contentContainer}>
                     <View style={styles.uerContainer}>
@@ -57,7 +57,7 @@ export default function PlaceDetailScreen({ route }: Props) {
                         <View style={styles.tags}>
                             {
                                 data?.tags.map((tag) => (
-                                    <Text key={tag}>#{tag}</Text>
+                                    <Text style={styles.tag} key={tag}>#{tag}</Text>
                                 ))
                             }
                         </View>
@@ -93,6 +93,7 @@ export default function PlaceDetailScreen({ route }: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingBottom: 36,
     },
     userIcon: {
         fontSize: 36,
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
         marginTop: 4
     },
     tag: {
-
+        fontFamily: "serif"
     },
     title: {
         fontWeight: "bold",
@@ -149,5 +150,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: "#dfe6e9",
         overflow: 'hidden',
+        marginTop: 12,
     },
 });

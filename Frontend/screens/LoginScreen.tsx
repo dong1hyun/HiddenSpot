@@ -71,7 +71,7 @@ export default function LoginScreen() {
       <Error message={errors.password?.message || error} />
       <Pressable style={styles.toggleButton} onPress={() => { navigation.navigate("Register") }}><Text style={styles.link}>회원가입</Text><AntDesign name='arrowright' /></Pressable>
       <Button onPress={handleSubmit(onSubmit)} disabled={loading}>로그인</Button>
-      {loading && <Spinner />}
+      <Spinner isLoading={loading} />
     </ScreenContainer>
   );
 };

@@ -8,10 +8,16 @@ export default function MyPageNavigator() {
     return (
         <Stack.Navigator>
             <Stack.Screen
+                options={{
+                    headerTitle: "내 정보"
+                }}
                 name="MyPage"
                 component={MyPageScreen}
             />
             <Stack.Screen
+            options={
+                ({route}) => ({title: route.params.headerTitle})
+            }
                 name="PlaceList"
                 component={PlaceListScreen}
             />

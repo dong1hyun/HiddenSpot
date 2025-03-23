@@ -50,7 +50,7 @@ export default function AppNavigator() {
             return <FontAwesome name="user" size={size} color={color} />
           }),
         }}
-        name="MyPage"
+        name="MyPageNavigator"
         component={MyPageNavigator}
       />
     </Tab.Navigator>

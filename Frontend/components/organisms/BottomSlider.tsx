@@ -1,23 +1,24 @@
 import "react-native-reanimated";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { PlaceType } from "../../lib/type";
 import { useMapContext } from "../../context/MapContext";
 import { fetchSearchPlace } from "../../util/map";
 import RecommendatedPlace from "../molecules/RecommendatedPlace";
 import SearchedPlace from "../molecules/SearchedPlace";
+import Feather from "react-native-vector-icons/Feather";
 
 export default function BottomSlider() {
   const { query, setQuery } = useMapContext();
   const [places, setPlaces] = useState<PlaceType[]>();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  
+
   const getSearchPlaces = async () => {
     try {
       const places = await fetchSearchPlace(query);
-      if(places) setPlaces(places);
-    } catch(error) {
+      if (places) setPlaces(places);
+    } catch (error) {
       console.error(error);
     }
   };
@@ -44,6 +45,10 @@ export default function BottomSlider() {
 
     return () => clearTimeout(timeoutId);
   }, [query]);
+
+  const onDeletePress = () => {
+    setQuery("");
+  }
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -52,15 +57,22 @@ export default function BottomSlider() {
       onChange={handleSheetChanges}
     >
       <BottomSheetView style={styles.contentContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="장소를 검색하세요"
-          onChangeText={setQuery}
-          value={query}
-          onPressIn={handleFocus}
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="장소를 검색하세요"
+            onChangeText={setQuery}
+            value={query}
+            onPressIn={handleFocus}
+          />
+          <Feather
+            style={styles.deleteIcon}
+            name="delete"
+            onPress={onDeletePress}
+          />
+        </View>
         {places && places.length > 0 ?
-          <SearchedPlace places={places} /> 
+          <SearchedPlace places={places} />
           :
           <RecommendatedPlace />
         }
@@ -72,6 +84,16 @@ export default function BottomSlider() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  inputContainer: {
+
+  },
+  deleteIcon: {
+    position: "absolute",
+    fontSize: 20,
+    right: 15,
+    top: 10,
+    color: "gray"
   },
   contentContainer: {
     flex: 1,

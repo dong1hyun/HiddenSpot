@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         paddingHorizontal: 12,
         marginHorizontal: 12,
+        elevation: 12
     },
     selectedTag: {
         backgroundColor: "black",
