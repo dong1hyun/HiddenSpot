@@ -1,9 +1,9 @@
 import HomeScreen from "../screens/HomeScreen";
-import BottomSheet from "../components/organisms/BottomSlider";
 import { createStackNavigator } from "@react-navigation/stack";
 import PlaceDetailScreen from "../screens/PlaceDetailScreen";
 import { HomeStackParamList } from "../lib/type";
 import AddPlaceScreen from "../screens/AddPlaceScreen";
+import Logo from "../components/atoms/Logo";
 
 export default function HomeNavigator() {
     const Stack = createStackNavigator<HomeStackParamList>();
@@ -14,7 +14,7 @@ export default function HomeNavigator() {
                 name="Home"
                 component={HomeScreen}
                 options={{
-                    title: "홈"
+                    headerTitle: () => <Logo />
                 }}
             />
             <Stack.Screen

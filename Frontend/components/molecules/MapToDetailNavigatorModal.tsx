@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import ModalContainer from "../templates/ModalContainer";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useMapContext } from "../../context/MapContext";

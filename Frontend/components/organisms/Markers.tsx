@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
 import { PostResponseType } from "../../lib/type";
 import { useMapContext } from "../../context/MapContext";

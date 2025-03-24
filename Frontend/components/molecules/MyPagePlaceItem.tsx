@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
-import { HomeStackParamList, PostResponseType, RootStackParamList } from "../../lib/type";
+import { PostResponseType, RootStackParamList } from "../../lib/type";
 import { getRelativeTime } from "../../util/date";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";

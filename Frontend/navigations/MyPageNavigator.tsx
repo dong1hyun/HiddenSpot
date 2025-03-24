@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { MyPageStackParamList } from "../lib/type";
 import MyPageScreen from "../screens/MyPageScreen";
 import PlaceListScreen from "../screens/PlaceListScreen";
+import Logo from "../components/atoms/Logo";
 
 export default function MyPageNavigator() {
     const Stack = createStackNavigator<MyPageStackParamList>();
@@ -9,7 +10,7 @@ export default function MyPageNavigator() {
         <Stack.Navigator>
             <Stack.Screen
                 options={{
-                    headerTitle: "내 정보"
+                    headerTitle: () => <Logo />
                 }}
                 name="MyPage"
                 component={MyPageScreen}

@@ -64,6 +64,7 @@ export default function BottomSlider() {
             onChangeText={setQuery}
             value={query}
             onPressIn={handleFocus}
+            numberOfLines={1}
           />
           <Feather
             style={styles.deleteIcon}
@@ -93,7 +94,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     right: 15,
     top: 10,
-    color: "gray"
+    color: "gray",
+    paddingHorizontal: 5,
   },
   contentContainer: {
     flex: 1,
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     marginBottom: 10,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    paddingRight: 50,
   }
 });

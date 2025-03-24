@@ -45,19 +45,19 @@ export default function TagFilter({ selectedTags, setSelectedTags }: Props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#dfe6e9",
         paddingVertical: 12,
     },
     tag: {
-        backgroundColor: "white",
+        backgroundColor: "#9dceff",
         borderRadius: 8,
         paddingVertical: 4,
         paddingHorizontal: 12,
         marginHorizontal: 12,
-        elevation: 12
+        color: "white"
     },
     selectedTag: {
-        backgroundColor: "black",
+        backgroundColor: "#9dceff",
+        opacity: 0.5,
         borderRadius: 8,
         paddingVertical: 4,
         paddingHorizontal: 12,
