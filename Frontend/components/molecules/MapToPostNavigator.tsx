@@ -38,12 +38,12 @@ export default function MapToPostNavigator({address, latitude, longitude}: Props
             <Text>{address}</Text>
             <View style={styles.buttons}>
                 <Button
-                    buttonStyle={{ backgroundColor: "#74b9ff", borderWidth: 0 }}
+                    buttonStyle={{ backgroundColor: "#74b9ff", borderWidth: 0, paddingVertical: 4 }}
                     onPress={onAddPress}>
                     확인
                 </Button>
                 <Button
-                    buttonStyle={{ backgroundColor: "#ff7675", borderWidth: 0 }}
+                    buttonStyle={{ backgroundColor: "#ff7675", borderWidth: 0, paddingVertical: 4 }}
                     onPress={onCancelPress}>
                     취소
                 </Button>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         top: 50,
         left: 0,
         right: 0,
-        zIndex: 10,
+        zIndex: 20,
         backgroundColor: "white",
         padding: 10,
         justifyContent: "center",

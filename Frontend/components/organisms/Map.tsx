@@ -2,7 +2,7 @@ import MapView, { Marker } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
 import { LocationType, PostResponseType } from "../../lib/type";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { fetchPlacesOnMap, getAddress } from "../../util/map";
 import Markers from "./Markers";
 import MapToPostNavigator from "../molecules/MapToPostNavigator";
@@ -11,6 +11,7 @@ import * as Location from "expo-location";
 import Spinner from "../atoms/SpinLoading";
 import MyLocationMarker from "../atoms/MyLocationMarker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function Map() {
     const [curLocation, setCurLocation] = useState<LocationType | null>(null);
@@ -89,7 +90,9 @@ export default function Map() {
                         <Marker
                             coordinate={location}
                             title="선택된 장소"
-                        />
+                        >
+                            <Ionicons name="pin" style={{fontSize: 36, color: "#74b9ff"}} />
+                        </Marker>
                     }
                     <Markers markers={markers} />
                     <MyLocationMarker latitude={curLocation?.latitude} longitude={curLocation?.longitude} />
