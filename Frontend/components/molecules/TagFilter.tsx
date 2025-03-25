@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     },
     selectedTag: {
         backgroundColor: "#9dceff",
-        opacity: 0.5,
+        opacity: 0.4,
         borderRadius: 8,
         paddingVertical: 4,
         paddingHorizontal: 12,

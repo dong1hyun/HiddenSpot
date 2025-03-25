@@ -1,6 +1,9 @@
-import { GOOGLE_MAPS_API_KEY } from "@env";
-import { LocationType, NearbyPlaceResponseType, PlaceType } from "../lib/type";
+import { API_URL, GOOGLE_MAPS_API_KEY } from "@env";
+import { LocationType, NearbyPlaceResponseType, PlaceType, PostResponseType } from "../lib/type";
 import Geocoder from "react-native-geocoding";
+import { getData } from "./fetch";
+import { Region } from "react-native-maps";
+import { Dispatch, SetStateAction } from "react";
 
 export const fetchSearchPlace = async (query: string) => {
     const url = `https://places.googleapis.com/v1/places:searchText`;
@@ -110,3 +113,20 @@ export const getNearbyPlace = async (location: LocationType) => {
         console.error("주변 장소 추천 에러:", error);
     }
 }
+
+export const fetchPlacesOnMap = async (region: Region, setMarkers: Dispatch<SetStateAction<PostResponseType[]>>) => {
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
+
+    if (latitudeDelta > 0.05) {
+        setMarkers([]); // 줌 아웃 시 장소 숨김
+        return;
+    }
+
+    const minLat = latitude - latitudeDelta / 2;
+    const maxLat = latitude + latitudeDelta / 2;
+    const minLng = longitude - longitudeDelta / 2;
+    const maxLng = longitude + longitudeDelta / 2;
+
+    const markers = await getData(`${API_URL}/place/marker?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`);
+    setMarkers(markers);
+};

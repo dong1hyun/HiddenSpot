@@ -1,70 +1,101 @@
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
-import { PostResponseType } from "../../lib/type";
-import { StyleSheet, View } from "react-native";
-import { getAddress } from "../../util/map";
-import { getData } from "../../util/fetch";
+import { LocationType, PostResponseType } from "../../lib/type";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { fetchPlacesOnMap, getAddress } from "../../util/map";
 import Markers from "./Markers";
-import { API_URL } from "@env";
 import MapToPostNavigator from "../molecules/MapToPostNavigator";
 import MapToDetailNavigatorModal from "../molecules/MapToDetailNavigatorModal";
+import * as Location from "expo-location";
+import Spinner from "../atoms/SpinLoading";
+import MyLocationMarker from "../atoms/MyLocationMarker";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function Map() {
-    const [markers, setMarkers] = useState<PostResponseType[]>();
+    const [curLocation, setCurLocation] = useState<LocationType | null>(null);
+    const [markers, setMarkers] = useState<PostResponseType[]>([]);
     const { onMapPress, location, mapRef, mapPressed } = useMapContext();
     const [address, setAddress] = useState("");
-    const fetchPlaces = async (region: Region) => {
-        const { latitude, longitude, latitudeDelta, longitudeDelta } = region;
-
-        if (latitudeDelta > 0.05) {
-            setMarkers([]); // 줌 아웃 시 장소 숨김
-            return;
+    const onMyLocationButtonPress = () => {
+        const newLocation = {
+            latitude: curLocation?.latitude || 37.5665,
+            longitude: curLocation?.longitude || 126.978
         }
+        mapRef?.current?.animateToRegion({
+            ...newLocation,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+        });
+    }
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                console.log("위치 권한이 거부되었습니다.");
+                return;
+            }
 
-        const minLat = latitude - latitudeDelta / 2;
-        const maxLat = latitude + latitudeDelta / 2;
-        const minLng = longitude - longitudeDelta / 2;
-        const maxLng = longitude + longitudeDelta / 2;
-        
-        const markers = await getData(`${API_URL}/place/marker?minLat=${minLat}&maxLat=${maxLat}&minLng=${minLng}&maxLng=${maxLng}`);
-        setMarkers(markers);
-    };
+            const subscription = await Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.High,
+                    timeInterval: 2000, // 2초마다 업데이트
+                    distanceInterval: 5, // 5m 이동 시 업데이트
+                },
+                (newLocation) => {
+                    setCurLocation({
+                        latitude: newLocation.coords.latitude,
+                        longitude: newLocation.coords.longitude
+                    })
+                }
+            );
+
+            return () => subscription.remove();
+        })();
+    }, []);
 
     useEffect(() => {
-        if(location) {
+        if (location) {
             getAddress(location)
-            .then((result) => {
-                if(result) setAddress(result);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                .then((result) => {
+                    if (result) setAddress(result);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }
     }, [location]);
     return (
         <View style={styles.container}>
-            <MapView
-                ref={mapRef}
-                style={{ flex: 1 }}
-                initialRegion={{
-                    latitude: 37.5665,
-                    longitude: 126.9780,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                }}
-                onPress={onMapPress}
-                onRegionChangeComplete={fetchPlaces}
-            >
-                {
-                    location && mapPressed &&
-                    <Marker
-                        coordinate={location}
-                        title="선택된 장소"
-                    />
-                }
-                <Markers markers={markers} />
-            </MapView>
+            {MaterialCommunityIcons && <TouchableOpacity onPress={onMyLocationButtonPress} style={styles.myLocationButtonContainer}>
+                <MaterialCommunityIcons name="target" style={styles.navigationIcon} />
+            </TouchableOpacity>}
+            {
+                curLocation ?
+                <MapView
+                    ref={mapRef}
+                    style={styles.map}
+                    initialRegion={{
+                        latitude: curLocation.latitude,
+                        longitude: curLocation.longitude,
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.02,
+                    }}
+                    onPress={onMapPress}
+                    onRegionChangeComplete={(region) => fetchPlacesOnMap(region, setMarkers)}
+                >
+                    {
+                        location && mapPressed &&
+                        <Marker
+                            coordinate={location}
+                            title="선택된 장소"
+                        />
+                    }
+                    <Markers markers={markers} />
+                    <MyLocationMarker latitude={curLocation?.latitude} longitude={curLocation?.longitude} />
+                </MapView> :
+                <Spinner isLoading={true} />
+            }
             {location && mapPressed &&
                 <MapToPostNavigator address={address} latitude={location.latitude} longitude={location.longitude} />
             }
@@ -76,9 +107,29 @@ export default function Map() {
     );
 };
 
-
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    }
+        flex: 1,
+        position: "relative",
+    },
+    map: { 
+        flex: 1, 
+    },
+    myLocationButtonContainer: {
+        position: "absolute",
+        fontSize: 20,
+        right: 20,
+        top: 80,
+        zIndex: 15,
+        color: "#0984e3",
+        backgroundColor: "white",
+        borderRadius: 24,
+        padding: 4,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    navigationIcon: {
+        fontSize: 24,
+        color: "#0984e3"
+    },
 });
