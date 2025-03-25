@@ -20,6 +20,7 @@ import { API_URL } from "@env";
 import ModalContainer from "../components/templates/ModalContainer";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { alt_image_url } from "../lib/const";
+import TextCopyButton from "../components/atoms/TextCopyButton";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -88,7 +89,10 @@ export default function PlaceDetailScreen({ route }: Props) {
                             }
                         </View>
                         <Text style={styles.description}>{data?.description}</Text>
-                        <Text>{data?.address}</Text>
+                        <View style={styles.addressContainer}>
+                            <Text>{data?.address}</Text>
+                            <TextCopyButton style={styles.copyButton} text={data?.address} />
+                        </View>
                         <View style={styles.mapContainer}>
                             {
                                 data &&
@@ -164,6 +168,15 @@ const styles = StyleSheet.create({
         paddingVertical: 24,
         fontSize: 18,
         lineHeight: 30
+    },
+    addressContainer: {
+        flexDirection: "row",
+        position: "relative",
+        paddingRight: 40
+    },
+    copyButton:{
+        position: "absolute",
+        right: 0
     },
     map: {
         width: "100%",

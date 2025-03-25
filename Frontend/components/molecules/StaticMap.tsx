@@ -1,5 +1,6 @@
 import MapView, { Marker } from "react-native-maps";
 import { LocationType } from "../../lib/type";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface Props extends LocationType {
     style: object;
@@ -17,12 +18,14 @@ export default function StaticMap({ latitude, longitude, style }: Props) {
             }}
         >
             <Marker
-                title="선택된 장소"
+                title="위치"
                 coordinate={{
                     latitude,
                     longitude
                 }}
-            />
+            >
+                <Ionicons name="pin" style={{ fontSize: 42, color: "#ff3939" }} />
+            </Marker>
         </MapView>
     );
 };

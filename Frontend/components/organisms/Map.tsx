@@ -91,7 +91,7 @@ export default function Map() {
                             coordinate={location}
                             title="선택된 장소"
                         >
-                            <Ionicons name="pin" style={{fontSize: 36, color: "#74b9ff"}} />
+                            <Ionicons name="pin" style={{fontSize: 40, color: "#ff3939"}} />
                         </Marker>
                     }
                     <Markers markers={markers} />
