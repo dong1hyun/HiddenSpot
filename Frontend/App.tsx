@@ -5,43 +5,50 @@ import AuthNavigator from './navigations/AuthNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from "./navigations/AppNavigator";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AuthStore from "./store/AuthStore";
 import queryClient from "./util/queryClient";
+import UserInfoSetting from "./screens/UserInfoSetting";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-  const {setEmail, setNickName} = AuthStore();
+  const { setEmail, setNickName } = AuthStore();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     })
-    .catch((error) => {
-      console.error(error);
-    })
-
+      .catch((error) => {
+        console.error(error);
+      })
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     })
   }, []);
-
+  console.log(session)
   useEffect(() => {
     const email = session?.user?.email;
     const nickName = session?.user?.user_metadata?.nickName;
-    if(email) setEmail(email);
-    if(nickName) setNickName(nickName);
+    if (email) setEmail(email);
+    if (nickName) setNickName(nickName);
   }, [session]);
+
+  let screen;
+
+  if (session?.user?.user_metadata.nickName) {
+    screen = <AppNavigator />;
+  } else if (session?.user?.id) {
+    screen = <UserInfoSetting />
+  } else {
+    screen = <AuthNavigator />
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView>
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>
-            {session?.user?.id ?
-              <AppNavigator /> :
-              <AuthNavigator />
-            }
+            {screen}
           </NavigationContainer>
         </QueryClientProvider>
       </GestureHandlerRootView>
@@ -52,6 +59,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 20,
   }
 });

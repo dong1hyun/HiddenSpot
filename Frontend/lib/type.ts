@@ -8,8 +8,7 @@ export type RootStackParamList = {
 }
 
 export type AuthStackParamList = {
-    Login: undefined;
-    Register: undefined;
+    Auth: undefined;
 };
 
 export type MapStackParamList = {
@@ -42,15 +41,13 @@ export type MyPageStackParamList = {
 
 export interface LoginFormType {
     email: string;
-    password: string;
 }
 
 export interface RegisterFormType {
     email: string;
-    password: string;
-    confirm_password: string;
     nickName: string;
     interests: string[];
+    token: string;
 }
 
 export interface PostFormType {

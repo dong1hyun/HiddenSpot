@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
+import AuthScreen from "../screens/AuthScreen";
 
 export default function AuthNavigator() {
     const Stack = createStackNavigator();
@@ -8,17 +7,10 @@ export default function AuthNavigator() {
         <Stack.Navigator>
             <Stack.Screen
                 options={{
-                    headerTitle: "로그인"
+                    headerTitle: "이메일 인증"
                 }}
-                name="Login"
-                component={LoginScreen}
-            />
-            <Stack.Screen
-                options={{
-                    headerTitle: "회원가입"
-                }}
-                name="Register"
-                component={RegisterScreen}
+                name="Auth"
+                component={AuthScreen}
             />
         </Stack.Navigator>
     )
