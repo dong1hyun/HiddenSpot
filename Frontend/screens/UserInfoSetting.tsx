@@ -57,7 +57,7 @@ export default function UserInfoSetting() {
             return;
         }
 
-        await postData(`http://10.0.2.2:5000/user`, {
+        await postData(`${API_URL}/user`, {
             email,
             nickName,
             interests

@@ -14,24 +14,35 @@ export default function AuthScreen() {
   const [emailError, setEmailError] = useState("");
   const [tokenError, setTokenError] = useState("");
   async function sendOtp() {
-    if (email.length === 0) {
-      setEmailError("이메일을 입력해주세요");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError("유효하지 않은 이메일 형식입니다");
-      return;
-    }
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: {
-        shouldCreateUser: true,
+    try {
+      setLoading(true);
+      if (email.length === 0) {
+        setEmailError("이메일을 입력해주세요");
+        return;
       }
-    });
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setEmailError("유효하지 않은 이메일 형식입니다");
+        return;
+      }
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: true,
+        }
+      });
 
-    Alert.alert("인증번호 발송 성공!", "이메일로 발송된 인증번호를 확인해주세요");
-    setEmailError("");
-    setIsSendOtp(true);
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      Alert.alert("인증번호 발송 성공!", "이메일로 발송된 인증번호를 확인해주세요");
+      setEmailError("");
+      setIsSendOtp(true);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const verifyWithOtp = async () => {

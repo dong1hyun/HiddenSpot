@@ -18,6 +18,7 @@ import { updateData } from "../util/fetch";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import { API_URL } from "@env";
 
 
 type MyPageNavigationProp = StackNavigationProp<MyPageStackParamList, "UserInfoUpdate">;
@@ -49,7 +50,7 @@ export default function UserInfoUpdateScreen() {
                 data: userData
             });
 
-            await updateData(`http://10.0.2.2:5000/user/${email}`, userData);
+            await updateData(`${API_URL}/user/${email}`, userData);
             setIsLoading(false);
             navigation.navigate("MyPage");
         } catch (error) {
@@ -74,13 +75,11 @@ export default function UserInfoUpdateScreen() {
                 <View style={styles.imageContainer}>
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
                         {
-                            image ?
+                            false ?
                                 <Image style={styles.image} source={{ uri: image }} /> :
-                                <>
-                                    <FontAwesome style={styles.userIcon} name="smile-o" />
-                                    <Entypo style={styles.cameraIcon} name="camera" />
-                                </>
+                                <FontAwesome style={styles.userIcon} name="smile-o" />
                         }
+                        <Entypo style={styles.cameraIcon} name="camera" />
                     </TouchableOpacity>
                 </View>
                 <InputWithLabel
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     cameraIcon: {
         position: "absolute",
         fontSize: 24,
-        bottom: 5,
-        right: 5
+        bottom: 0,
+        right: 0
     }
 });
