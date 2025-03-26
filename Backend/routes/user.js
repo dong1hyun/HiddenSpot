@@ -21,18 +21,16 @@ router.post('/', async (req, res) => {
 
 router.get('/check', async (req, res) => {
     try {
-        const {email, nickName} = req.query;
+        const {nickName} = req.query;
 
         const existingUser = await db.User.findFirst({
             where: {
-                OR: [{ email }, { nickName }]
+                nickName
             }
         });
 
-        const emailExist = existingUser?.email === email;
         const nickNameExist = existingUser?.nickName === nickName;
         return res.status(200).json({
-            emailExist,
             nickNameExist
         });
     } catch (error) {

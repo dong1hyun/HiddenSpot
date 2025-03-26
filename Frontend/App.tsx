@@ -25,7 +25,6 @@ export default function App() {
       setSession(session);
     })
   }, []);
-  console.log(session)
   useEffect(() => {
     const email = session?.user?.email;
     const nickName = session?.user?.user_metadata?.nickName;

@@ -118,7 +118,6 @@ export interface PlaceType {
 }
 
 export interface UserExistCheckType {
-    emailExist: boolean,
     nickNameExist: boolean
 }
 
