@@ -30,11 +30,12 @@ export type HomeStackParamList = {
 }
 
 export type MyPageStackParamList = {
-    MyPage: undefined,
+    MyPage: undefined;
     PlaceList: {
         type: "favorite" | "myPosts",
-        headerTitle: string,
-    }
+        headerTitle: string
+    };
+    UserInfoUpdate: undefined;
 }
 
 //FormType
@@ -54,6 +55,12 @@ export interface PostFormType {
     title: string;
     description: string;
     photoUrl: string;
+}
+
+export interface UserInfoFormType {
+    nickName: string;
+    interests: string[];
+    profileImageUrl: string;
 }
 
 // ResponseType

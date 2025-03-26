@@ -1,11 +1,9 @@
 import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { SubmitHandler, useForm } from 'react-hook-form'
 import Button from '../components/atoms/Button';
 import { useState } from 'react';
 import Error from '../components/atoms/Error';
 import ScreenContainer from '../components/templates/ScreenContainer';
-import Spinner from '../components/atoms/SpinLoading';
 import FullScreenLoader from '../components/atoms/FullScreenLoader';
 
 export default function AuthScreen() {
@@ -85,7 +83,6 @@ export default function AuthScreen() {
       </ScreenContainer>
       <FullScreenLoader loading={loading} />
     </View>
-
   );
 };
 

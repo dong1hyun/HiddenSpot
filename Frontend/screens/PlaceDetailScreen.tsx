@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { HomeStackParamList, PostResponseType } from "../lib/type";
 import { getData } from "../util/fetch";
 import { useQuery } from "@tanstack/react-query";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
@@ -21,6 +20,7 @@ import ModalContainer from "../components/templates/ModalContainer";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { alt_image_url } from "../lib/const";
 import TextCopyButton from "../components/atoms/TextCopyButton";
+import ProfileImage from "../components/atoms/ProfileImage";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -75,8 +75,8 @@ export default function PlaceDetailScreen({ route }: Props) {
                 </TouchableOpacity>
                 <View style={styles.contentContainer}>
                     <View style={styles.uerContainer}>
-                        <FontAwesome style={styles.userIcon} name="user-circle-o" />
-                        <Text>{data?.nickName}</Text>
+                        <ProfileImage />
+                        <Text style={styles.nickName}>{data?.nickName}</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.title}>{data?.title}</Text>
@@ -125,13 +125,17 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: 36,
     },
+    nickName: {
+        fontWeight: "bold",
+        fontSize: 20,
+    },
     userIcon: {
         fontSize: 36,
     },
     uerContainer: {
         flexDirection: 'row',
         alignItems: "center",
-        gap: 5,
+        gap: 10,
         borderBottomWidth: 2,
         borderBottomColor: "#dfe6e9",
         paddingBottom: 8,

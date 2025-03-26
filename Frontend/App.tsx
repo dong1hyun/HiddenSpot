@@ -13,7 +13,7 @@ import UserInfoSetting from "./screens/UserInfoSetting";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
-  const { setEmail, setNickName } = AuthStore();
+  const { setEmail, setNickName, setInterests, setProfileImageUrl } = AuthStore();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -26,12 +26,17 @@ export default function App() {
     })
   }, []);
   useEffect(() => {
+    const metaData = session?.user?.user_metadata;
     const email = session?.user?.email;
-    const nickName = session?.user?.user_metadata?.nickName;
+    const nickName = metaData?.nickName;
+    const interests = metaData?.interests;
+    const profileImageUrl = metaData?.profileImageUrl
     if (email) setEmail(email);
     if (nickName) setNickName(nickName);
+    if(interests) setInterests(interests);
+    if(profileImageUrl) setProfileImageUrl(profileImageUrl);
   }, [session]);
-
+ 
   let screen;
 
   if (session?.user?.user_metadata.nickName) {

@@ -103,12 +103,12 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                 control={control}
                 label="제목"
                 name="title"
-                placeHolder="제목을 입력해주세요."
+                placeHolder="제목을 입력해주세요"
                 rules={{
-                    required: "제목을 입력해주세요.",
+                    required: "제목을 입력해주세요",
                     maxLength: {
                         value: 15,
-                        message: "제목은 최대 15자까지 입력할 수 있습니다."
+                        message: "제목은 최대 15자까지 입력할 수 있습니다"
                     }
                 }}
             />
@@ -117,27 +117,33 @@ export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
                 control={control}
                 label="사진과 장소에 대한 설명"
                 name="description"
-                placeHolder="내용을 입력해주세요."
+                placeHolder="내용을 입력해주세요"
                 multiline={true}
                 style={{ height: 120 }}
                 rules={{
-                    required: "내용을 입력해주세요.",
+                    required: "내용을 입력해주세요",
                     maxLength: {
                         value: 1000,
-                        message: "설명은 최대 1000자까지 입력할 수 있습니다."
+                        message: "설명은 최대 1000자까지 입력할 수 있습니다"
                     }
                 }}
             />
-            <TagForm interests={interests} setInterests={setInterests} errorMessage="" title="사진에 해당하는 태그를 선택해주새요" maxNumber={2} />
             <Error message={errors.description?.message} />
-                <Button
-                    buttonStyle={styles.submitButton}
-                    textStyle={{ color: "white" }}
-                    disabled={!(title && description && image && interests.length) || isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                >
-                    {isEditing ? "수정 완료" : "완료"}
-                </Button>
+            <TagForm
+                interests={interests}
+                setInterests={setInterests}
+                errorMessage=""
+                title="사진에 해당하는 태그를 선택해주새요"
+                maxNumber={2}
+            />
+            <Button
+                buttonStyle={styles.submitButton}
+                textStyle={{ color: "white" }}
+                disabled={!(title && description && image && interests.length) || isLoading}
+                onPress={handleSubmit(onSubmit)}
+            >
+                {isEditing ? "수정 완료" : "완료"}
+            </Button>
         </View>
     );
 }

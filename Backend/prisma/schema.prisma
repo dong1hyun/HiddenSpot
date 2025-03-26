@@ -10,8 +10,9 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   email String @unique
-  nickName String
+  nickName String @unique
   interests String[]
+  profileImageUrl String?
   places Place[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

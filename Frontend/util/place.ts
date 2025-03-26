@@ -8,6 +8,7 @@ import { PostResponseType } from "../lib/type";
 
 export const uploadPhotoAndGetPublicUrl = async (image: string) => {
     try {
+        if(!image) return "";
         // 이미지 url에서 데이터를 가져옴
         const response = await fetch(image);
 

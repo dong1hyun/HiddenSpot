@@ -39,4 +39,21 @@ router.get('/check', async (req, res) => {
     }
 });
 
+router.put('/:email', async (req, res) => {
+    try {
+        const data = req.body;
+        const {email} = req.params;
+        const updatedUer = await db.User.update({
+            where: {
+                email
+            },
+            data
+        });
+        res.status(200).json(updatedUer);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({error: "유저 정보 수정 실패"});
+    }
+});
+
 module.exports = router;
