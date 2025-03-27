@@ -1,6 +1,4 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AuthStore from "../../store/AuthStore";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MyPageStackParamList } from "../../lib/type";
@@ -14,7 +12,6 @@ export default function AccountInfo() {
     const { nickName, email } = AuthStore();
     return (
         <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("UserInfoUpdate")}>
-            <MaterialIcons style={styles.arrowIcon} name="arrow-forward-ios" />
             <View style={styles.user}>
                 <ProfileImage />
                 <View style={styles.userIds}>
@@ -28,7 +25,6 @@ export default function AccountInfo() {
 
 const styles = StyleSheet.create({
     container: {
-        position: "relative",
         padding: 24,
         backgroundColor: "white",
         borderRadius: 24,
@@ -54,9 +50,6 @@ const styles = StyleSheet.create({
         color: "#636e72"
     },
     arrowIcon: {
-        position: "absolute",
-        right: 10,
-        top: 40,
         fontSize: 20,
         color: "gray"
     }

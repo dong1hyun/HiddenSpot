@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import HomePlaceItem from "../components/molecules/HomePlaceItem";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { MyPageStackParamList, PostResponseType } from "../lib/type";
 import { getData } from "../util/fetch";
@@ -9,12 +8,13 @@ import { RouteProp } from "@react-navigation/native";
 import MyPagePlaceItem from "../components/molecules/MyPagePlaceItem";
 import Spinner from "../components/atoms/SpinLoading";
 import { API_URL } from "@env";
+import NoContent from "../components/atoms/NoContent";
 
 type PlaceListScreenRouteProp = RouteProp<MyPageStackParamList, "PlaceList">;
 
-export default function PlaceListScreen({route}: {route: PlaceListScreenRouteProp}) {
+export default function PlaceListScreen({ route }: { route: PlaceListScreenRouteProp }) {
     const { email } = AuthStore();
-    const {type} = route.params;
+    const { type } = route.params;
     const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
         const response = await getData(`${API_URL}/place/${type}?userEmail=${email}&page=${pageParam}`);
         return response;
@@ -35,16 +35,20 @@ export default function PlaceListScreen({route}: {route: PlaceListScreenRoutePro
         }
     }
     const places = data?.pages.flat();
+    const noContentMsg = type === "favorite" ? "아직 저장한 장소가 없어요." : "아직 소개한 장소가 없어요";
+    console.log(places)
     return (
         <View style={styles.container}>
-            <FlatList
-                data={places}
-                renderItem={({ item }) => (
-                    <MyPagePlaceItem placeData={item} />
-                )}
-                onEndReached={onEndReached}
-                onEndReachedThreshold={0.5}
-            />
+            {places?.length === 0 ? <NoContent text={noContentMsg} /> :
+                <FlatList
+                    data={places}
+                    renderItem={({ item }) => (
+                        <MyPagePlaceItem placeData={item} />
+                    )}
+                    onEndReached={onEndReached}
+                    onEndReachedThreshold={0.5}
+                />
+            }
             <Spinner isLoading={isLoading} />
         </View>
     )

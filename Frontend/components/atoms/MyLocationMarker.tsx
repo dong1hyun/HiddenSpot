@@ -10,7 +10,7 @@ export default function MyLocationMarker({latitude, longitude}: LocationType) {
         latitude,
         longitude
       }}
-      title="현 위치"
+      title="내 위치"
     >
         <MaterialCommunityIcons style={styles.me} name="human-greeting" />
     </Marker>

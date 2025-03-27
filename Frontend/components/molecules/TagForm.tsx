@@ -40,7 +40,7 @@ export default function TagForm({ setInterests, interests, errorMessage, title, 
             <View style={styles.seletedTagContainer}>
                 {
                     interests.map((interest, index) => (
-                            <Text style={styles.selectedTag} onPress={() => { onTagDeletePress(interest) }} key={index}>{interest}</Text>
+                        <Text style={styles.selectedTag} onPress={() => { onTagDeletePress(interest) }} key={index}>{interest}</Text>
                     ))
                 }
             </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         fontWeight: "500"
     },
     text: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: "500"
     },
     seletedTagContainer: {

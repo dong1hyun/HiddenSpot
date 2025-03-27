@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import StaticMap from "../components/molecules/StaticMap";
 import FullScreenLoader from "../components/atoms/FullScreenLoader";
-import AddPlaceForm from "../components/organisms/AddOrUpdatePlaceForm";
+import AddOrUpdatePlaceForm from "../components/organisms/AddOrUpdatePlaceForm";
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 type AddPlaceScreenNavigationProp = StackNavigationProp<HomeStackParamList, "AddPlace">;
 type AddPlaceScreenProp = RouteProp<HomeStackParamList, "AddPlace">;
@@ -33,11 +33,11 @@ export default function AddPlaceScreen({ navigation, route }: Props) {
     return (
         <View style={{ flex: 1 }}>
             <ScreenContainer>
-                <Text style={styles.address}>주소: {address}</Text>
+                <Text style={styles.address}>{address}</Text>
                 <View style={styles.mapContainer}>
                     <StaticMap latitude={latitude} longitude={longitude} style={styles.map} />
                 </View>
-                <AddPlaceForm isLoading={isLoading} setIsLoading={setIsLoading} />
+                <AddOrUpdatePlaceForm isLoading={isLoading} setIsLoading={setIsLoading} />
             </ScreenContainer>
             <FullScreenLoader loading={isLoading} />
         </View>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     address: {
         fontSize: 15,
-        fontWeight: "bold",
-        marginVertical: 5
+        marginVertical: 5,
+        color: "#636e72"
     },
 });

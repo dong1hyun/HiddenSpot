@@ -85,6 +85,7 @@ export default function AuthScreen() {
               onChangeText={(text) => { setToken(text) }}
               textAlignVertical="top"
               textAlign="left"
+              keyboardType='number-pad'
             />
             <Button buttonStyle={{ marginVertical: 12 }} onPress={verifyWithOtp} disabled={token.length !== 6}>인증</Button>
             <Error message={tokenError} />

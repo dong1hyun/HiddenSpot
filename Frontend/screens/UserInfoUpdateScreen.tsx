@@ -75,11 +75,13 @@ export default function UserInfoUpdateScreen() {
                 <View style={styles.imageContainer}>
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
                         {
-                            false ?
+                            image ?
                                 <Image style={styles.image} source={{ uri: image }} /> :
-                                <FontAwesome style={styles.userIcon} name="smile-o" />
+                                <>
+                                    <FontAwesome style={styles.userIcon} name="smile-o" />
+                                    <Entypo style={styles.cameraIcon} name="camera" />
+                                </>
                         }
-                        <Entypo style={styles.cameraIcon} name="camera" />
                     </TouchableOpacity>
                 </View>
                 <InputWithLabel
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
     cameraIcon: {
         position: "absolute",
         fontSize: 24,
-        bottom: 0,
-        right: 0
+        bottom: 5,
+        right: 5
     }
 });

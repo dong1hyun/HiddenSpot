@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { getRelativeTime } from "../util/date";
 import StaticMap from "../components/molecules/StaticMap";
-import Spinner from "../components/atoms/SpinLoading";
 import AuthStore from "../store/AuthStore";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useState } from "react";
@@ -21,6 +20,7 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import { alt_image_url } from "../lib/const";
 import TextCopyButton from "../components/atoms/TextCopyButton";
 import ProfileImage from "../components/atoms/ProfileImage";
+import PlaceDetailLoadingScreen from "../components/templates/PlaceDetailLoadingScreen";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -52,78 +52,80 @@ export default function PlaceDetailScreen({ route }: Props) {
         setImageModalVisible(false);
     }
     return (
-        <View style={styles.container}>
-            <ModalContainer modalVisible={imageModalVisible} setModalVisible={setImageModalVisible}>
-                <View style={styles.zoomImage}>
-                    <EvilIcons style={styles.closeIcon} name="close" onPress={onCloseImagePress} />
-                    <ImageViewer
-                        backgroundColor="transparent"
-                        imageUrls={[{ url: data?.photoUrl || alt_image_url }]}
-                        enableSwipeDown={true}
-                        onSwipeDown={onCloseImagePress}
-                    />
-                </View>
-            </ModalContainer>
-            <ScrollView style={styles.container}>
-                <Spinner isLoading={isLoading} />
-                <TouchableOpacity onPress={() => setImageModalVisible(true)}>
-                    <Image
-                        source={{ uri: data?.photoUrl }}
-                        style={styles.image}
-                        resizeMode="cover"
-                    />
-                </TouchableOpacity>
-                <View style={styles.contentContainer}>
-                    <View style={styles.uerContainer}>
-                        <ProfileImage />
-                        <Text style={styles.nickName}>{data?.nickName}</Text>
-                    </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.title}>{data?.title}</Text>
-                        <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
-                        <View style={styles.tags}>
-                            {
-                                data?.tags.map((tag) => (
-                                    <Text style={styles.tag} key={tag}>#{tag}</Text>
-                                ))
-                            }
-                        </View>
-                        <Text style={styles.description}>{data?.description}</Text>
-                        <View style={styles.addressContainer}>
-                            <Text>{data?.address}</Text>
-                            <TextCopyButton style={styles.copyButton} text={data?.address} />
-                        </View>
-                        <View style={styles.mapContainer}>
-                            {
-                                data &&
-                                <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
-                            }
-                        </View>
-                        <LikeAndFavoriteButton
-                            email={email}
-                            placeId={id}
-                            isFavorited={!!data?.isFavorited}
-                            isLiked={!!data?.isLiked}
-                            favoriteCount={data?.favoriteCount || 0}
-                            likeCount={data?.likeCount || 0}
-                        />
-                    </View>
-                </View>
-            </ScrollView>
+        <>
             {
-                nickName === data?.nickName &&
-                <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
-            }
-            <PlaceDeleteModal id={id} modalVisible={deleteModalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setDeleteModalVisible} />
-            <FullScreenLoader loading={deleteLoading} />
-        </View>
+                isLoading ? <PlaceDetailLoadingScreen /> :
+                    <View style={styles.container}>
+                        <ModalContainer modalVisible={imageModalVisible} setModalVisible={setImageModalVisible}>
+                            <View style={styles.zoomImage}>
+                                <EvilIcons style={styles.closeIcon} name="close" onPress={onCloseImagePress} />
+                                <ImageViewer
+                                    backgroundColor="transparent"
+                                    imageUrls={[{ url: data?.photoUrl || alt_image_url }]}
+                                    enableSwipeDown={true}
+                                    onSwipeDown={onCloseImagePress}
+                                />
+                            </View>
+                        </ModalContainer>
+                        <ScrollView style={styles.container}>
+                            <TouchableOpacity onPress={() => setImageModalVisible(true)}>
+                                <Image
+                                    source={{ uri: data?.photoUrl }}
+                                    style={styles.image}
+                                    resizeMode="cover"
+                                />
+                            </TouchableOpacity>
+                            <View style={styles.contentContainer}>
+                                <View style={styles.uerContainer}>
+                                    <ProfileImage />
+                                    <Text style={styles.nickName}>{data?.nickName}</Text>
+                                </View>
+                                <View style={styles.infoContainer}>
+                                    <Text style={styles.title}>{data?.title}</Text>
+                                    <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>
+                                    <View style={styles.tags}>
+                                        {
+                                            data?.tags.map((tag) => (
+                                                <Text style={styles.tag} key={tag}>#{tag}</Text>
+                                            ))
+                                        }
+                                    </View>
+                                    <Text style={styles.description}>{data?.description}</Text>
+                                    <View style={styles.addressContainer}>
+                                        <Text>{data?.address}</Text>
+                                        <TextCopyButton style={styles.copyButton} text={data?.address} />
+                                    </View>
+                                    <View style={styles.mapContainer}>
+                                        {
+                                            data &&
+                                            <StaticMap latitude={data.latitude} longitude={data.longitude} style={styles.map} />
+                                        }
+                                    </View>
+                                    <LikeAndFavoriteButton
+                                        email={email}
+                                        placeId={id}
+                                        isFavorited={!!data?.isFavorited}
+                                        isLiked={!!data?.isLiked}
+                                        favoriteCount={data?.favoriteCount || 0}
+                                        likeCount={data?.likeCount || 0}
+                                    />
+                                </View>
+                            </View>
+                        </ScrollView>
+                        {
+                            nickName === data?.nickName &&
+                            <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
+                        }
+                        <PlaceDeleteModal id={id} modalVisible={deleteModalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setDeleteModalVisible} />
+                        <FullScreenLoader loading={deleteLoading} />
+                    </View>}
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 36,
     },
     nickName: {
         fontWeight: "bold",
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
         position: "relative",
         paddingRight: 40
     },
-    copyButton:{
+    copyButton: {
         position: "absolute",
         right: 0
     },
@@ -194,10 +196,11 @@ const styles = StyleSheet.create({
         borderColor: "#dfe6e9",
         overflow: 'hidden',
         marginTop: 12,
+        marginBottom: 50
     },
     zoomImage: {
         position: "relative",
-        width: "100%", 
+        width: "100%",
         height: "100%",
     },
     closeIcon: {

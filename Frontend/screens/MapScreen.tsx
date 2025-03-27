@@ -1,7 +1,6 @@
 import { GOOGLE_MAPS_API_KEY } from "@env";
-import { useEffect, useRef, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
-import MapView, { MapPressEvent, Marker } from "react-native-maps";
+import { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import 'react-native-get-random-values';
 import { MapStackParamList } from "../lib/type";
 import Geocoder from "react-native-geocoding";

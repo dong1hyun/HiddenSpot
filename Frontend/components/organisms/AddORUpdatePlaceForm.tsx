@@ -24,7 +24,7 @@ interface Props {
 type AddPlaceScreenNavigation = StackNavigationProp<HomeStackParamList, "PlaceDetail">;
 type AddPlaceRouteProp = RouteProp<HomeStackParamList, "AddPlace">;
 
-export default function AddPlaceForm({ setIsLoading, isLoading }: Props) {
+export default function AddOrUpdatePlaceForm({ setIsLoading, isLoading }: Props) {
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const route = useRoute<AddPlaceRouteProp>();
     const prevData = route.params;
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         borderStyle: "dashed",
         borderWidth: 2,
         borderRadius: 24,
-        borderColor: "gray",
+        borderColor: "#b2bec3",
         marginVertical: 42,
     },
     image: {

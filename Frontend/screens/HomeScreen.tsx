@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { getData } from "../util/fetch";
 import { StackNavigationProp } from "@react-navigation/stack";

@@ -8,18 +8,23 @@ import { fetchSearchPlace } from "../../util/map";
 import RecommendatedPlace from "../molecules/RecommendatedPlace";
 import SearchedPlace from "../molecules/SearchedPlace";
 import Feather from "react-native-vector-icons/Feather";
+import Spinner from "../atoms/SpinLoading";
 
 export default function BottomSlider() {
+  const [isLoading, setIsLoading] = useState(false);
   const { query, setQuery } = useMapContext();
   const [places, setPlaces] = useState<PlaceType[]>();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const getSearchPlaces = async () => {
     try {
+      setIsLoading(true);
       const places = await fetchSearchPlace(query);
       if (places) setPlaces(places);
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +83,7 @@ export default function BottomSlider() {
           <RecommendatedPlace />
         }
       </BottomSheetView>
+      <Spinner isLoading={isLoading} />
     </BottomSheet>
   );
 }

@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import TagForm from "../components/molecules/TagForm";
 import { useState } from "react";

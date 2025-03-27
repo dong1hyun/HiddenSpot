@@ -14,8 +14,8 @@ interface Props {
     longitude: number;
 }
 
-export default function MapToPostNavigator({address, latitude, longitude}: Props) {
-    const {setMapPressed} = useMapContext();
+export default function MapToPostNavigator({ address, latitude, longitude }: Props) {
+    const { setMapPressed } = useMapContext();
     const navigation = useNavigation<MapScreenNavigationProp>();
     const onAddPress = () => {
         navigation.navigate("HomeNavigator", {
@@ -34,16 +34,18 @@ export default function MapToPostNavigator({address, latitude, longitude}: Props
 
     return (
         <View style={styles.overlay}>
-            <Text>선택된 장소를 소개해보세요.</Text>
-            <Text>{address}</Text>
+            <Text style={styles.title}>선택된 장소를 소개해보세요.</Text>
+            <Text style={styles.address}>{address}</Text>
             <View style={styles.buttons}>
                 <Button
-                    buttonStyle={{ backgroundColor: "#74b9ff", borderWidth: 0, paddingVertical: 4 }}
-                    onPress={onAddPress}>
+                    buttonStyle={{ borderWidth: 0, paddingVertical: 4 }}
+                    onPress={onAddPress}
+                    disabled={!address}
+                >
                     확인
                 </Button>
                 <Button
-                    buttonStyle={{ backgroundColor: "#ff7675", borderWidth: 0, paddingVertical: 4 }}
+                    buttonStyle={{ borderWidth: 0, paddingVertical: 4 }}
                     onPress={onCancelPress}>
                     취소
                 </Button>
@@ -64,10 +66,18 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: "center",
         alignItems: "center",
-        gap: 10
+        gap: 10,
+        opacity: 0.8
+    },
+    title: {
+        fontWeight: "bold"
+    },
+    address: {
+        color: "#636e72",
+        fontSize: 12
     },
     buttons: {
         flexDirection: "row",
-        gap: 10
+        gap: 30
     }
 });
