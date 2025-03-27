@@ -39,6 +39,12 @@
         "projectId": "e10fdcbc-9ccd-4e9b-88ad-27e825a88e7c"
       }
     },
-    "scheme": "com.hidden_spot"
+    "scheme": "com.hiddenspot",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e10fdcbc-9ccd-4e9b-88ad-27e825a88e7c"
+    }
   }
 }
