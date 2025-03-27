@@ -12,17 +12,16 @@ export default function MyLocationMarker({ latitude, longitude }: MyLocationMark
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // 애니메이션 초기화
     opacityAnim.setValue(1);
 
     Animated.loop(
       Animated.timing(opacityAnim, {
-        toValue: 0, // 점점 투명해짐
+        toValue: 0,
         duration: 5000,
         useNativeDriver: true,
       })
     ).start();
-  }, [latitude, longitude]); // 위치 변경 시 애니메이션 재시작
+  }, [latitude, longitude]);
 
   return (
     <Marker coordinate={{ latitude, longitude }} title="내 위치">
