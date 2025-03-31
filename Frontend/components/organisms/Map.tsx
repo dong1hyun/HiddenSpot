@@ -1,4 +1,4 @@
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import { useMapContext } from "../../context/MapContext";
 import { useEffect, useState } from "react";
 import { LocationType, PostResponseType } from "../../lib/type";
@@ -74,6 +74,7 @@ export default function Map() {
             {
                 curLocation ?
                 <MapView
+                    provider={PROVIDER_DEFAULT}
                     ref={mapRef}
                     style={styles.map}
                     initialRegion={{
