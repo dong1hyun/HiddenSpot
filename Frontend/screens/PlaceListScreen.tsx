@@ -13,15 +13,15 @@ import NoContent from "../components/atoms/NoContent";
 type PlaceListScreenRouteProp = RouteProp<MyPageStackParamList, "PlaceList">;
 
 export default function PlaceListScreen({ route }: { route: PlaceListScreenRouteProp }) {
-    const { email } = AuthStore();
+    const { nickName } = AuthStore();
     const { type } = route.params;
     const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
-        const response = await getData(`${API_URL}/place/${type}?userEmail=${email}&page=${pageParam}`);
+        const response = await getData(`${API_URL}/place/${type}?nickName=${nickName}&page=${pageParam}`);
         return response;
     };
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
-        queryKey: ['places', type, email],
+        queryKey: ['places', type, nickName],
         queryFn: ({ pageParam }) => fetchData(pageParam),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
@@ -36,7 +36,6 @@ export default function PlaceListScreen({ route }: { route: PlaceListScreenRoute
     }
     const places = data?.pages.flat();
     const noContentMsg = type === "favorite" ? "아직 저장한 장소가 없어요." : "아직 소개한 장소가 없어요";
-    console.log(places)
     return (
         <View style={styles.container}>
             {places?.length === 0 ? <NoContent text={noContentMsg} /> :

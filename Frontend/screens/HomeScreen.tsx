@@ -57,15 +57,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white"
-    },
-    image: {
-        width: 50,
-        height: 50
-    },
-    plusIcon: {
-        position: "absolute",
-        right: 10,
-        bottom: 10,
-        fontSize: 36
     }
 });

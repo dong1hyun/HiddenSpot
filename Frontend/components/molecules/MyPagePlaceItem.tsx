@@ -14,24 +14,22 @@ export default function MyPagePlaceItem({ placeData }: { placeData: PostResponse
     return (
         <TouchableOpacity onPress={() => navigation.navigate(
             "HomeNavigator", {
-                screen: "PlaceDetail",
-                params: {
-                    id
-                }
-            })} style={styles.container}>
+            screen: "PlaceDetail",
+            params: {
+                id
+            }
+        })} style={styles.container}>
             <Image style={styles.image} source={{ uri: photoUrl }} />
-            <View>
-                <View style={styles.topContainer}>
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={styles.time}>{getRelativeTime(created_at.toString())}</Text>
-                </View>
-                <Text style={styles.address}>{address}</Text>
+            <View style={{flex: 1}}>
+                <Text style={styles.title}>{title}</Text>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={styles.address}>{address}</Text>
                 <Text style={styles.nickName}>{nickName}</Text>
             </View>
             <View style={styles.likeContainer}>
                 <AntDesign name="heart" />
                 <Text>{likeCount}</Text>
             </View>
+            <Text style={styles.time}>{getRelativeTime(created_at.toString())}</Text>
         </TouchableOpacity>
     )
 }
@@ -39,11 +37,13 @@ export default function MyPagePlaceItem({ placeData }: { placeData: PostResponse
 
 const styles = StyleSheet.create({
     container: {
+        position: "relative",
         flex: 1,
         flexDirection: "row",
         borderBottomWidth: 1,
         borderBottomColor: "#dfe6e9",
         padding: 12,
+        marginTop: 12,
         marginBottom: 16,
         gap: 12,
     },
@@ -52,15 +52,11 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 8,
     },
-    topContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "88%",
-        backgroundColor: "white"
-    },
     time: {
+        position: "absolute",
         color: "gray",
-        fontSize: 12
+        fontSize: 12,
+        right: 5,
     },
     title: {
         fontWeight: "bold",
@@ -68,7 +64,7 @@ const styles = StyleSheet.create({
     },
     address: {
         fontSize: 12,
-        color: "gray"
+        color: "gray",
     },
     nickName: {
         fontWeight: "500",

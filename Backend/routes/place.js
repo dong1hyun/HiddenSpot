@@ -146,9 +146,9 @@ router.get("/favorite", async (req, res) => {
 
 router.get("/myPosts", async (req, res) => {
     try {
-        const { userEmail, page } = req.query;
+        const { nickName, page } = req.query;
         const response = await db.Place.findMany({
-            where: { userEmail },
+            where: { nickName },
             skip: (page - 1) * pageListLimit,
             take: pageListLimit,
             include: {
@@ -169,7 +169,7 @@ router.get("/myPosts", async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => { 
     try {
         const id = +req.params.id;
         const userEmail = req.query.email;
@@ -180,6 +180,11 @@ router.get('/:id', async (req, res) => {
             include: {
                 favoritedBy: true,
                 likedBy: true,
+                user: {
+                    select: {
+                        profileImageUrl: true,
+                    }
+                }
             }
         });
 

@@ -31,7 +31,7 @@ interface Props {
 }
 
 const { width, height } = Dimensions.get('window');
-export default function PlaceDetailScreen({ route }: Props) {
+export default function PlaceDetailScreen({ route, navigation }: Props) {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [imageModalVisible, setImageModalVisible] = useState(false);
@@ -76,10 +76,13 @@ export default function PlaceDetailScreen({ route }: Props) {
                                 />
                             </TouchableOpacity>
                             <View style={styles.contentContainer}>
-                                <View style={styles.uerContainer}>
-                                    <ProfileImage />
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("UserInfo", {nickName: data?.nickName || ""})}
+                                    style={styles.uerContainer}
+                                >
+                                    <ProfileImage imageUrl={data?.user?.profileImageUrl} />
                                     <Text style={styles.nickName}>{data?.nickName}</Text>
-                                </View>
+                                </TouchableOpacity>
                                 <View style={styles.infoContainer}>
                                     <Text style={styles.title}>{data?.title}</Text>
                                     <Text style={styles.time}>{getRelativeTime(data?.created_at.toString())}</Text>

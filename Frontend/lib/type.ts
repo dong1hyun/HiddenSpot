@@ -27,6 +27,9 @@ export type HomeStackParamList = {
         title?: string;
         description?: string;
     };
+    UserInfo: {
+        nickName: string
+    }
 }
 
 export type MyPageStackParamList = {
@@ -78,6 +81,9 @@ export interface PostResponseType extends PostFormType {
     isFavorited: boolean;
     isLiked: boolean;
     tags: string[];
+    user: {
+        profileImageUrl: string
+    }
 }
 
 

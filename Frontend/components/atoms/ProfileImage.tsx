@@ -2,12 +2,11 @@ import { Image, StyleSheet, View } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AuthStore from "../../store/AuthStore";
 
-export default function ProfileImage() {
-    const { profileImageUrl } = AuthStore();
+export default function ProfileImage({imageUrl}: {imageUrl?: string}) {
     return (
         <View>
-            {profileImageUrl ?
-                <Image style={styles.image} source={{uri: profileImageUrl}} resizeMode="cover" /> :
+            {imageUrl ?
+                <Image style={styles.image} source={{uri: imageUrl}} resizeMode="cover" /> :
                 <FontAwesome style={styles.userIcon} name="user-circle-o" />}
         </View>
     );

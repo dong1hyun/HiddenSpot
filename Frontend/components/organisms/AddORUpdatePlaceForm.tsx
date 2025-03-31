@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+    import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import InputWithLabel from "../atoms/InputWithLabel";
 import * as ImagePicker from 'expo-image-picker';
 import EvilIcons from "react-native-vector-icons/EvilIcons";

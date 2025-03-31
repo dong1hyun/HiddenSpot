@@ -7,7 +7,7 @@ const Spinner = ({ isLoading }: { isLoading: boolean }) => {
       {
         isLoading ?
           <View style={styles.container}>
-            <ActivityIndicator size="large" color="black" />
+            <ActivityIndicator size="large" color="#b2bec3" />
           </View> :
           null
       }

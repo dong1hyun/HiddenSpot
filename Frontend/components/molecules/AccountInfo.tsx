@@ -9,11 +9,11 @@ type MyPageNavigationProp = StackNavigationProp<MyPageStackParamList, "UserInfoU
 
 export default function AccountInfo() {
     const navigation = useNavigation<MyPageNavigationProp>();
-    const { nickName, email } = AuthStore();
+    const { nickName, email, profileImageUrl } = AuthStore();
     return (
         <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("UserInfoUpdate")}>
             <View style={styles.user}>
-                <ProfileImage />
+                <ProfileImage imageUrl={profileImageUrl} />
                 <View style={styles.userIds}>
                     <Text style={styles.nickName}>{nickName}</Text>
                     <Text style={styles.email}>{email}</Text>
