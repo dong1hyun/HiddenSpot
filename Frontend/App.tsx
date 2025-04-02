@@ -11,21 +11,27 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AuthStore from "./store/AuthStore";
 import queryClient from "./util/queryClient";
 import UserInfoSetting from "./screens/UserInfoSetting";
+import SplashScreen from 'react-native-splash-screen';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const { setEmail, setNickName, setInterests, setProfileImageUrl } = AuthStore();
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    })
-      .catch((error) => {
-        console.error(error);
-      })
+  const [appReady, setAppReady] = useState(false);
+
+  const authenticate = async () => {
+    const {data: {session}} = await supabase.auth.getSession();
+    setSession(session);
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-    })
+    });
+    
+    setAppReady(true);
+  };
+
+  useEffect(() => {
+    authenticate();
   }, []);
+
   useEffect(() => {
     const metaData = session?.user?.user_metadata;
     const email = session?.user?.email;
@@ -38,6 +44,11 @@ export default function App() {
     if(profileImageUrl) setProfileImageUrl(profileImageUrl);
   }, [session]);
  
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [appReady])
+
+  if(!appReady) return null;
   let screen;
 
   if (session?.user?.user_metadata.nickName) {
