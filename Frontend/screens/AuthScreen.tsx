@@ -18,10 +18,12 @@ export default function AuthScreen() {
       setLoading(true);
       if (email.length === 0) {
         setEmailError("이메일을 입력해주세요");
+        setLoading(false);
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         setEmailError("유효하지 않은 이메일 형식입니다");
+        setLoading(false);
         return;
       }
       const { error } = await supabase.auth.signInWithOtp({
@@ -42,6 +44,8 @@ export default function AuthScreen() {
       setLoading(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -56,6 +60,7 @@ export default function AuthScreen() {
     });
     if (error) {
       setTokenError("만료 혹은 잘못된 인증번호입니다");
+      setLoading(false);
     }
     setLoading(false);
   }

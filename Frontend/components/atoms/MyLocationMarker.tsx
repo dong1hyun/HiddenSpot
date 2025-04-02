@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   me: {
     fontSize: 24,
     color: "#0984e3",
-    backgroundColor: "rgba(255, 255, 0, 0.3)",
+    backgroundColor: "rgba(255, 255, 0, 0.44)",
     borderRadius: 24,
     padding: 4,
   },
