@@ -28,7 +28,7 @@ export default function BottomSliderPlaceItem({ photoUrl, placeName, location, f
     const { setLocation } = useMapContext();
     return (
         <TouchableOpacity onPress={onPlacePress} style={styles.container}>
-            <Image style={styles.image} source={photoUrl ? { uri: photoUrl } : require("../../assets/alt.jpg")} />
+            <Image style={styles.image} source={photoUrl ? { uri: photoUrl } : require("../../assets/logo.png")} />
             <View style={styles.textContainer}>
                 <Text>{placeName}</Text>
                 <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail">{formattedAddress}</Text>

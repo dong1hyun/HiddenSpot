@@ -5,7 +5,7 @@ import { supabase } from "./lib/supabase";
 import AuthNavigator from './navigations/AuthNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from "./navigations/AppNavigator";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AuthStore from "./store/AuthStore";
@@ -61,6 +61,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       <GestureHandlerRootView>
         <QueryClientProvider client={queryClient}>
           <NavigationContainer>

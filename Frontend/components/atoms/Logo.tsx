@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from "react-native"
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { Image, StyleSheet, Text, View } from "react-native"
 
 export default function Logo() {
     return (
         <View style={styles.container}>
-            <FontAwesome style={styles.icon} name="camera-retro" />
+            <Image style={styles.image} source={require("../../assets/logo.png")} />
             <Text style={styles.logo}>
-                Hidden Spot
+                HiddenSpot
             </Text>
         </View>
     )
@@ -18,13 +17,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5
     },
-    icon: {
-        fontSize: 24,
-        color: "#336BDE",
+    image: {
+        width: 40,
+        height: 40, 
     },
     logo: {
         fontSize: 24,
-        color: "#336BDE",
+        color: "#329fff",
         fontWeight: "bold"
     }
 });
