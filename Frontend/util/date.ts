@@ -1,5 +1,5 @@
 export const getRelativeTime = (isoDate: string | undefined): string => {
-    if(!isoDate) return ""
+    if(!isoDate) return "";
     const now = new Date();
     const past = new Date(isoDate);
     const diffMs = now.getTime() - past.getTime();
@@ -9,6 +9,8 @@ export const getRelativeTime = (isoDate: string | undefined): string => {
     const diffDays = Math.floor(diffHrs / 24);
     const diffMonths = Math.floor(diffDays / 30);
     const diffYears = Math.floor(diffDays / 365);
+
+    if(diffHrs < 0) return "0분 전";
 
     if (diffHrs < 24) {
         return diffHrs === 0 ? `${diffMin}분 전` : `${diffHrs}시간 전`;

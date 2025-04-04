@@ -27,7 +27,7 @@ export default function PlaceListScreen({ route }: { route: PlaceListScreenRoute
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length ? allPages.length + 1 : undefined;
         },
-        refetchInterval: 60000
+        refetchInterval: 30000
     });
     const onEndReached = () => {
         if (hasNextPage && !isFetchingNextPage) {

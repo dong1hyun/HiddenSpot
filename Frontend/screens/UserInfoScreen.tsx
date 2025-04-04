@@ -26,7 +26,7 @@ export default function UserInfoScreen({ route }: { route: PlaceDetailScreenRout
         getNextPageParam: (lastPage, allPages) => {
             return lastPage.length ? allPages.length + 1 : undefined;
         },
-        refetchInterval: 60000
+        refetchInterval: 30000
     });
 
     const getUserData = async () => {

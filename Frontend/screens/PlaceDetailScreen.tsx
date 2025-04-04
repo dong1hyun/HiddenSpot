@@ -45,7 +45,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const { data, isLoading } = useQuery({
         queryKey: ['place', 'detail', id],
         queryFn: fetchData,
-        refetchInterval: 60000
+        refetchInterval: 30000
     });
 
     const onCloseImagePress = () => {
