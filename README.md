@@ -44,7 +44,7 @@ cd android
 ### 1️⃣ Supabase 프로젝트 생성
 - [Supabase](https://supabase.com/)에 로그인 후 새 프로젝트를 생성합니다.
 ### 2️⃣ 환경 변수 설정
-Supabase Project에서 Configuration > Data API > URL, API key를 가져옴
+Supabase Project에서 Configuration > Data API > URL, API key를 가져옴 <br/>
 `.env` 파일에 Supabase API 키 추가:
 ```sh
 SUPABASE_URL=https://your-project.supabase.co
@@ -54,10 +54,10 @@ SUPABASE_ANON_KEY=your-anon-key
 ```sh
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANONKEY, {
   auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
+    storage: AsyncStorage, // 사용자의 로그인 세션을 AsyncStorage에 저장
+    autoRefreshToken: true, // 액세스 토큰 자동 갱신 활성화
+    persistSession: true, 앱을 재시작해도 로그인 상태 유지
+    detectSessionInUrl: false, // URL을 통해 세션을 감지하지 않음(어플리케이션)
   },
 })
 ```
@@ -65,11 +65,12 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANONKEY, {
 
 ## 🔑 Supabase OTP Auth
 
-otp 인증을 위한 email form 설정
+### otp 인증을 위한 email form 설정
 ![image](https://github.com/user-attachments/assets/94b41d3a-989d-42ff-a09c-578d041f4123)
 
 <br/>
-입력받은 이메일로 otp 코드 전송
+
+### 입력받은 이메일로 otp 코드 전송
 
 ```sh
 const { error } = await supabase.auth.signInWithOtp({
@@ -80,7 +81,8 @@ const { error } = await supabase.auth.signInWithOtp({
 })
 ```
 <br/>
-입력받은 otp 코드로 회원가입 혹은 로그인 (이미 존재하는 계정인 경우 로그인)
+
+### 입력받은 otp 코드로 회원가입 혹은 로그인 (이미 존재하는 계정인 경우 로그인)
 
 ```sh
 await supabase.auth.verifyOtp({
@@ -92,19 +94,21 @@ await supabase.auth.verifyOtp({
 <br/><br/>
 ## 📦 Supabase Storage
 
-사용자가 이미지를 업로드하면 이미지를 storage에 저장합니다.
-정상적으로 저장됐다면 해당 이미지의 경로를 얻을 수 있고, 그 경로를 통해 이미지 주소를 요청할 수 있습니다.
+- 사용자가 이미지를 업로드하면 이미지를 storage에 저장합니다.
+- 정상적으로 저장됐다면 해당 이미지의 경로를 얻을 수 있고, 그 경로를 통해 이미지 주소를 요청할 수 있습니다.
 
-우선 Supabse Storage 사용하기 위해서 Project에서 bucket을 생성합니다.
+- 우선 Supabse Storage 사용하기 위해서 Project에서 bucket을 생성합니다.
 
 ![image](https://github.com/user-attachments/assets/e8a75ba5-6193-46da-b1a1-6fab756f3ff4)
 
-저장된 이미지를 어플을 이용하는 모든 사람들에게 제공해야 하기 때문에 public으로 설정합니다.
+- 저장된 이미지를 어플을 이용하는 모든 사람들에게 제공해야 하기 때문에 public으로 설정합니다.
+
 ![image](https://github.com/user-attachments/assets/992033b8-388e-4b81-9473-093d12041ef4)
 
 
 
-이미지 storage에 저장하는 코드
+### 이미지를 Supabase Storage에 저장
+
 ```sh
 const response = await fetch(image);
 
@@ -128,4 +132,30 @@ storage에 이미지를 올리면 반환되는 data에 있는 path를 통해서 
 const imageUrl = supabase.storage
     .from('photos')
     .getPublicUrl(data.path).data.publicUrl
+```
+
+<br/><br/><br/>
+
+# 🖥️ Vercel Express Server 배포
+
+### 1️⃣ Vercel 프로젝트 생성
+- [Vercel](https://vercel.com)에 로그인 후 새 프로젝트를 생성합니다.
+
+express에 대한 preset이 없기때문에 other을 선택합니다.
+<br/>
+![image](https://github.com/user-attachments/assets/0dcd53d9-87eb-4f8f-9585-eaaeb55f494a)
+
+### 2️⃣ 환경 변수 설정
+- DATABASE_URL을 설정해줍니다.
+- DATABASE는 Supabse의 PostgreSQL + Prisma를 사용할 것이기 때문에 Supabase에서 Url을 복사해서 설정해주세요.
+<br/>
+
+![image](https://github.com/user-attachments/assets/80659980-f0cd-4720-957e-f6881bd44e25)
+
+### 3️⃣ Backend root 폴더에 vercel.json을 생성하고 진입점을 정의해줍니다.
+
+- 서버 진입점 정의 (진입점: /api/index.js)
+
+```sh
+{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
 ```
