@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     },
     description: {
         paddingVertical: 24,
-        fontSize: 18,
+        fontSize: 12,
         lineHeight: 30
     },
     addressContainer: {

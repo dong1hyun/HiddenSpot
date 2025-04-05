@@ -35,6 +35,9 @@ export default function HomeNavigator() {
             <Stack.Screen 
                 name="UserInfo"
                 component={UserInfoScreen}
+                options={{
+                    title: "사용자 정보"
+                }}
             />
         </Stack.Navigator>
     )
