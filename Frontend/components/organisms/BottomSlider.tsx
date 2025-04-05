@@ -28,10 +28,6 @@ export default function BottomSlider() {
     }
   };
 
-  const handleSheetChanges = useCallback((index: number) => {
-    // console.log("handleSheetChanges", index);
-  }, []);
-
   const handleFocus = () => {
     if (bottomSheetRef.current) {
       bottomSheetRef.current.snapToIndex(2);
@@ -59,10 +55,9 @@ export default function BottomSlider() {
       ref={bottomSheetRef}
       style={styles.container}
       snapPoints={["25%", "50%", "80%"]}
-      onChange={handleSheetChanges}
     >
       <BottomSheetView style={styles.contentContainer}>
-        <View style={styles.inputContainer}>
+        <View>
           <TextInput
             style={styles.input}
             placeholder="장소를 검색하세요"
@@ -91,9 +86,6 @@ export default function BottomSlider() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  inputContainer: {
-
   },
   deleteIcon: {
     position: "absolute",

@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
         res.status(201).json(newPlace);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "장소 추가에 실패했습니다."});
+        res.status(500).json({ error: "장소 추가에 실패했습니다." });
     }
 });
 
@@ -27,13 +27,13 @@ router.put('/:id', async (req, res) => {
         res.status(200).json(updatedPlace);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error:"장소 정보 수정에 실패했습니다."});
+        res.status(500).json({ error: "장소 정보 수정에 실패했습니다." });
     }
 });
 
 router.get('/', async (req, res) => {
     try {
-        const {page, tags} = req.query;
+        const { page, tags } = req.query;
         const selectedTags = tags ? tags.split(",") : [];
         const places = await db.Place.findMany({
             where: selectedTags.length > 0 ? {
@@ -48,6 +48,11 @@ router.get('/', async (req, res) => {
             },
             include: {
                 likedBy: true,
+                user: {
+                    select: {
+                        nickName: true
+                    }
+                }
             }
         });
 
@@ -71,17 +76,17 @@ router.get('/recommendation', async (req, res) => {
     try {
         const places = await db.place.findMany({
             include: {
-              _count: {
-                select: { likedBy: true }
-              }
+                _count: {
+                    select: { likedBy: true }
+                }
             },
             orderBy: {
-              likedBy: {
-                _count: 'desc'
-              }
+                likedBy: {
+                    _count: 'desc'
+                }
             },
             take: 10
-          });
+        });
         res.status(200).json(places);
     } catch (error) {
         console.error(error);
@@ -124,10 +129,16 @@ router.get("/favorite", async (req, res) => {
             take: pageListLimit,
             include: {
                 place: {
-                include: {
-                    likedBy: true
+                    include: {
+                        likedBy: true,
+                        user: {
+                            select: {
+                                nickName: true
+                            }
+                        }
+                    }
                 }
-            } },
+            },
         });
         const favoritePlaces = response.map((favorite) => favorite.place);
         const newPlaces = favoritePlaces.map((place) => {
@@ -148,13 +159,23 @@ router.get("/myPosts", async (req, res) => {
     try {
         const { nickName, page } = req.query;
         const response = await db.Place.findMany({
-            where: { nickName },
+            where: {
+                user: {
+                    nickName
+                }
+            },
             skip: (page - 1) * pageListLimit,
             take: pageListLimit,
             include: {
-                likedBy: true
+                likedBy: true,
+                user: {
+                    select: {
+                        nickName: true
+                    }
+                }
             }
         });
+
         const places = response.map((place) => {
             const likeCount = place.likedBy.length;
             delete place.likedBy;
@@ -169,7 +190,7 @@ router.get("/myPosts", async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => { 
+router.get('/:id', async (req, res) => {
     try {
         const id = +req.params.id;
         const userEmail = req.query.email;
@@ -182,6 +203,7 @@ router.get('/:id', async (req, res) => {
                 likedBy: true,
                 user: {
                     select: {
+                        nickName: true,
                         profileImageUrl: true,
                     }
                 }
@@ -211,7 +233,7 @@ router.get('/:id', async (req, res) => {
 
 router.delete(`/favorite`, async (req, res) => {
     try {
-        const {userEmail, placeId} = req.query;
+        const { userEmail, placeId } = req.query;
         const response = await db.Favorite.delete({
             where: {
                 userEmail_placeId: {
@@ -221,15 +243,15 @@ router.delete(`/favorite`, async (req, res) => {
             }
         });
         res.status(200).json(response);
-    } catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "즐겨찾기 삭제에 실패했습니다."});
+        res.status(500).json({ error: "즐겨찾기 삭제에 실패했습니다." });
     }
 });
 
 router.delete(`/like`, async (req, res) => {
     try {
-        const {userEmail, placeId} = req.query;
+        const { userEmail, placeId } = req.query;
         const response = await db.Like.delete({
             where: {
                 userEmail_placeId: {
@@ -239,9 +261,9 @@ router.delete(`/like`, async (req, res) => {
             }
         });
         res.status(200).json(response);
-    } catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "좋아요 삭제에 실패했습니다."});
+        res.status(500).json({ error: "좋아요 삭제에 실패했습니다." });
     }
 });
 
@@ -256,13 +278,13 @@ router.delete('/:id', async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "장소 삭제에 실패했습니다."});
+        res.status(500).json({ error: "장소 삭제에 실패했습니다." });
     }
 });
 
 router.post(`/favorite`, async (req, res) => {
     try {
-        const {userEmail, placeId} = req.body;
+        const { userEmail, placeId } = req.body;
         const response = await db.Favorite.create({
             data: {
                 userEmail,
@@ -270,15 +292,15 @@ router.post(`/favorite`, async (req, res) => {
             }
         });
         res.status(200).json(response);
-    } catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "즐겨찾기에 실패했습니다."});
+        res.status(500).json({ error: "즐겨찾기에 실패했습니다." });
     }
 });
 
 router.post(`/like`, async (req, res) => {
     try {
-        const {userEmail, placeId} = req.body;
+        const { userEmail, placeId } = req.body;
         const response = await db.Like.create({
             data: {
                 userEmail,
@@ -286,9 +308,9 @@ router.post(`/like`, async (req, res) => {
             }
         });
         res.status(200).json(response);
-    } catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).json({error: "즐겨찾기에 실패했습니다."});
+        res.status(500).json({ error: "즐겨찾기에 실패했습니다." });
     }
 });
 

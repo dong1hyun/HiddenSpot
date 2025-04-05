@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { getData } from "../util/fetch";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { PostResponseType, RootStackParamList } from "../lib/type";
+import { HomePlaceType, RootStackParamList } from "../lib/type";
 import HomePlaceItem from "../components/molecules/HomePlaceItem";
 import { API_URL } from "@env";
 import TagFilter from "../components/molecules/TagFilter";
@@ -16,7 +16,7 @@ interface Props {
 
 export default function HomeScreen({ navigation }: Props) {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
+    const fetchData = async (pageParam: number): Promise<HomePlaceType[]> => {
         const tagQuery = selectedTags.length > 0 ? `&tags=${selectedTags.join(',')}` : "";
         const response = await getData(`${API_URL}/place?page=${pageParam}${tagQuery}`);
         return response;

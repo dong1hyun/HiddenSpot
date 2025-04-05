@@ -36,7 +36,6 @@ export default function Map() {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
-                console.log("위치 권한이 거부되었습니다.");
                 return;
             }
 

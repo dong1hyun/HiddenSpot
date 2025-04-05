@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
-import { PostResponseType, RootStackParamList } from "../../lib/type";
+import { HomePlaceType, PostResponseType, RootStackParamList } from "../../lib/type";
 import { getRelativeTime } from "../../util/date";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -8,8 +8,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 
 type MyPageScreenNavigationProp = StackNavigationProp<RootStackParamList, "HomeNavigator">;
 
-export default function MyPagePlaceItem({ placeData }: { placeData: PostResponseType }) {
-    const { id, title, address, created_at, photoUrl, nickName, likeCount } = placeData;
+export default function MyPagePlaceItem({ placeData }: { placeData: HomePlaceType }) {
+    const { id, title, address, created_at, photoUrl, likeCount, user: {nickName} } = placeData;
     const navigation = useNavigation<MyPageScreenNavigationProp>();
     return (
         <TouchableOpacity onPress={() => navigation.navigate(

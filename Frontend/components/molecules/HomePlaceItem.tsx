@@ -1,6 +1,6 @@
 import { Image, Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
-import { HomeStackParamList, PostResponseType } from "../../lib/type";
+import { HomePlaceType, HomeStackParamList } from "../../lib/type";
 import { getRelativeTime } from "../../util/date";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -8,13 +8,13 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
 
-export default function HomePlaceItem({ placeData }: { placeData: PostResponseType }) {
-    const { id, title, address, created_at, photoUrl, nickName, likeCount } = placeData;
+export default function HomePlaceItem({ placeData }: { placeData: HomePlaceType }) {
+    const { id, title, address, created_at, photoUrl, likeCount, user: { nickName } } = placeData;
     const navigation = useNavigation<HomeScreenNavigationProp>();
     return (
         <TouchableOpacity onPress={() => navigation.navigate("PlaceDetail", { id })} style={styles.container}>
             <Image style={styles.image} source={{ uri: photoUrl }} />
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.title}>{title}</Text>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={styles.address}>{address}</Text>
                 <Text style={styles.nickName}>{nickName}</Text>

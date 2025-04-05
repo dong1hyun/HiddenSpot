@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { getData } from "../util/fetch";
 import { RouteProp } from "@react-navigation/native";
-import { HomeStackParamList, PostResponseType, UserInfoFormType } from "../lib/type";
+import { HomePlaceType, HomeStackParamList, PostResponseType, UserInfoFormType } from "../lib/type";
 import HomePlaceItem from "../components/molecules/HomePlaceItem";
 import Spinner from "../components/atoms/SpinLoading";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "UserInfo">;
 export default function UserInfoScreen({ route }: { route: PlaceDetailScreenRouteProp }) {
     const { nickName } = route.params;
     const [user, setUser] = useState<UserInfoFormType>();
-    const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
+    const fetchData = async (pageParam: number): Promise<HomePlaceType[]> => {
         const response = await getData(`${API_URL}/place/myPosts?nickName=${nickName}&page=${pageParam}`);
         return response;
     };

@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import { HomeStackParamList, PostResponseType } from "../lib/type";
+import { DetailPlaceType, HomeStackParamList } from "../lib/type";
 import { getData } from "../util/fetch";
 import { useQuery } from "@tanstack/react-query";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -37,7 +37,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const [imageModalVisible, setImageModalVisible] = useState(false);
     const { nickName, email } = AuthStore();
     const id = route.params.id;
-    const fetchData = async (): Promise<PostResponseType> => {
+    const fetchData = async (): Promise<DetailPlaceType> => {
         const response = await getData(`${API_URL}/place/${id}?email=${email}`);
         return response;
     }
@@ -77,11 +77,11 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                             </TouchableOpacity>
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity
-                                    onPress={() => navigation.navigate("UserInfo", {nickName: data?.nickName || ""})}
+                                    onPress={() => navigation.navigate("UserInfo", {nickName: data?.user?.nickName || ""})}
                                     style={styles.uerContainer}
                                 >
                                     <ProfileImage imageUrl={data?.user?.profileImageUrl} />
-                                    <Text style={styles.nickName}>{data?.nickName}</Text>
+                                    <Text style={styles.nickName}>{data?.user?.nickName}</Text>
                                 </TouchableOpacity>
                                 <View style={styles.infoContainer}>
                                     <Text style={styles.title}>{data?.title}</Text>
@@ -116,7 +116,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                             </View>
                         </ScrollView>
                         {
-                            nickName === data?.nickName &&
+                            nickName === data?.user?.nickName &&
                             <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
                         }
                         <PlaceDeleteModal id={id} modalVisible={deleteModalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setDeleteModalVisible} />

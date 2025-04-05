@@ -73,7 +73,6 @@ export interface PostResponseType extends PostFormType {
     address: string;
     latitude: number;
     longitude: number;
-    nickName: string;
     created_at: Date;
     updated_at: Date;
     favoriteCount: number;
@@ -81,7 +80,17 @@ export interface PostResponseType extends PostFormType {
     isFavorited: boolean;
     isLiked: boolean;
     tags: string[];
+}
+
+export interface HomePlaceType extends PostResponseType {
     user: {
+        nickName: string
+    }
+}
+
+export interface DetailPlaceType extends PostResponseType {
+    user: {
+        nickName: string
         profileImageUrl: string
     }
 }

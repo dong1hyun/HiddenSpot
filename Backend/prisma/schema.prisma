@@ -28,7 +28,6 @@ model Place {
   photoUrl String
   latitude Float
   longitude Float
-  nickName String
   userEmail String
   tags String[]
   user       User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)

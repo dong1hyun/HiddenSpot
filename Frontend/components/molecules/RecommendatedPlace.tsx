@@ -10,18 +10,18 @@ import { FlatList } from "react-native-gesture-handler";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export default function RecommendatedPlace() {
-    const getRecommendedPlaces = async (): Promise<RecommendationPlaceResponseType[] | undefined> => {
+    const getRecommendedPlaces = async (): Promise<RecommendationPlaceResponseType[]> => {
         try {
             const recommendedPlaces = await getData(`${API_URL}/place/recommendation`);
             return recommendedPlaces;
         } catch (error) {
             console.error(error);
+            return [];
         }
     }
-
     const { mapRef } = useMapContext();
 
-    const { data = [] } = useQuery({
+    const { data } = useQuery({
         queryFn: getRecommendedPlaces,
         queryKey: ["recommendationPlaces"]
     });

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { MyPageStackParamList, PostResponseType } from "../lib/type";
+import { HomePlaceType, MyPageStackParamList, PostResponseType } from "../lib/type";
 import { getData } from "../util/fetch";
 import AuthStore from "../store/AuthStore";
 import { RouteProp } from "@react-navigation/native";
@@ -15,7 +15,7 @@ type PlaceListScreenRouteProp = RouteProp<MyPageStackParamList, "PlaceList">;
 export default function PlaceListScreen({ route }: { route: PlaceListScreenRouteProp }) {
     const { nickName } = AuthStore();
     const { type } = route.params;
-    const fetchData = async (pageParam: number): Promise<PostResponseType[]> => {
+    const fetchData = async (pageParam: number): Promise<HomePlaceType[]> => {
         const response = await getData(`${API_URL}/place/${type}?nickName=${nickName}&page=${pageParam}`);
         return response;
     };
