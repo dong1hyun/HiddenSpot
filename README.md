@@ -3,6 +3,37 @@
 ![Badge](https://img.shields.io/badge/version-1.0.0-blue.svg)
 <br/><br/>
 
+## 📱주요 화면
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/cdc20ee3-74eb-4c9c-a3fe-e4de497b4ee9" width="200" /><br/>
+      <b>홈 화면</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/655c3bfe-1506-4b04-8fb5-62f1d4dceec5" width="200" /><br/>
+      <b>상세 화면</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/55663e59-121c-4648-aa57-0f2c101b8d69" width="200" /><br/>
+      <b>사용자 정보 화면</b>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/46d7e68b-2367-4e57-9ffd-4b3ed055cd27" width="200" /><br/>
+      <b>지도 화면</b>
+    </td>
+  </tr>
+</table>
+<br/><br/>
+
+## 🔍주요기능
+- 자신만 알고있는 히든스팟을 다른 사람들에게 공유
+- 자신이 가고자 하는 여행지의 히든스팟을 지도에서 찾고, 저장해서 자신의 여정을 풍요롭게 만들 수 있음
+- 태그 필터링을 통해 자신의 취향에 맞는 장소들을 추천받을 수 있음
+- 자동완성 검색 기능을 이용해서 편리하게 특정 장소에 대한 정보를 찾을 수 있음
+<br/><br/>
+
 ## 📌 개요
 자신만 알고있는 숨겨져있는 사진스팟, 아름다운 장소를 다른 사람들과 공유하는 어플리케이션입니다. </br>
 지도에 있는 히든스팟을 따라가며 자신의 여정을 풍요롭게 만들 수 있습니다.
