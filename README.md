@@ -47,6 +47,19 @@
 - **Auth**: Supabase Authentication
 <br/><br/>
 
+## 📦 주요 라이브러리 및 버전
+
+- React Native: `0.76.7`
+- Expo SDK: `52.0.41`
+- React: `18.3.1`
+- React Navigation: `^7.x`
+- Supabase JS: `^2.49.1`
+- Zustand: `^5.0.3`
+- React Query: `^5.40.0`
+- React Hook Form: `^7.54.2`
+- TypeScript: `^5.3.3`
+<br/><br/>
+
 ## 🚀 설치 및 실행
 ```sh
 
