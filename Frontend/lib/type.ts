@@ -26,6 +26,7 @@ export type HomeStackParamList = {
         photoUrl?: string;
         title?: string;
         description?: string;
+        tags?: string[];
     };
     UserInfo: {
         nickName: string

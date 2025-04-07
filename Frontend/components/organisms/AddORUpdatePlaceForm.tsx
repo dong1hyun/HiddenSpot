@@ -1,4 +1,4 @@
-    import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import InputWithLabel from "../atoms/InputWithLabel";
 import * as ImagePicker from 'expo-image-picker';
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -28,17 +28,18 @@ export default function AddOrUpdatePlaceForm({ setIsLoading, isLoading }: Props)
     const navigation = useNavigation<AddPlaceScreenNavigation>();
     const route = useRoute<AddPlaceRouteProp>();
     const prevData = route.params;
-    const { address, latitude, longitude } = prevData;
-    const [interests, setInterests] = useState<string[]>([]);
+    const { address, latitude, longitude, tags } = prevData;
+    const [interests, setInterests] = useState<string[]>(tags || []);
     const isEditing = Boolean(prevData.id);
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<PostFormType>(prevData.title ? {
         defaultValues: {
             title: prevData.title,
             description: prevData.description,
-            photoUrl: prevData.photoUrl
+            photoUrl: prevData.photoUrl,
+
         }
     } : {});
-    const { nickName, email } = AuthStore();
+    const { email } = AuthStore();
     const image = watch("photoUrl");
     const title = watch("title");
     const description = watch("description");
@@ -61,7 +62,6 @@ export default function AddOrUpdatePlaceForm({ setIsLoading, isLoading }: Props)
             const photoUrl = await uploadPhotoAndGetPublicUrl(image);
             const PlaceData = {
                 userEmail: email,
-                nickName,
                 title: data.title,
                 description: data.description,
                 photoUrl,
@@ -70,7 +70,6 @@ export default function AddOrUpdatePlaceForm({ setIsLoading, isLoading }: Props)
                 address,
                 tags: interests
             }
-
             let id = prevData.id;
             if (isEditing) {
                 await updateData(`${API_URL}/place/${id}`, PlaceData);

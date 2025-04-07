@@ -28,6 +28,7 @@ export default function EditButtons({ data, setModalVisible }: Props) {
                     title: data.title,
                     description: data.description,
                     photoUrl: data.photoUrl,
+                    tags: data.tags
                 })}
             >
                 수정
