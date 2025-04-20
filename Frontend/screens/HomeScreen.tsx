@@ -18,7 +18,7 @@ export default function HomeScreen({ navigation }: Props) {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const fetchData = async (pageParam: number): Promise<HomePlaceType[]> => {
         const tagQuery = selectedTags.length > 0 ? `&tags=${selectedTags.join(',')}` : "";
-        const response = await getData(`${API_URL}/place?page=${pageParam}${tagQuery}`);
+        const response = await getData(`http://10.0.2.2:5000/place?page=${pageParam}${tagQuery}`);
         return response;
     };
 

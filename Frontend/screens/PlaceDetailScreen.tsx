@@ -2,7 +2,7 @@ import { RouteProp } from "@react-navigation/native";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import { DetailPlaceType, HomeStackParamList } from "../lib/type";
-import { getData } from "../util/fetch";
+import { deleteData, getData } from "../util/fetch";
 import { useQuery } from "@tanstack/react-query";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { getRelativeTime } from "../util/date";
@@ -21,6 +21,8 @@ import { alt_image_url } from "../lib/const";
 import TextCopyButton from "../components/atoms/TextCopyButton";
 import ProfileImage from "../components/atoms/ProfileImage";
 import PlaceDetailLoadingScreen from "../components/templates/PlaceDetailLoadingScreen";
+import queryClient from "../util/queryClient";
+import DoubleCheckModal from "../components/molecules/DoubleCheckModal";
 
 type PlaceDetailScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
 type PlaceDetailScreenRouteProp = RouteProp<HomeStackParamList, "PlaceDetail">;
@@ -51,6 +53,21 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const onCloseImagePress = () => {
         setImageModalVisible(false);
     }
+
+    const deletePlace = async () => {
+        try {
+            setDeleteLoading(true);
+            await deleteData(`${API_URL}/place/${id}`);
+            setDeleteModalVisible(false);
+            queryClient.invalidateQueries({ queryKey: ['places'] });
+            navigation.navigate("Home");
+        } catch (error) {
+            console.error("장소 제거 에러", error);
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
     return (
         <>
             {
@@ -77,7 +94,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                             </TouchableOpacity>
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity
-                                    onPress={() => navigation.navigate("UserInfo", {nickName: data?.user?.nickName || ""})}
+                                    onPress={() => navigation.navigate("UserInfo", { nickName: data?.user?.nickName || "" })}
                                     style={styles.uerContainer}
                                 >
                                     <ProfileImage imageUrl={data?.user?.profileImageUrl} />
@@ -119,9 +136,9 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                             nickName === data?.user?.nickName &&
                             <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
                         }
-                        <PlaceDeleteModal id={id} modalVisible={deleteModalVisible} setDeleteLoading={setDeleteLoading} setModalVisible={setDeleteModalVisible} />
-                        <FullScreenLoader loading={deleteLoading} />
-                    </View>}
+                        <DoubleCheckModal isLoading={deleteLoading} modalVisible={deleteModalVisible} setModalVisible={setDeleteModalVisible} execute={deletePlace} notification="정말 삭제하시겠습니까?" buttonText="삭제" />
+                    </View>
+            }
         </>
     );
 };

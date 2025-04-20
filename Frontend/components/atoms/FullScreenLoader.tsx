@@ -16,6 +16,7 @@ const FullScreenLoader = ({ loading }: {loading: boolean}) => {
 
 const styles = StyleSheet.create({
   overlay: {
+    flex: 1,
     position: 'absolute', // 화면 전체를 덮음
     top: 0,
     left: 0,

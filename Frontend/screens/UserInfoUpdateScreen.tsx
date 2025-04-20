@@ -1,4 +1,4 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import ScreenContainer from "../components/templates/ScreenContainer";
 import { StyleSheet } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
@@ -19,6 +19,7 @@ import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { API_URL } from "@env";
+import ModalContainer from "../components/templates/ModalContainer";
 
 
 type MyPageNavigationProp = StackNavigationProp<MyPageStackParamList, "UserInfoUpdate">;
@@ -27,6 +28,7 @@ export default function UserInfoUpdateScreen() {
     const { nickName, email, interests, profileImageUrl } = AuthStore();
     const [newInterests, setNewInterests] = useState(interests);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<UserInfoFormType>({
         defaultValues: {
             nickName,
@@ -36,7 +38,7 @@ export default function UserInfoUpdateScreen() {
     });
     const image = watch("profileImageUrl");
     const newNickName = watch("nickName");
-    const onSubmit = async () => {
+    const onCompleteSubmit = async () => {
         try {
             setIsLoading(true);
             const photoUrl = await uploadPhotoAndGetPublicUrl(image);
@@ -57,6 +59,10 @@ export default function UserInfoUpdateScreen() {
             console.error(error);
             setIsLoading(false);
         }
+    };
+
+    const onDeleteSubmit = async () => {
+        setModalVisible(true);
     }
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -110,7 +116,16 @@ export default function UserInfoUpdateScreen() {
                     maxNumber={5}
                 />
                 <Error message={errors.nickName?.message} />
-                <Button disabled={!(newNickName && newInterests.length > 0)} onPress={handleSubmit(onSubmit)}>수정완료</Button>
+                <View style={styles.buttonContainer}>
+                    <Button buttonStyle={{width: "100%"}} disabled={!(newNickName && newInterests.length > 0)} onPress={handleSubmit(onCompleteSubmit)}>수정완료</Button>
+                    <TouchableOpacity onPress={onDeleteSubmit}><Text style={styles.deleteUserButton}>계정 삭제</Text></TouchableOpacity>
+                </View>
+                <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
+                    <View style={styles.modalContainer}>
+                        <Text>정말 계정을 삭제하시겠습니까?</Text>
+                        <Pressable>삭제</Pressable>
+                    </View>
+                </ModalContainer>
             </ScreenContainer>
             <FullScreenLoader loading={isLoading} />
         </View>
@@ -139,5 +154,18 @@ const styles = StyleSheet.create({
         fontSize: 24,
         bottom: 5,
         right: 5
+    },
+    buttonContainer: {
+        justifyContent: "center", 
+        alignItems: "center", 
+        width: "100%",
+        gap: 12
+    },
+    deleteUserButton: {
+        textDecorationLine: "underline"
+    },
+    modalContainer: {
+        backgroundColor: "white",
+        padding: 24
     }
 });

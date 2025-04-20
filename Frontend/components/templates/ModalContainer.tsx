@@ -32,8 +32,10 @@ export default function ModalContainer({ children, modalVisible, setModalVisible
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
+        position: "relative",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(0,0,0,0.5)",
+        zIndex: 500
     }
 })
