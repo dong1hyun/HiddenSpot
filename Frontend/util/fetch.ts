@@ -21,11 +21,10 @@ export async function postData(url: string, data: object) {
 export async function getData(url: string) {
     try {
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('get error');
-        }
-
         const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data);
+        }
         return data;
     } catch (error) {
         console.error("getData 에러:", error);

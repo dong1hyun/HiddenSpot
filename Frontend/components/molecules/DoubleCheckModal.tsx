@@ -10,10 +10,9 @@ interface Props {
     execute: () => void;
     notification: string;
     buttonText: string;
-    isLoading: boolean
 }
 
-export default function DoubleCheckModal({ modalVisible, setModalVisible, execute, buttonText, notification, isLoading }: Props) {
+export default function DoubleCheckModal({ modalVisible, setModalVisible, execute, buttonText, notification }: Props) {
     return (
         <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
             <View style={styles.modalContainer}>
@@ -22,7 +21,6 @@ export default function DoubleCheckModal({ modalVisible, setModalVisible, execut
                     <Button buttonStyle={styles.button} onPress={() => execute()}>{buttonText}</Button>
                     <Button buttonStyle={styles.button} onPress={() => setModalVisible(false)}>취소</Button>
                 </View>
-                <FullScreenLoader loading={isLoading} />
             </View>
         </ModalContainer>
     )

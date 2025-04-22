@@ -10,9 +10,7 @@ import StaticMap from "../components/molecules/StaticMap";
 import AuthStore from "../store/AuthStore";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useState } from "react";
-import FullScreenLoader from "../components/atoms/FullScreenLoader";
 import EditButtons from "../components/molecules/EditButtons";
-import PlaceDeleteModal from "../components/molecules/PlaceDeleteModal";
 import LikeAndFavoriteButton from "../components/molecules/LikeAndFavoriteButton";
 import { API_URL } from "@env";
 import ModalContainer from "../components/templates/ModalContainer";
@@ -47,7 +45,6 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
     const { data, isLoading } = useQuery({
         queryKey: ['place', 'detail', id],
         queryFn: fetchData,
-        refetchInterval: 30000
     });
 
     const onCloseImagePress = () => {
@@ -60,6 +57,7 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
             await deleteData(`${API_URL}/place/${id}`);
             setDeleteModalVisible(false);
             queryClient.invalidateQueries({ queryKey: ['places'] });
+            queryClient.removeQueries({queryKey: ['place', 'detail', id]});
             navigation.navigate("Home");
         } catch (error) {
             console.error("장소 제거 에러", error);
@@ -136,7 +134,12 @@ export default function PlaceDetailScreen({ route, navigation }: Props) {
                             nickName === data?.user?.nickName &&
                             <EditButtons data={data} setModalVisible={setDeleteModalVisible} />
                         }
-                        <DoubleCheckModal isLoading={deleteLoading} modalVisible={deleteModalVisible} setModalVisible={setDeleteModalVisible} execute={deletePlace} notification="정말 삭제하시겠습니까?" buttonText="삭제" />
+                        <DoubleCheckModal
+                            modalVisible={deleteModalVisible}
+                            setModalVisible={setDeleteModalVisible}
+                            execute={deletePlace} notification="정말 삭제하시겠습니까?"
+                            buttonText="삭제"
+                        />
                     </View>
             }
         </>

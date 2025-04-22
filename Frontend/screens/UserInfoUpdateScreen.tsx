@@ -20,6 +20,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { API_URL } from "@env";
 import ModalContainer from "../components/templates/ModalContainer";
+import DoubleCheckModal from "../components/molecules/DoubleCheckModal";
 
 
 type MyPageNavigationProp = StackNavigationProp<MyPageStackParamList, "UserInfoUpdate">;
@@ -120,12 +121,12 @@ export default function UserInfoUpdateScreen() {
                     <Button buttonStyle={{width: "100%"}} disabled={!(newNickName && newInterests.length > 0)} onPress={handleSubmit(onCompleteSubmit)}>수정완료</Button>
                     <TouchableOpacity onPress={onDeleteSubmit}><Text style={styles.deleteUserButton}>계정 삭제</Text></TouchableOpacity>
                 </View>
-                <ModalContainer modalVisible={modalVisible} setModalVisible={setModalVisible}>
-                    <View style={styles.modalContainer}>
-                        <Text>정말 계정을 삭제하시겠습니까?</Text>
-                        <Pressable>삭제</Pressable>
-                    </View>
-                </ModalContainer>
+                {/* <DoubleCheckModal
+                    buttonText="삭제"
+                    execute={ }
+                    isLoading={ }
+                    notification="정말 계정을 삭제하시겠습니까?"
+                /> */}
             </ScreenContainer>
             <FullScreenLoader loading={isLoading} />
         </View>
